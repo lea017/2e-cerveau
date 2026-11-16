@@ -203,6 +203,7 @@ section[role="tabpanel"]{padding-bottom:44px}
 .donut-legend .lg .lv{font-weight:600;font-variant-numeric:tabular-nums;color:var(--muted)}
 .big{font-family:var(--f-display);font-size:1.9rem;font-weight:700}
 .big.pos{color:var(--good)}
+.big.neg{color:var(--warn,#c47d72)}
 
 .moods{display:flex;gap:9px;justify-content:space-between;margin-top:6px}
 .moods button{flex:1;aspect-ratio:1;border:1px solid var(--line);background:var(--surface);border-radius:12px;font-size:1.5rem;cursor:pointer}
@@ -404,6 +405,42 @@ svg.chart{width:100%;height:170px;display:block;margin-top:6px;overflow:visible}
 .valbanner .vb-ic svg{width:18px;height:18px;stroke:var(--accent-ink);stroke-width:1.9;fill:none;stroke-linecap:round;stroke-linejoin:round}
 .valbanner .vb-k{font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600}
 .valbanner .vb-t{font-weight:600;font-size:.92rem;margin-top:1px}
+/* ---- Budget : catégories ---- */
+.bcat-tag{display:inline-flex;align-items:center;gap:5px;font-size:.72rem;font-weight:600;color:var(--muted);padding:2px 8px;border-radius:999px;background:var(--surface);border:1px solid var(--line)}
+.bcat-tag .dot{width:8px;height:8px;border-radius:50%;flex:none}
+.bud-row .bgrp{display:flex;flex-direction:column;gap:3px;min-width:0}
+.bud-row .bgrp .bt{font-weight:500}
+.bcat-head{display:flex;align-items:center;gap:8px;font-size:.78rem;font-weight:700;letter-spacing:.02em;color:var(--fg);margin:14px 0 2px;padding-bottom:5px;border-bottom:1px solid var(--line)}
+.bcat-head .dot{width:10px;height:10px;border-radius:50%;flex:none}
+.bcat-head .bc-sum{margin-left:auto;font-variant-numeric:tabular-nums;color:var(--muted);font-weight:600}
+.bcat-pick{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 2px}
+.bcat-pick button{font-family:inherit;font-size:.75rem;font-weight:600;color:var(--muted);padding:5px 10px;border-radius:999px;border:1px solid var(--line);background:var(--surface);cursor:pointer;display:inline-flex;align-items:center;gap:5px;transition:.12s}
+.bcat-pick button .dot{width:8px;height:8px;border-radius:50%;flex:none}
+.bcat-pick button[aria-current="true"]{border-color:var(--accent);background:var(--accent-soft);color:var(--accent-ink)}
+.bud-seg{display:flex;height:11px;border-radius:999px;overflow:hidden;margin:4px 0 12px;background:var(--line)}
+.bud-seg i{display:block;height:100%}
+/* ---- Muscu ---- */
+.mz-top{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;margin-bottom:12px}
+.mz-sel{flex:1 1 130px;display:flex;flex-direction:column;gap:5px}
+.mz-sel label{font-size:.74rem;font-weight:600;color:var(--muted)}
+.mz-sel select,.mz-ex input{font-family:inherit;font-size:.9rem;padding:9px 11px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--fg);width:100%}
+.mz-ex{display:flex;flex-direction:column;gap:9px;margin:4px 0 10px}
+.mz-exrow{display:flex;gap:8px;align-items:center}
+.mz-exrow .nm{flex:1 1 auto;min-width:0}
+.mz-exrow .kg,.mz-exrow .rp{flex:0 0 68px}
+.mz-exrow .rm{flex:none;background:none;border:0;color:var(--muted);font-size:1.1rem;cursor:pointer;padding:4px 6px;line-height:1}
+.mz-addex{font-family:inherit;font-size:.82rem;font-weight:600;color:var(--accent-ink);background:var(--accent-soft);border:1px dashed var(--accent);border-radius:10px;padding:9px;cursor:pointer;width:100%}
+.mz-hist .mh{padding:11px 0;border-bottom:1px solid var(--line)}
+.mz-hist .mh:last-child{border-bottom:0}
+.mz-hd{display:flex;align-items:center;gap:8px;justify-content:space-between}
+.mz-hd .tag{font-size:.72rem;font-weight:700;color:var(--accent-ink);background:var(--accent-soft);padding:2px 9px;border-radius:999px}
+.mz-hd .dt{font-size:.78rem;color:var(--muted)}
+.mz-hd .rm{background:none;border:0;color:var(--muted);cursor:pointer;font-size:.95rem}
+.mz-hl{font-size:.82rem;color:var(--muted);margin-top:4px;line-height:1.5}
+.mz-hl b{color:var(--fg);font-weight:600}
+/* ---- Mini bar chart (sommeil, budget, sport) ---- */
+svg.bchart{width:100%;height:150px;display:block;margin-top:8px;overflow:visible}
+.chart-cap{display:flex;justify-content:space-between;font-size:.72rem;color:var(--muted);margin-top:4px}
 </style>
 
 <header>
@@ -602,6 +639,11 @@ svg.chart{width:100%;height:170px;display:block;margin-top:6px;overflow:visible}
     </div>
   </div>
   <div class="card">
+    <h3><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V5"/><path d="M4 19h16"/><path d="M7 16v-5M12 16V8M17 16v-7"/></svg> Sommeil · 7 derniers jours</h3>
+    <div class="sub">Heures par nuit et ta moyenne</div>
+    <svg class="bchart" id="sleep-chart" viewBox="0 0 320 150" preserveAspectRatio="none" aria-hidden="true"></svg>
+  </div>
+  <div class="card">
     <h3>7 dernières nuits</h3>
     <div id="sleep-hist"></div>
   </div>
@@ -667,12 +709,40 @@ svg.chart{width:100%;height:170px;display:block;margin-top:6px;overflow:visible}
 <!-- SEANCES -->
 <section role="tabpanel" data-view="seances" hidden>
   <div class="card">
-    <h3><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 8v8M18 8v8M4 10v4M20 10v4M6 12h12"/></svg> Mes séances</h3>
-    <div class="sub">Haut du corps + escalade</div>
+    <h3><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 8v8M18 8v8M4 10v4M20 10v4M6 12h12"/></svg> Séance du jour</h3>
+    <div class="sub">Coche en direct pendant ta séance</div>
     <div class="chips" id="sess-chips"></div>
     <div id="sess-exos"></div>
     <div class="prog"><i id="sess-bar" style="width:0%"></i></div>
     <div class="prog-row"><span id="sess-pct">0 %</span><span id="sess-name"></span></div>
+  </div>
+  <div class="card">
+    <div class="stat-grid">
+      <div class="stat"><div class="v tnum" id="mz-week">0</div><div class="k">Séances / semaine</div></div>
+      <div class="stat"><div class="v tnum" id="mz-vol">—</div><div class="k">Volume (dern. séance)</div></div>
+      <div class="stat"><div class="v tnum" id="mz-total">0</div><div class="k">Séances enregistrées</div></div>
+    </div>
+    <h3 style="margin-top:18px"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V5"/><path d="M4 19h16"/><path d="M7 16v-4M12 16V7M17 16v-6"/></svg> Séances / semaine · 8 semaines</h3>
+    <svg class="bchart" id="sport-chart" viewBox="0 0 320 150" preserveAspectRatio="none" aria-hidden="true"></svg>
+    <h3 style="margin-top:14px"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg> Volume · 10 dernières séances</h3>
+    <svg class="bchart" id="vol-chart" viewBox="0 0 320 150" preserveAspectRatio="none" aria-hidden="true"></svg>
+  </div>
+  <div class="card">
+    <h3><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg> Enregistrer une séance</h3>
+    <div class="sub">Note tes charges pour suivre ta progression</div>
+    <div class="mz-top">
+      <div class="mz-sel"><label>Type</label>
+        <select id="mz-type"></select></div>
+      <div class="mz-sel"><label>Date</label>
+        <input type="date" id="mz-date" style="font-family:inherit;font-size:.9rem;padding:9px 11px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--fg)"></div>
+    </div>
+    <div class="mz-ex" id="mz-exos"></div>
+    <button class="mz-addex" id="mz-addex">+ Ajouter un exercice</button>
+    <button class="btn" id="mz-save" style="width:100%;margin-top:10px">Enregistrer la séance</button>
+  </div>
+  <div class="card">
+    <h3><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg> Mes dernières séances</h3>
+    <div class="mz-hist" id="mz-hist"></div>
   </div>
 </section>
 
@@ -723,14 +793,25 @@ svg.chart{width:100%;height:170px;display:block;margin-top:6px;overflow:visible}
       <svg class="donut" id="bud-donut" viewBox="0 0 120 120" aria-hidden="true"></svg>
       <div class="donut-legend" id="bud-legend"></div>
     </div>
+    <div class="bud-seg" id="bud-seg"></div>
     <div id="bud-list" style="margin-top:8px"></div>
     <div class="note">💡 En plus : 13e mois en 2 fois (juin + décembre), ~1800 € chacun. CAF = prime d'activité + APL regroupées (450 €) ; Mobili-Jeune versée à part par Action Logement. Courses à ajuster après quelques semaines de suivi.</div>
+    <div class="add-sep">Ajouter une ligne</div>
     <div class="add-row" style="flex-wrap:wrap">
-      <input id="bud-name" placeholder="Poste (ex. Téléphone)" maxlength="30">
+      <input id="bud-name" placeholder="Poste (ex. Téléphone)" maxlength="30" style="flex:1 1 130px">
       <input id="bud-amt" type="number" inputmode="numeric" placeholder="€" style="flex:0 0 80px">
       <select id="bud-type"><option value="out">Dépense</option><option value="in">Revenu</option></select>
-      <button id="bud-add">+</button>
     </div>
+    <div class="bcat-pick" id="bud-catpick"></div>
+    <div class="add-row"><button id="bud-add" style="width:100%">Ajouter</button></div>
+  </div>
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
+      <h3><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 12l3-3"/></svg> Réglages des catégories</h3>
+      <button class="editbtn" id="bud-cat-edit">Modifier</button>
+    </div>
+    <div class="sub">Renomme, recolore ou ajoute tes propres catégories de dépenses.</div>
+    <div id="bud-cat-mgr"></div>
   </div>
 </section>
 
@@ -849,7 +930,11 @@ async function sbPull(){
     if(!r.ok)return false;
     const rows=await r.json();if(!rows.length||!rows[0].data)return false;
     const remote=rows[0].data;
-    for(const k in remote){try{localStorage.setItem(k,remote[k]);}catch(e){}}
+    for(const k in remote){
+      // Ne jamais réinjecter l'ancienne synchro ICS du cloud : le seed intégré fait foi (noms courts + heures de fin)
+      if(k==="c2_real_events_synced")continue;
+      try{localStorage.setItem(k,remote[k]);}catch(e){}
+    }
     return true;
   }catch(e){return false;}
 }
@@ -916,18 +1001,31 @@ const GOALS_SEED=[
   {id:"g3",t:"Décrocher le TOEIC",m:"Entraînement quotidien"},
   {id:"g4",t:"Devenir disciplinée",m:"La régularité avant la perfection"},
 ];
+// Catégories de dépenses (modifiables : stockées dans "bud_cats")
+const BUD_CATS_SEED=[
+  {id:"courses",lbl:"Courses",c:"#7fa67a"},
+  {id:"resto",lbl:"Resto / Sorties",c:"#c47d72"},
+  {id:"transport",lbl:"Transport",c:"#8aa0b5"},
+  {id:"loyer",lbl:"Loyer / Charges",c:"#bfa05a"},
+  {id:"sport",lbl:"Sport",c:"#6b9a8f"},
+  {id:"abo",lbl:"Abonnements",c:"#9a7fb0"},
+  {id:"shopping",lbl:"Shopping",c:"#c0905f"},
+  {id:"autre",lbl:"Autre",c:"#a0a0a0"},
+];
+const getBudCats=()=>store.get("bud_cats",BUD_CATS_SEED);
+const budCat=(id)=>getBudCats().find(c=>c.id===id)||{id:"autre",lbl:"Autre",c:"#a0a0a0"};
 const BUDGET_SEED=[
   {id:"b1",t:"Salaire alternance",a:1400,in:true},
   {id:"b10",t:"CAF (prime activité + APL)",a:450,in:true},
   {id:"b11",t:"Mobili-Jeune (Action Logement)",a:100,in:true},
-  {id:"b2",t:"Loyer",a:650,in:false},
-  {id:"b3",t:"Courses / alimentation",a:200,in:false},
-  {id:"b4",t:"Salle (Basic-Fit)",a:24,in:false},
-  {id:"b5",t:"Escalade (~4 séances)",a:28,in:false},
-  {id:"b6",t:"Transport (train, remb. 50%)",a:38,in:false},
-  {id:"b7",t:"Téléphone",a:7,in:false},
-  {id:"b8",t:"Abonnements (streaming…)",a:30,in:false},
-  {id:"b9",t:"Loisirs / plaisir",a:0,in:false},
+  {id:"b2",t:"Loyer",a:650,in:false,cat:"loyer"},
+  {id:"b3",t:"Courses / alimentation",a:200,in:false,cat:"courses"},
+  {id:"b4",t:"Salle (Basic-Fit)",a:24,in:false,cat:"sport"},
+  {id:"b5",t:"Escalade (~4 séances)",a:28,in:false,cat:"sport"},
+  {id:"b6",t:"Transport (train, remb. 50%)",a:38,in:false,cat:"transport"},
+  {id:"b7",t:"Téléphone",a:7,in:false,cat:"abo"},
+  {id:"b8",t:"Abonnements (streaming…)",a:30,in:false,cat:"abo"},
+  {id:"b9",t:"Loisirs / plaisir",a:0,in:false,cat:"resto"},
 ];
 const getExams=()=>store.get("exams",EXAMS_SEED);
 const getGoals=()=>store.get("goals",GOALS_SEED);
@@ -1095,6 +1193,8 @@ function show(v){
   if(v==="recompenses")renderRewards();
   if(v==="sommeil")renderSleep();
   if(v==="valeurs")renderValues();
+  if(v==="seances")renderMusc();
+  if(v==="budget")renderBudget();
   closeSheet();
   window.scrollTo(0,0);
 }
@@ -1211,6 +1311,29 @@ $("#habit-add").addEventListener("click",()=>{
 });
 $("#habit-new").addEventListener("keydown",e=>{if(e.key==="Enter")$("#habit-add").click();});
 
+/* ---- Helper : mini bar chart (valeurs + labels + ligne moyenne optionnelle) ---- */
+function barChart(el,data,opts={}){
+  // data = [{v:number, lbl:string, hl?:bool}] ; opts.unit, opts.avg (bool), opts.fmt(v)
+  if(!el)return;
+  const W=320,Hh=150,padX=4,padT=16,padB=20;
+  const vals=data.map(d=>d.v);const max=Math.max(1,...vals);
+  const n=data.length,bw=n?(W-2*padX)/n:0,gap=Math.min(7,bw*0.22);
+  const y=v=>padT+(1-v/max)*(Hh-padT-padB);
+  const fmt=opts.fmt||(v=>opts.unit?v+opts.unit:v);
+  let bars="";
+  data.forEach((d,i)=>{
+    const x=padX+i*bw,h=Math.max(0,(Hh-padT-padB)-(y(d.v)-padT));
+    const col=d.hl?"var(--accent)":"var(--accent-soft)";
+    bars+=`<rect x="${x+gap/2}" y="${y(d.v)}" width="${bw-gap}" height="${h}" rx="3" fill="${col}"/>`;
+    if(d.v>0)bars+=`<text x="${x+bw/2}" y="${y(d.v)-4}" text-anchor="middle" font-size="8" fill="var(--muted)">${fmt(d.v)}</text>`;
+    bars+=`<text x="${x+bw/2}" y="${Hh-6}" text-anchor="middle" font-size="8" fill="var(--muted)">${esc(d.lbl)}</text>`;
+  });
+  let avgLine="";
+  if(opts.avg&&vals.filter(v=>v>0).length){const a=vals.filter(v=>v>0).reduce((s,v)=>s+v,0)/vals.filter(v=>v>0).length;
+    avgLine=`<line x1="${padX}" y1="${y(a)}" x2="${W-padX}" y2="${y(a)}" stroke="var(--accent-ink)" stroke-width="1.3" stroke-dasharray="4 4" opacity="0.7"/>
+      <text x="${W-padX}" y="${y(a)-3}" text-anchor="end" font-size="8" fill="var(--accent-ink)">moy. ${fmt(Math.round(a*10)/10)}</text>`;}
+  el.innerHTML=avgLine+bars;
+}
 /* ---- Stats ---- */
 function dayScore(dt){const s=store.get("habits_"+dayKey(dt),{});const H=getHabits();if(!H.length)return 0;return H.filter(h=>s[h.id]).length/H.length;}
 function renderStats(){
@@ -1483,6 +1606,78 @@ $("#sess-exos").addEventListener("click",e=>{
   const key="sess_"+curSess+"_"+dayKey();const st=store.get(key,{});const i=row.dataset.i;const was=st[i];
   st[i]=!was;store.set(key,st);if(!was)addPts(1);renderSessExos();
 });
+/* ---- Muscu : enregistrement des séances + stats ---- */
+const getMusc=()=>store.get("musc_log",[]);
+let mzDraft=null; // {type,date,exos:[{nm,kg,rp}]}
+function mzInit(){
+  if(mzDraft)return;
+  mzDraft={type:Object.keys(SESSIONS)[0],date:dayKey(),exos:[]};
+  // pré-remplit avec les exos du type choisi
+  mzFill();
+}
+function mzFill(){
+  mzDraft.exos=(SESSIONS[mzDraft.type]||[]).map(nm=>({nm,kg:"",rp:""}));
+}
+function volume(s){return s.exos.reduce((t,e)=>t+((+e.kg||0)*(+e.rp||0)),0);}
+function renderMusc(){
+  mzInit();
+  // sélecteur de type
+  $("#mz-type").innerHTML=Object.keys(SESSIONS).map(s=>`<option value="${s}" ${s===mzDraft.type?"selected":""}>${s}</option>`).join("");
+  $("#mz-date").value=mzDraft.date;
+  // lignes d'exercices
+  $("#mz-exos").innerHTML=mzDraft.exos.map((e,i)=>`<div class="mz-exrow" data-i="${i}">
+    <input class="nm" value="${esc(e.nm)}" data-f="nm" placeholder="Exercice" maxlength="30">
+    <input class="kg" value="${e.kg}" data-f="kg" type="number" inputmode="decimal" placeholder="kg">
+    <input class="rp" value="${e.rp}" data-f="rp" type="number" inputmode="numeric" placeholder="reps">
+    <button class="rm" data-rm="${i}" aria-label="Retirer">✕</button></div>`).join("")
+    ||`<div class="sub">Ajoute un exercice ci-dessous.</div>`;
+  // stats
+  const log=getMusc();
+  const wkStart=new Date();wkStart.setDate(wkStart.getDate()-((wkStart.getDay()+6)%7));const wkk=dayKey(wkStart);
+  $("#mz-week").textContent=log.filter(s=>s.date>=wkk).length;
+  $("#mz-total").textContent=log.length;
+  const last=log.slice().sort((a,b)=>b.date.localeCompare(a.date))[0];
+  $("#mz-vol").textContent=last?Math.round(volume(last)).toLocaleString("fr-FR")+" kg":"—";
+  // Graphe séances/semaine (8 semaines)
+  const weeks=[];for(let w=7;w>=0;w--){const d=new Date();d.setDate(d.getDate()-((d.getDay()+6)%7)-w*7);const s=dayKey(d);const e=new Date(d);e.setDate(e.getDate()+7);const ek=dayKey(e);
+    weeks.push({v:log.filter(x=>x.date>=s&&x.date<ek).length,lbl:"S"+(d.getDate())});}
+  barChart($("#sport-chart"),weeks,{avg:true,fmt:v=>v});
+  // Graphe volume (10 dernières séances, du + ancien au + récent)
+  const recent=log.slice().sort((a,b)=>a.date.localeCompare(b.date)||a.id.localeCompare(b.id)).slice(-10);
+  barChart($("#vol-chart"),recent.map((s,i)=>({v:Math.round(volume(s)),lbl:new Date(s.date).toLocaleDateString("fr-FR",{day:"numeric",month:"numeric"}),hl:i===recent.length-1})),{fmt:v=>v>=1000?(v/1000).toFixed(1)+"k":v});
+  // historique
+  $("#mz-hist").innerHTML=log.length?log.slice().sort((a,b)=>b.date.localeCompare(a.date)||b.id.localeCompare(a.id)).slice(0,12).map(s=>{
+    const dd=new Date(s.date).toLocaleDateString("fr-FR",{weekday:"short",day:"numeric",month:"short"});
+    const done=s.exos.filter(e=>e.kg||e.rp);
+    const detail=done.map(e=>`<b>${esc(e.nm)}</b> ${e.kg?e.kg+" kg":""}${e.kg&&e.rp?" × ":""}${e.rp?e.rp+" reps":""}`).join(" · ")||"—";
+    return `<div class="mh"><div class="mz-hd"><span style="display:flex;align-items:center;gap:8px"><span class="tag">${esc(s.type)}</span><span class="dt">${dd}</span></span>
+      <span style="display:flex;align-items:center;gap:8px"><span class="dt">${Math.round(volume(s)).toLocaleString("fr-FR")} kg</span><button class="rm" data-mdel="${s.id}" aria-label="Supprimer">✕</button></span></div>
+      <div class="mz-hl">${detail}</div></div>`;
+  }).join(""):`<div class="empty">Aucune séance enregistrée.<br>Note ta première séance ci-dessus.</div>`;
+}
+$("#mz-type").addEventListener("change",e=>{mzDraft.type=e.target.value;mzFill();renderMusc();});
+$("#mz-date").addEventListener("change",e=>{mzDraft.date=e.target.value;});
+$("#mz-exos").addEventListener("input",e=>{
+  const row=e.target.closest(".mz-exrow");if(!row)return;const i=+row.dataset.i,f=e.target.dataset.f;
+  mzDraft.exos[i][f]=e.target.value;
+});
+$("#mz-exos").addEventListener("click",e=>{
+  const rm=e.target.closest("[data-rm]");if(!rm)return;mzDraft.exos.splice(+rm.dataset.rm,1);renderMusc();
+});
+$("#mz-addex").addEventListener("click",()=>{mzDraft.exos.push({nm:"",kg:"",rp:""});renderMusc();
+  setTimeout(()=>{const rows=$$("#mz-exos .mz-exrow");const last=rows[rows.length-1];if(last)last.querySelector(".nm").focus();},0);});
+$("#mz-save").addEventListener("click",()=>{
+  const exos=mzDraft.exos.filter(e=>e.nm.trim()&&(e.kg||e.rp));
+  if(!exos.length){$("#mz-save").textContent="Remplis au moins un exercice";setTimeout(()=>$("#mz-save").textContent="Enregistrer la séance",1500);return;}
+  const log=getMusc();log.push({id:"m"+Date.now(),type:mzDraft.type,date:mzDraft.date,exos});store.set("musc_log",log);
+  addPts(4);mzDraft=null;mzInit();
+  $("#mz-save").textContent="Séance enregistrée ✓";setTimeout(()=>$("#mz-save").textContent="Enregistrer la séance",1500);
+  renderMusc();checkBadges&&checkBadges();
+});
+$("#mz-hist").addEventListener("click",e=>{
+  const del=e.target.closest("[data-mdel]");if(!del)return;
+  store.set("musc_log",getMusc().filter(s=>s.id!==del.dataset.mdel));renderMusc();
+});
 
 /* ---- Exams / TOEIC ---- */
 function renderExams(){
@@ -1551,35 +1746,85 @@ $("#goal-add").addEventListener("click",()=>{
   const g=getGoals();g.push({id:"g"+Date.now(),t,m:$("#goal-sub").value.trim()});store.set("goals",g);
   $("#goal-title").value="";$("#goal-sub").value="";renderGoals();
 });
+let budPickCat="courses",budCatEdit=false;
 function renderBudget(){
-  const B=getBudget();
+  const B=getBudget(),CATS=getBudCats();
   const inc=B.filter(b=>b.in).reduce((s,b)=>s+b.a,0),out=B.filter(b=>!b.in).reduce((s,b)=>s+b.a,0);
-  $("#bud-net").textContent=(inc-out)+" €";
-  const cols=["#7fa67a","#bfa05a","#8aa0b5","#c47d72","#9a7fb0","#6b9a8f","#c0905f","#a98fb0","#7bb0a0"];
-  const outs=B.filter(b=>!b.in);
-  // Donut des dépenses
+  const net=inc-out;
+  $("#bud-net").textContent=net+" €";
+  $("#bud-net").className="big tnum "+(net>=0?"pos":"neg");
+  // Regroupe les dépenses par catégorie
+  const byCat={};B.filter(b=>!b.in).forEach(b=>{const c=b.cat||"autre";(byCat[c]=byCat[c]||{tot:0,items:[]});byCat[c].tot+=b.a;byCat[c].items.push(b);});
+  const order=CATS.filter(c=>byCat[c.id]).map(c=>c.id).concat(Object.keys(byCat).filter(id=>!CATS.some(c=>c.id===id)));
+  // Donut par catégorie
   const R=52,C=2*Math.PI*R;let off=0;
-  const segs=outs.map((b,i)=>{
-    const frac=out?b.a/out:0;const len=frac*C;
-    const seg=`<circle class="d-seg" cx="60" cy="60" r="${R}" stroke="${cols[i%cols.length]}" stroke-dasharray="${len} ${C-len}" stroke-dashoffset="${-off}"/>`;
+  const segs=order.map(id=>{
+    const col=budCat(id).c,frac=out?byCat[id].tot/out:0,len=frac*C;
+    const seg=`<circle class="d-seg" cx="60" cy="60" r="${R}" stroke="${col}" stroke-dasharray="${len} ${C-len}" stroke-dashoffset="${-off}"/>`;
     off+=len;return seg;
   }).join("");
   $("#bud-donut").innerHTML=`<g transform="rotate(-90 60 60)">
     <circle cx="60" cy="60" r="${R}" fill="none" stroke="var(--line)" stroke-width="16"/>${segs}</g>
     <text class="donut-center" x="60" y="56" text-anchor="middle" font-size="15" fill="var(--fg)">${out} €</text>
     <text x="60" y="72" text-anchor="middle" font-size="8" fill="var(--muted)">dépenses</text>`;
-  $("#bud-legend").innerHTML=outs.map((b,i)=>`<div class="lg"><span class="sw" style="background:${cols[i%cols.length]}"></span>
-    <span class="lt">${esc(b.t)}</span><span class="lv">${b.a} €</span></div>`).join("");
-  $("#bud-list").innerHTML=B.map(b=>`<div class="bud-row"><span>${b.t}</span>
-    <span style="display:flex;align-items:center;gap:8px"><span class="amt ${b.in?"in":""} tnum">${b.in?"+":"−"}${b.a} €</span>
-    <button class="del" data-id="${b.id}" aria-label="Supprimer">✕</button></span></div>`).join("");
+  $("#bud-legend").innerHTML=order.map(id=>{const c=budCat(id),pct=out?Math.round(byCat[id].tot/out*100):0;
+    return `<div class="lg"><span class="sw" style="background:${c.c}"></span>
+    <span class="lt">${esc(c.lbl)}</span><span class="lv">${byCat[id].tot} € · ${pct}%</span></div>`;}).join("")||`<div class="sub">Aucune dépense.</div>`;
+  // Barre segmentée
+  $("#bud-seg").innerHTML=order.map(id=>`<i style="width:${out?byCat[id].tot/out*100:0}%;background:${budCat(id).c}" title="${esc(budCat(id).lbl)}"></i>`).join("");
+  // Liste groupée par catégorie + revenus
+  let html="";
+  order.forEach(id=>{const c=budCat(id);
+    html+=`<div class="bcat-head"><span class="dot" style="background:${c.c}"></span>${esc(c.lbl)}<span class="bc-sum">${byCat[id].tot} €</span></div>`;
+    html+=byCat[id].items.map(b=>`<div class="bud-row"><span class="bgrp"><span class="bt">${esc(b.t)}</span></span>
+      <span style="display:flex;align-items:center;gap:8px"><span class="amt tnum">−${b.a} €</span>
+      <button class="del" data-id="${b.id}" aria-label="Supprimer">✕</button></span></div>`).join("");
+  });
+  const ins=B.filter(b=>b.in);
+  if(ins.length){html+=`<div class="bcat-head"><span class="dot" style="background:var(--good)"></span>Revenus<span class="bc-sum">+${inc} €</span></div>`;
+    html+=ins.map(b=>`<div class="bud-row"><span class="bgrp"><span class="bt">${esc(b.t)}</span></span>
+      <span style="display:flex;align-items:center;gap:8px"><span class="amt in tnum">+${b.a} €</span>
+      <button class="del" data-id="${b.id}" aria-label="Supprimer">✕</button></span></div>`).join("");}
+  $("#bud-list").innerHTML=html;
+  // Picker de catégorie (pour l'ajout)
+  if(!CATS.some(c=>c.id===budPickCat))budPickCat=CATS[0]?.id||"autre";
+  const isOut=$("#bud-type")?$("#bud-type").value!=="in":true;
+  $("#bud-catpick").innerHTML=isOut?CATS.map(c=>`<button data-cat="${c.id}" aria-current="${c.id===budPickCat}"><span class="dot" style="background:${c.c}"></span>${esc(c.lbl)}</button>`).join(""):"";
+  // Gestionnaire de catégories
+  $("#bud-cat-mgr").innerHTML=CATS.map(c=>budCatEdit
+    ?`<div class="bud-row"><span style="display:flex;align-items:center;gap:8px;flex:1;min-width:0">
+        <input type="color" value="${c.c}" data-cc="${c.id}" style="width:28px;height:28px;border:0;background:none;padding:0;cursor:pointer;flex:none">
+        <input class="catname" value="${esc(c.lbl)}" data-cn="${c.id}" maxlength="22" style="flex:1;min-width:0;font-family:inherit;font-size:.9rem;padding:7px 9px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--fg)"></span>
+      <button class="del" data-cdel="${c.id}" aria-label="Supprimer">✕</button></div>`
+    :`<div class="bud-row"><span style="display:flex;align-items:center;gap:9px"><span class="dot" style="width:12px;height:12px;border-radius:50%;background:${c.c};display:inline-block"></span>${esc(c.lbl)}</span>
+      <span class="amt tnum" style="color:var(--muted)">${byCat[c.id]?byCat[c.id].tot+" €":"—"}</span></div>`).join("");
+  if(budCatEdit)$("#bud-cat-mgr").insertAdjacentHTML("beforeend",`<div class="add-row" style="margin-top:8px"><input id="newcat" placeholder="Nouvelle catégorie" maxlength="22"><button id="newcat-add">+</button></div>`);
 }
 $("#bud-list").addEventListener("click",e=>{const del=e.target.closest(".del");if(!del)return;
   store.set("budget",getBudget().filter(x=>x.id!==del.dataset.id));renderBudget();});
+$("#bud-catpick").addEventListener("click",e=>{const b=e.target.closest("[data-cat]");if(!b)return;budPickCat=b.dataset.cat;renderBudget();});
+$("#bud-type")&&$("#bud-type").addEventListener("change",renderBudget);
 $("#bud-add").addEventListener("click",()=>{
   const t=$("#bud-name").value.trim(),a=parseInt($("#bud-amt").value,10);if(!t||!a||a<0)return;
-  const B=getBudget();B.push({id:"b"+Date.now(),t,a,in:$("#bud-type").value==="in"});store.set("budget",B);
+  const isIn=$("#bud-type").value==="in";
+  const row={id:"b"+Date.now(),t,a,in:isIn};if(!isIn)row.cat=budPickCat;
+  const B=getBudget();B.push(row);store.set("budget",B);
   $("#bud-name").value="";$("#bud-amt").value="";renderBudget();
+});
+// Gestion des catégories
+$("#bud-cat-edit").addEventListener("click",()=>{budCatEdit=!budCatEdit;$("#bud-cat-edit").textContent=budCatEdit?"Terminé":"Modifier";renderBudget();});
+$("#bud-cat-mgr").addEventListener("click",e=>{
+  const del=e.target.closest("[data-cdel]");
+  if(del){const CATS=getBudCats().filter(c=>c.id!==del.dataset.cdel);store.set("bud_cats",CATS);
+    // les dépenses de cette catégorie repassent en "autre"
+    store.set("budget",getBudget().map(b=>b.cat===del.dataset.cdel?{...b,cat:"autre"}:b));renderBudget();return;}
+  if(e.target.id==="newcat-add"){const v=$("#newcat").value.trim();if(!v)return;
+    const CATS=getBudCats();CATS.push({id:"c"+Date.now(),lbl:v,c:"#7fa67a"});store.set("bud_cats",CATS);renderBudget();}
+});
+$("#bud-cat-mgr").addEventListener("input",e=>{
+  const nm=e.target.closest("[data-cn]"),cc=e.target.closest("[data-cc]");
+  if(nm){const CATS=getBudCats().map(c=>c.id===nm.dataset.cn?{...c,lbl:nm.value}:c);store.set("bud_cats",CATS);}
+  if(cc){const CATS=getBudCats().map(c=>c.id===cc.dataset.cc?{...c,c:cc.value}:c);store.set("bud_cats",CATS);}
 });
 function bindMood(sel,key){
   const saved=store.get(key+"_"+dayKey(),null);
@@ -1628,6 +1873,10 @@ function renderSleep(){
     const d=sleepDur(n.bed,n.wake);const pct=d?Math.min(100,d/540*100):0;
     return `<div class="slrow"><span class="sd">${dd}</span><span class="sv"><span class="slbar"><i style="width:${pct}%"></i></span>${fmtH(d)} <small style="color:var(--muted);font-weight:400">(${n.bed}→${n.wake})</small></span></div>`;
   }).join(""):`<div class="empty">Aucune nuit enregistrée.<br>Note ta première nuit ci-dessus.</div>`;
+  // Graphe : heures de sommeil par nuit (7 j)
+  const chartData=last7.map(n=>{const d=sleepDur(n.bed,n.wake);
+    return {v:d?Math.round(d/60*10)/10:0,lbl:new Date(n.k).toLocaleDateString("fr-FR",{weekday:"short"}).slice(0,3),hl:true};});
+  barChart($("#sleep-chart"),chartData,{unit:"h",avg:true,fmt:v=>v+"h"});
 }
 $("#sleep-save").addEventListener("click",()=>{
   const bed=$("#sleep-bed").value,wake=$("#sleep-wake").value;if(!bed||!wake){$("#sleep-save").textContent="Remplis les heures";setTimeout(()=>$("#sleep-save").textContent="Enregistrer la nuit",1400);return;}
@@ -1794,7 +2043,7 @@ $("#ics-sync").addEventListener("click",()=>syncICS(false));
 /* ---- Rendu complet (réutilisable après synchro) ---- */
 function renderAll(){
   renderPts();renderNow();renderHomeSummary();renderHabits();renderPlanning();renderTodos();renderRoutines();renderValues();
-  renderSessChips();renderSessExos();renderExams();renderToeic();renderJournal();renderBudget();renderGoals();
+  renderSessChips();renderSessExos();renderExams();renderToeic();renderJournal();renderBudget();renderGoals();renderMusc();
   fRender();renderFocus();
 }
 
