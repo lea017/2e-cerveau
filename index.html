@@ -290,11 +290,20 @@ svg.chart{width:100%;height:170px;display:block;margin-top:6px;overflow:visible}
 .viewtog{display:flex;gap:4px;background:var(--surface-2);border-radius:999px;padding:3px}
 .viewtog button{border:0;background:none;font-family:inherit;font-weight:600;font-size:.8rem;color:var(--muted);padding:6px 14px;border-radius:999px;cursor:pointer}
 .viewtog button[aria-current="true"]{background:var(--accent);color:#fff}
-.cat-cours{--c:#5a86b0;--cs:#e4edf4}
-.cat-sport{--c:#c08a4a;--cs:#f3e8d6}
-.cat-revision{--c:#7a9a6b;--cs:#e8efe0}
-.cat-perso{--c:#9a7fb0;--cs:#ece4f2}
-.cal-head{font-family:var(--f-display);font-weight:600;font-size:.95rem;margin:12px 0 2px;text-transform:capitalize}
+/* Catégories en nuances de vert (dégradé de la même famille) */
+.cat-cours{--c:#4f7a5a;--cs:#e3ece4}
+.cat-revision{--c:#6f9a6b;--cs:#e8efe0}
+.cat-sport{--c:#9ab87f;--cs:#edf2e2}
+.cat-perso{--c:#b7c9a0;--cs:#f1f4ea}
+.cal-nav{display:flex;align-items:center;gap:8px;margin:12px 0 4px}
+.cal-arrow{flex:none;width:34px;height:34px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--accent-ink);font-size:1.3rem;line-height:1;cursor:pointer;display:grid;place-items:center}
+.cal-arrow:active{background:var(--accent-soft)}
+.cal-head{flex:1;text-align:center;font-family:var(--f-display);font-weight:600;font-size:.98rem;text-transform:capitalize}
+.cal-tools{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.cal-datepick{font-family:inherit;font-size:.82rem;padding:5px 9px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--fg);margin-left:auto}
+.add-sep{font-size:.72rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--accent-ink);margin:14px 0 8px;padding-top:12px;border-top:1px solid var(--line)}
+.nowline{position:absolute;left:0;right:0;height:2px;background:var(--crit);z-index:3}
+.nowline::before{content:"";position:absolute;left:-3px;top:-3px;width:8px;height:8px;border-radius:50%;background:var(--crit)}
 .cal-scroll{max-height:62vh;overflow-y:auto;border:1px solid var(--line);border-radius:12px;margin-top:10px;background:var(--surface)}
 .calgrid{position:relative}
 /* Vue JOUR */
@@ -310,7 +319,9 @@ svg.chart{width:100%;height:170px;display:block;margin-top:6px;overflow:visible}
 .calgrid.day .evblock .eb-m{font-size:.64rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 /* Vue SEMAINE */
 .calgrid.week{display:grid;grid-template-columns:34px repeat(7,1fr);font-size:.6rem}
-.calgrid.week .wh{position:sticky;top:0;background:var(--surface);z-index:2;text-align:center;padding:5px 0;font-weight:700;color:var(--muted);border-bottom:1px solid var(--line);font-size:.62rem}
+.calgrid.week .wh{position:sticky;top:0;background:var(--surface);z-index:2;text-align:center;padding:5px 0;font-weight:700;color:var(--muted);border-bottom:1px solid var(--line);font-size:.62rem;display:flex;flex-direction:column;gap:1px}
+.calgrid.week .wh .wh-n{font-size:.7rem;color:var(--fg)}
+.calgrid.week .wh.today .wh-n{color:#fff;background:var(--accent);border-radius:999px;width:18px;height:18px;line-height:18px;margin:0 auto}
 .calgrid.week .wh.today{color:var(--accent)}
 .calgrid.week .corner{position:sticky;top:0;background:var(--surface);z-index:2;border-bottom:1px solid var(--line)}
 .calgrid.week .wrow-h{grid-column:1;font-size:.58rem;color:var(--muted);text-align:right;padding:2px 4px 0 0;border-top:1px solid var(--line);min-height:30px}
@@ -595,13 +606,26 @@ svg.chart{width:100%;height:170px;display:block;margin-top:6px;overflow:visible}
       <h3><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg> Mon calendrier</h3>
       <div class="viewtog"><button id="vt-jour" aria-current="true">Jour</button><button id="vt-sem">Semaine</button></div>
     </div>
-    <div class="cal-head" id="cal-head"></div>
+    <div class="cal-nav">
+      <button class="cal-arrow" id="cal-prev" aria-label="Précédent">‹</button>
+      <div class="cal-head" id="cal-head"></div>
+      <button class="cal-arrow" id="cal-next" aria-label="Suivant">›</button>
+    </div>
+    <div class="cal-tools">
+      <button class="chip" id="cal-today">Aujourd'hui</button>
+      <input type="date" id="cal-date" class="cal-datepick">
+    </div>
     <div class="daynav" id="daynav"></div>
-    <div class="cal-scroll"><div id="calendar" class="calgrid"></div></div>
+    <div class="cal-scroll" id="cal-scroll"><div id="calendar" class="calgrid"></div></div>
     <div class="cat-legend" id="cat-legend"></div>
     <div id="perso-manage"></div>
+    <div class="add-sep">Ajouter un bloc perso</div>
     <div class="add-row" style="flex-wrap:wrap">
-      <input id="ev-time" placeholder="19:30" style="flex:0 0 66px" maxlength="12">
+      <input id="ev-time" type="time" style="flex:1 1 90px">
+      <span style="align-self:center;color:var(--muted)">→</span>
+      <input id="ev-end" type="time" style="flex:1 1 90px">
+    </div>
+    <div class="add-row" style="flex-wrap:wrap">
       <input id="ev-title" placeholder="Titre (ex. Révision polymères)" maxlength="50">
     </div>
     <div class="add-row">
@@ -609,7 +633,6 @@ svg.chart{width:100%;height:170px;display:block;margin-top:6px;overflow:visible}
       <input id="ev-note" placeholder="Lieu (optionnel)" maxlength="40">
       <button id="ev-add">Ajouter</button>
     </div>
-    <div class="note">Les cours (synchro Polytech) et tes blocs perso s'affichent par couleur. Touche un bloc perso pour le supprimer.</div>
   </div>
   <div class="card">
     <h3><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a9 9 0 11-3-6.7M21 4v4h-4"/></svg> Emploi du temps</h3>
@@ -922,15 +945,16 @@ function parseICS(raw){
   for(const bl of blocks){
     const get=(k)=>{const m=bl.match(new RegExp(k+"[^:\\n]*:([^\\n\\r]*)","i"));return m?m[1].trim():"";};
     const dtRaw=get("DTSTART");if(!dtRaw)continue;
-    const m=dtRaw.match(/(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})/);if(!m)continue;
-    let dt;
-    if(/Z/.test(dtRaw)){dt=new Date(Date.UTC(+m[1],+m[2]-1,+m[3],+m[4],+m[5]));}
-    else{dt=new Date(+m[1],+m[2]-1,+m[3],+m[4],+m[5]);}
-    const dk=dayKey(dt);const hh=String(dt.getHours()).padStart(2,"0")+":"+String(dt.getMinutes()).padStart(2,"0");
+    const parseDt=(raw)=>{const m=raw.match(/(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})/);if(!m)return null;
+      return /Z/.test(raw)?new Date(Date.UTC(+m[1],+m[2]-1,+m[3],+m[4],+m[5])):new Date(+m[1],+m[2]-1,+m[3],+m[4],+m[5]);};
+    const dt=parseDt(dtRaw);if(!dt)continue;
+    const dtEnd=parseDt(get("DTEND"));
+    const fmt=(d)=>String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0");
+    const dk=dayKey(dt);const hh=fmt(dt);const he=dtEnd?fmt(dtEnd):"";
     let title=icsDecode(get("SUMMARY"))||"Cours";
     title=shortCourse(title);
     const loc=icsDecode(get("LOCATION"));
-    (events[dk]=events[dk]||[]).push({t:hh,b:title,n:loc});
+    (events[dk]=events[dk]||[]).push({t:hh,e:he,b:title,n:loc});
   }
   for(const k in events)events[k].sort((a,b)=>a.t.localeCompare(b.t));
   return events;
@@ -1189,8 +1213,10 @@ $("#f-reset").addEventListener("click",()=>{clearInterval(fTimer);fTimer=null;fR
 const DAYS_FR=["Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi","Dimanche"];
 const DAYS_MIN=["Lun","Mar","Mer","Jeu","Ven","Sam","Dim"];
 const CATS={cours:"Cours",sport:"Sport",revision:"Révision",perso:"Perso"};
-const CAL_START=7,CAL_END=23; // heures affichées
-let planDay=(new Date().getDay()+6)%7;
+const CAL_START=7,CAL_END=23;      // heures affichées
+const SLOT_H=46;                    // hauteur d'une heure (jour)
+const WROW_H=26;                    // hauteur d'une heure (semaine)
+let calOffset=0;                    // décalage en jours (jour) ou semaines (semaine) depuis aujourd'hui
 let calView="jour";
 function toMin(t){const m=String(t).match(/(\d{1,2})[:h](\d{2})?/);if(!m)return null;return (+m[1])*60+(+(m[2]||0));}
 function guessCat(title){
@@ -1199,99 +1225,128 @@ function guessCat(title){
   if(/r[ée]vis|exam|fiche|annales|polym[eè]re|proba|anglais toeic/.test(l))return "revision";
   return "perso";
 }
-// Récupère tous les events d'un jour (wd 0=lundi) : cours ICS + perso
-function dayEvents(wd){
-  const out=[];const dk=dateForWeekday(wd);
-  (getReal()[dk]||[]).forEach(r=>out.push({t:r.t,b:r.b,n:r.n,cat:"cours",real:true}));
-  (getPlanning()[wd]||[]).forEach((r,i)=>out.push({t:r.t,b:r.b,n:r.n,cat:r.cat||guessCat(r.b),idx:i}));
+// Index dans getPlanning() : 0=lundi… basé sur le jour de la semaine de la date
+function wdOf(date){return (date.getDay()+6)%7;}
+function dkOf(date){return dayKey(date);}
+// Date actuellement affichée (vue jour)
+function currentDate(){const d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()+calOffset);return d;}
+// Lundi de la semaine affichée (vue semaine)
+function weekMonday(off){const d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()-wdOf(d)+off*7);return d;}
+// Events d'une date donnée : cours ICS (par date) + perso (par jour de semaine)
+function eventsForDate(date){
+  const out=[];const dk=dkOf(date);const wd=wdOf(date);
+  (getReal()[dk]||[]).forEach(r=>out.push({t:r.t,e:r.e,b:r.b,n:r.n,cat:"cours",real:true}));
+  (getPlanning()[wd]||[]).forEach((r,i)=>out.push({t:r.t,e:r.e,b:r.b,n:r.n,cat:r.cat||guessCat(r.b),idx:i}));
   return out.filter(e=>toMin(e.t)!=null).sort((a,b)=>toMin(a.t)-toMin(b.t));
 }
-function renderDaynav(){
-  $("#daynav").hidden=(calView!=="jour");
-  const todayWd=(new Date().getDay()+6)%7;
-  $("#daynav").innerHTML=DAYS_MIN.map((lbl,i)=>{
-    const has=dayEvents(i).length;
-    return `<button data-d="${i}" aria-current="${i===planDay}" class="${has?"has":""}" title="${DAYS_FR[i]}">${lbl[0]}</button>`;
-  }).join("");
-}
+function endMin(e,startM){const em=toMin(e.e);return (em!=null&&em>startM)?em:startM+60;} // durée par défaut 1h
 function renderPlanning(){
   $("#vt-jour").setAttribute("aria-current",calView==="jour");
   $("#vt-sem").setAttribute("aria-current",calView==="semaine");
-  renderDaynav();
-  // légende
+  $("#daynav").hidden=true; // remplacé par les flèches
   $("#cat-legend").innerHTML=Object.keys(CATS).map(c=>`<span class="cl cat-${c}"><span class="sw" style="background:var(--c)"></span>${CATS[c]}</span>`).join("");
+  // Date picker reflète l'état
+  if(calView==="jour")$("#cal-date").value=dkOf(currentDate());
   const grid=$("#calendar");
   if(calView==="jour")renderDayGrid(grid);else renderWeekGrid(grid);
   renderPersoManage();
+  scrollToFirst();
+}
+// Place le scroll sur la première activité (ou l'heure actuelle)
+function scrollToFirst(){
+  const sc=$("#cal-scroll");if(!sc)return;
+  let firstMin=null;
+  if(calView==="jour"){const evs=eventsForDate(currentDate());if(evs.length)firstMin=toMin(evs[0].t);}
+  else{for(let d=0;d<7;d++){const dt=new Date(weekMonday(calOffset));dt.setDate(dt.getDate()+d);const evs=eventsForDate(dt);if(evs.length){const m=toMin(evs[0].t);if(firstMin==null||m<firstMin)firstMin=m;}}}
+  if(firstMin==null)firstMin=8*60;
+  const slot=calView==="jour"?SLOT_H:WROW_H;
+  const y=Math.max(0,(firstMin-CAL_START*60)/60*slot-10);
+  setTimeout(()=>{sc.scrollTop=y;},60);
 }
 function renderPersoManage(){
   const box=$("#perso-manage");if(!box)return;
   if(calView!=="jour"){box.innerHTML="";return;}
-  const perso=(getPlanning()[planDay]||[]);
+  const wd=wdOf(currentDate());const perso=(getPlanning()[wd]||[]);
   if(!perso.length){box.innerHTML="";return;}
-  box.innerHTML=`<div class="realtag" style="margin-top:10px">Mes blocs perso du jour</div>`+
-    perso.map((r,i)=>`<div class="bud-row"><span style="display:flex;align-items:center;gap:8px"><span class="sw-dot cat-${r.cat||guessCat(r.b)}" style="width:10px;height:10px;border-radius:3px;background:var(--c);display:inline-block"></span>${esc(r.t)} · ${esc(r.b)}</span>
-      <button class="del" data-pdel="${i}" aria-label="Supprimer">✕</button></div>`).join("");
+  box.innerHTML=`<div class="realtag" style="margin-top:10px">Mes blocs perso ce jour</div>`+
+    perso.map((r,i)=>`<div class="bud-row"><span style="display:flex;align-items:center;gap:8px"><span class="cat-${r.cat||guessCat(r.b)}" style="width:10px;height:10px;border-radius:3px;background:var(--c);display:inline-block"></span>${esc(r.t)}${r.e?"–"+esc(r.e):""} · ${esc(r.b)}</span>
+      <button class="del" data-pdel="${i}" data-wd="${wd}" aria-label="Supprimer">✕</button></div>`).join("");
 }
 $("#perso-manage").addEventListener("click",e=>{
   const del=e.target.closest("[data-pdel]");if(!del)return;
-  const p=getPlanning();(p[planDay]=p[planDay]||[]).splice(+del.dataset.pdel,1);savePlanning(p);renderPlanning();renderNow();
+  const wd=+del.dataset.wd;const p=getPlanning();(p[wd]=p[wd]||[]).splice(+del.dataset.pdel,1);savePlanning(p);renderPlanning();renderNow();
 });
 function renderDayGrid(grid){
-  const dk=dateForWeekday(planDay);const isToday=planDay===((new Date().getDay()+6)%7);
-  $("#cal-head").textContent=new Date(dk).toLocaleDateString("fr-FR",{weekday:"long",day:"numeric",month:"long"})+(isToday?" · aujourd'hui":"");
+  const date=currentDate();const isToday=calOffset===0;
+  $("#cal-head").textContent=date.toLocaleDateString("fr-FR",{weekday:"long",day:"numeric",month:"long"})+(isToday?" · aujourd'hui":"");
   grid.className="calgrid day";
-  const slotH=52;
   let html="";
   for(let h=CAL_START;h<=CAL_END;h++){
-    html+=`<div class="hourline"><div class="hlabel">${String(h).padStart(2,"0")}:00</div><div class="hslot"></div></div>`;
+    html+=`<div class="hourline" style="height:${SLOT_H}px"><div class="hlabel">${String(h).padStart(2,"0")}h</div><div class="hslot"></div></div>`;
   }
-  // calque des événements, positionné en absolu au-dessus de la colonne horaire
   html+=`<div class="ev-layer" id="ev-layer"></div>`;
   grid.innerHTML=html;
-  const evs=dayEvents(planDay);
-  const layer=grid.querySelector("#ev-layer");
+  const evs=eventsForDate(date);const layer=grid.querySelector("#ev-layer");
+  // ligne "maintenant"
+  if(isToday){const nowM=new Date().getHours()*60+new Date().getMinutes();
+    if(nowM>=CAL_START*60&&nowM<=CAL_END*60){const ny=(nowM-CAL_START*60)/60*SLOT_H;
+      layer.insertAdjacentHTML("beforeend",`<div class="nowline" style="top:${ny}px"></div>`);}}
   evs.forEach(e=>{
     const m=toMin(e.t);if(m==null||m<CAL_START*60)return;
-    const top=(m-CAL_START*60)/60*slotH;
+    const top=(m-CAL_START*60)/60*SLOT_H;
+    const h=Math.max(22,(endMin(e,m)-m)/60*SLOT_H-2);
     const bl=document.createElement("div");bl.className="evblock cat-"+e.cat;
-    bl.style.cssText=`top:${top}px;height:${(e.real?46:42)}px`;
-    bl.innerHTML=`<div class="eb-t">${esc(e.b)}</div><div class="eb-m">${esc(e.t)}${e.n?" · "+esc(e.n):""}</div>`;
+    bl.style.cssText=`top:${top}px;height:${h}px`;
+    const endLbl=e.e?"–"+e.e:"";
+    bl.innerHTML=`<div class="eb-t">${esc(e.b)}</div><div class="eb-m">${esc(e.t)}${endLbl}${e.n?" · "+esc(e.n):""}</div>`;
     layer.appendChild(bl);
   });
 }
 function renderWeekGrid(grid){
-  const monday=dateForWeekday(0);
-  $("#cal-head").textContent="Semaine du "+new Date(monday).toLocaleDateString("fr-FR",{day:"numeric",month:"long"});
+  const monday=weekMonday(calOffset);
+  const end=new Date(monday);end.setDate(end.getDate()+6);
+  $("#cal-head").textContent=monday.toLocaleDateString("fr-FR",{day:"numeric",month:"short"})+" – "+end.toLocaleDateString("fr-FR",{day:"numeric",month:"short"});
   grid.className="calgrid week";
-  const todayWd=(new Date().getDay()+6)%7;const rowH=30;
+  const todayDk=dkOf(new Date());
   let html=`<div class="corner"></div>`;
-  for(let d=0;d<7;d++)html+=`<div class="wh ${d===todayWd?"today":""}">${DAYS_MIN[d]}</div>`;
+  for(let d=0;d<7;d++){const dt=new Date(monday);dt.setDate(dt.getDate()+d);
+    const isT=dkOf(dt)===todayDk;
+    html+=`<div class="wh ${isT?"today":""}">${DAYS_MIN[d]}<span class="wh-n">${dt.getDate()}</span></div>`;}
   for(let h=CAL_START;h<=CAL_END;h++){
-    html+=`<div class="wrow-h">${String(h).padStart(2,"0")}h</div>`;
-    for(let d=0;d<7;d++)html+=`<div class="wcell" data-d="${d}" data-h="${h}"></div>`;
+    html+=`<div class="wrow-h" style="height:${WROW_H}px">${String(h).padStart(2,"0")}h</div>`;
+    for(let d=0;d<7;d++)html+=`<div class="wcell" data-d="${d}" data-h="${h}" style="height:${WROW_H}px"></div>`;
   }
   grid.innerHTML=html;
   for(let d=0;d<7;d++){
-    dayEvents(d).forEach(e=>{
+    const dt=new Date(monday);dt.setDate(dt.getDate()+d);
+    eventsForDate(dt).forEach(e=>{
       const m=toMin(e.t);if(m==null||m<CAL_START*60)return;
       const h=Math.floor(m/60);const cell=grid.querySelector(`.wcell[data-d="${d}"][data-h="${h}"]`);if(!cell)return;
-      const top=(m-h*60)/60*rowH;
+      const top=(m-h*60)/60*WROW_H;
+      const hgt=Math.max(WROW_H-2,(endMin(e,m)-m)/60*WROW_H-1);
       const ev=document.createElement("div");ev.className="wev cat-"+e.cat;
-      ev.style.cssText=`top:${top}px;height:${rowH-2}px`;
-      ev.innerHTML=`<div class="we-t">${esc(e.b)}</div>`;ev.title=e.t+" · "+e.b+(e.n?" ("+e.n+")":"");
+      ev.style.cssText=`top:${top}px;height:${hgt}px`;
+      ev.innerHTML=`<div class="we-t">${esc(e.b)}</div>`;ev.title=e.t+(e.e?"–"+e.e:"")+" · "+e.b+(e.n?" ("+e.n+")":"");
       cell.appendChild(ev);
     });
   }
 }
-$("#vt-jour").addEventListener("click",()=>{calView="jour";renderPlanning();});
-$("#vt-sem").addEventListener("click",()=>{calView="semaine";renderPlanning();});
-$("#daynav").addEventListener("click",e=>{const b=e.target.closest("button");if(b){planDay=+b.dataset.d;renderPlanning();}});
+$("#vt-jour").addEventListener("click",()=>{calView="jour";calOffset=0;renderPlanning();});
+$("#vt-sem").addEventListener("click",()=>{calView="semaine";calOffset=0;renderPlanning();});
+$("#cal-prev").addEventListener("click",()=>{calOffset--;renderPlanning();});
+$("#cal-next").addEventListener("click",()=>{calOffset++;renderPlanning();});
+$("#cal-today").addEventListener("click",()=>{calOffset=0;renderPlanning();});
+$("#cal-date").addEventListener("change",()=>{
+  const v=$("#cal-date").value;if(!v)return;
+  const target=new Date(v+"T00:00:00");const today=new Date();today.setHours(0,0,0,0);
+  calView="jour";calOffset=Math.round((target-today)/864e5);renderPlanning();
+});
 $("#ev-add").addEventListener("click",()=>{
-  const t=$("#ev-time").value.trim(),b=$("#ev-title").value.trim();if(!b||toMin(t)==null){$("#ev-title").focus();return;}
-  const n=$("#ev-note").value.trim();const cat=$("#ev-cat").value;
-  const p=getPlanning();(p[planDay]=p[planDay]||[]).push({t,b,n,cat});savePlanning(p);
-  $("#ev-time").value="";$("#ev-title").value="";$("#ev-note").value="";renderPlanning();renderNow();
+  const t=$("#ev-time").value.trim(),e=$("#ev-end").value.trim(),b=$("#ev-title").value.trim();
+  if(!b||toMin(t)==null){$("#ev-title").focus();return;}
+  const n=$("#ev-note").value.trim();const cat=$("#ev-cat").value;const wd=wdOf(currentDate());
+  const p=getPlanning();(p[wd]=p[wd]||[]).push({t,e,b,n,cat});savePlanning(p);
+  $("#ev-time").value="";$("#ev-end").value="";$("#ev-title").value="";$("#ev-note").value="";renderPlanning();renderNow();
 });
 $("#ev-title").addEventListener("keydown",e=>{if(e.key==="Enter")$("#ev-add").click();});
 
