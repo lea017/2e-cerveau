@@ -106,14 +106,28 @@ section[role="tabpanel"]{padding-bottom:44px}
 .tile .tl{font-family:var(--f-display);font-weight:600;font-size:.9rem}
 .tile .tm{font-size:.72rem;color:var(--muted);margin-top:-2px}
 
-.now{display:block;width:100%;text-align:left;font-family:inherit;color:var(--fg);cursor:pointer;
+.now{display:block;width:100%;text-align:left;font-family:inherit;color:var(--fg);
   background:linear-gradient(135deg,var(--accent-soft),transparent 80%);border:1px solid var(--line);
   border-radius:var(--radius);padding:20px;margin-bottom:14px}
 .now .eyebrow{color:var(--accent-ink)}
 .now .task{font-family:var(--f-display);font-size:1.5rem;font-weight:600;margin:6px 0 2px;text-wrap:balance}
 .now .meta{color:var(--muted);font-size:.86rem}
-.now-go{margin-top:10px;font-size:.78rem;font-weight:600;color:var(--accent-ink);display:none}
+.now-actions{display:flex;gap:9px;margin-top:14px;flex-wrap:wrap}
+.now-start{font-family:inherit;font-size:.86rem;font-weight:600;color:#fff;background:var(--accent);border:0;border-radius:11px;padding:11px 16px;cursor:pointer;flex:1 1 auto;min-width:140px}
+.now-start:active{transform:scale(.98)}
+.now-go{font-family:inherit;font-size:.86rem;font-weight:600;color:var(--accent-ink);background:var(--surface);border:1px solid var(--line);border-radius:11px;padding:11px 16px;cursor:pointer;display:none}
 .now-go.on{display:block}
+/* Mini-minuteur démarrage 2 min */
+.kick{position:fixed;inset:0;z-index:60;background:rgba(20,28,22,.55);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;padding:24px}
+.kick-card{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:28px 24px;max-width:340px;width:100%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.35)}
+.kick-eyebrow{font-size:.74rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent-ink)}
+.kick-task{font-family:var(--f-display);font-size:1.3rem;font-weight:600;margin:8px 0 4px;text-wrap:balance}
+.kick-time{font-family:var(--f-display);font-size:3.4rem;font-weight:700;font-variant-numeric:tabular-nums;color:var(--accent);line-height:1.1;margin:10px 0}
+.kick-sub{font-size:.84rem;color:var(--muted);line-height:1.5}
+.kick-btns{display:flex;gap:10px;margin-top:20px}
+.kick-btns button{font-family:inherit;font-size:.9rem;font-weight:600;border-radius:12px;padding:12px;cursor:pointer;flex:1}
+.kick-stop{background:var(--surface);border:1px solid var(--line);color:var(--muted)}
+.kick-done{background:var(--accent);border:0;color:#fff}
 
 /* Progress cards */
 .prog-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;margin-bottom:14px}
@@ -463,6 +477,34 @@ svg.bchart{width:100%;height:150px;display:block;margin-top:8px;overflow:visible
 .hm-mlabels span{line-height:1}
 .hm-legend{display:flex;align-items:center;gap:4px;justify-content:flex-end;margin-top:8px;font-size:.7rem;color:var(--muted)}
 .hm-legend i{width:11px;height:11px;border-radius:3px}
+/* ---- Valeurs en actions ---- */
+.va{padding:13px 0;border-bottom:1px solid var(--line)}
+.va:last-child{border-bottom:0}
+.va-top{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.va-name{font-weight:700;font-size:1rem}
+.va-sc{font-weight:700;color:var(--accent-ink);font-variant-numeric:tabular-nums}
+.va-sc.muted{color:var(--muted)}
+.va-bar{height:8px;border-radius:999px;background:var(--line);overflow:hidden;margin:7px 0 9px}
+.va-bar i{display:block;height:100%;background:var(--accent);border-radius:999px}
+.va-habs{display:flex;gap:6px;flex-wrap:wrap;font-size:.76rem;color:var(--muted)}
+.va-chip{background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:3px 10px;color:var(--fg)}
+/* ---- Anti-scroll ---- */
+.sc-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.sc-today{font-family:var(--f-display);font-size:2rem;font-weight:700;color:var(--accent-ink);line-height:1;flex:none}
+.sc-btns{display:flex;gap:9px;margin-top:10px;flex-wrap:wrap}
+.sc-btns button{font-family:inherit;font-size:.84rem;font-weight:600;border-radius:11px;padding:11px 14px;cursor:pointer;flex:1 1 auto;min-width:140px}
+.sc-mark{background:var(--surface);border:1px solid var(--line);color:var(--muted)}
+.sc-instead{background:var(--accent-soft);border:1px solid var(--accent);color:var(--accent-ink)}
+/* ---- Récap hebdo ---- */
+.recap{background:linear-gradient(135deg,var(--accent-soft),transparent 85%);border:1px solid var(--accent);border-radius:var(--radius);padding:18px 18px 16px;margin-bottom:14px}
+.recap-head{display:flex;justify-content:space-between;align-items:center}
+.recap-eyebrow{font-family:var(--f-display);font-size:1.15rem;font-weight:700}
+.recap-x{background:none;border:0;color:var(--muted);font-size:1rem;cursor:pointer;padding:4px}
+.recap-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0 4px}
+.recap-cell{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:11px 13px}
+.recap-cell .rv{font-family:var(--f-display);font-size:1.35rem;font-weight:700;color:var(--accent-ink);line-height:1}
+.recap-cell .rk{font-size:.74rem;color:var(--muted);margin-top:3px}
+.recap-note{font-size:.84rem;color:var(--fg);line-height:1.5;margin-top:10px;opacity:.9}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .hm-cell.l1{background:#35543b}:root:not([data-theme="light"]) .hm-cell.l2{background:#4a7a53}:root:not([data-theme="light"]) .hm-cell.l3{background:#6fa876}}
 :root[data-theme="dark"] .hm-cell.l1{background:#35543b}:root[data-theme="dark"] .hm-cell.l2{background:#4a7a53}:root[data-theme="dark"] .hm-cell.l3{background:#6fa876}
 </style>
@@ -493,13 +535,38 @@ svg.bchart{width:100%;height:150px;display:block;margin-top:8px;overflow:visible
 <main>
 <!-- HOME -->
 <section role="tabpanel" data-view="home">
+  <!-- Récap de la semaine (dimanche soir / lundi) -->
+  <div class="recap" id="recap" hidden>
+    <div class="recap-head">
+      <div class="recap-eyebrow" id="recap-title">Ta semaine</div>
+      <button class="recap-x" id="recap-x" aria-label="Fermer">✕</button>
+    </div>
+    <div class="recap-grid" id="recap-grid"></div>
+    <div class="recap-note" id="recap-note"></div>
+  </div>
   <!-- Action du moment -->
-  <button class="now" id="now-block" data-v="">
-    <div class="eyebrow">Maintenant</div>
+  <div class="now" id="now-block">
+    <div class="eyebrow" id="now-eyebrow">Maintenant</div>
     <div class="task" id="now-task">—</div>
     <div class="meta" id="now-meta"></div>
-    <div class="now-go" id="now-go"></div>
-  </button>
+    <div class="now-actions">
+      <button class="now-start" id="now-start">Je m'y mets · 2 min</button>
+      <button class="now-go" id="now-go" data-v="">Ouvrir →</button>
+    </div>
+  </div>
+  <!-- Mini-minuteur "démarrage 2 min" -->
+  <div class="kick" id="kick" hidden>
+    <div class="kick-card">
+      <div class="kick-eyebrow">Juste 2 minutes</div>
+      <div class="kick-task" id="kick-task"></div>
+      <div class="kick-time" id="kick-time">2:00</div>
+      <div class="kick-sub">Commence, c'est tout. Si tu veux arrêter après, tu arrêtes.</div>
+      <div class="kick-btns">
+        <button class="kick-stop" id="kick-stop">Arrêter</button>
+        <button class="kick-done" id="kick-done">C'est lancé ✓</button>
+      </div>
+    </div>
+  </div>
 
   <!-- Progression du jour -->
   <div class="prog-cards">
@@ -516,6 +583,22 @@ svg.bchart{width:100%;height:150px;display:block;margin-top:8px;overflow:visible
       <span class="pc-big" id="pc-pts">0</span>
       <span class="pc-k">Points</span>
     </button>
+  </div>
+
+  <!-- Anti-scroll -->
+  <div class="card scroll-card">
+    <div class="sc-head">
+      <div>
+        <h3 style="margin:0"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></svg> Conscience du scroll</h3>
+        <div class="sub" style="margin-top:2px" id="sc-sub">Repère tes moments de scroll pour mieux les désamorcer.</div>
+      </div>
+      <span class="sc-today" id="sc-today">0</span>
+    </div>
+    <svg class="bchart" id="sc-chart" viewBox="0 0 320 120" preserveAspectRatio="none" aria-hidden="true" style="height:84px"></svg>
+    <div class="sc-btns">
+      <button class="sc-mark" id="sc-mark">+1 · j'ai scrollé pour rien</button>
+      <button class="sc-instead" id="sc-instead">Plutôt 2 min utiles →</button>
+    </div>
   </div>
 
   <!-- Ma journée -->
@@ -863,6 +946,11 @@ svg.bchart{width:100%;height:150px;display:block;margin-top:8px;overflow:visible
       <input id="goal-sub" placeholder="Pourquoi / détail" maxlength="40">
       <button id="goal-add">+</button>
     </div>
+  </div>
+  <div class="card">
+    <h3><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2L3 14h7l-1 8 10-12h-7z"/></svg> Mes valeurs en actions</h3>
+    <div class="sub">Ce que tu fais au quotidien nourrit ce que tu veux devenir · 14 derniers jours</div>
+    <div id="val-actions"></div>
   </div>
   <div class="card">
     <h3><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l2.5 5.5 6 .5-4.5 4 1.4 5.8L12 15.8 6.6 18.8 8 13 3.5 9l6-.5z"/></svg> Mes valeurs</h3>
@@ -1278,22 +1366,136 @@ $("#sheet").addEventListener("click",e=>{if(e.target.id==="sheet")closeSheet();c
 
 /* ---- Home (dashboard du jour, ton neutre) ---- */
 function daySession(){return SESS_ORDER[(new Date().getDay()+6)%7];}
-function renderNow(){
-  const h=new Date().getHours();const habits=store.get("habits_"+dayKey(),{});
-  const H=getHabits();const doneH=H.filter(x=>habits[x.id]).length;
-  const todos=store.get("todos",DEFAULT_TODOS);const nextTodo=todos.find(t=>!t.done&&t.p==="u")||todos.find(t=>!t.done);
-  let task,meta,target="";
-  if(h<9){task="Lumière du matin";meta="15 min dehors ou à la fenêtre.";target="habitudes";}
-  else if(h>=20&&h<22){const s=daySession();if(s==="Repos"){task="Récupération";meta="Jour off.";target="habitudes";}else{task="Séance "+s;meta="Programme du jour.";target="seances";}}
-  else if(h>=22){task="Coucher";meta="Heure de coucher régulière.";target="sommeil";}
-  else if(doneH<H.length){task="Habitudes du jour";meta=doneH+"/"+H.length+" faites.";target="habitudes";}
-  else if(nextTodo){task=nextTodo.t;meta="Prochaine tâche prioritaire.";target="todo";}
-  else{task="Tout est à jour";meta="Rien d'urgent pour l'instant.";target="";}
-  $("#now-task").textContent=task;$("#now-meta").textContent=meta;
-  $("#now-block").dataset.v=target;
-  $("#now-go").textContent=target?"Ouvrir →":"";$("#now-go").classList.toggle("on",!!target);
-  renderValBanner();renderProgCards();renderHomeToday();renderHomeTodos();
+let nowAction=null; // {task, target}
+function nextCourseToday(){
+  const wd=(new Date().getDay()+6)%7;const real=getReal()[dateForWeekday(wd)]||[];
+  const nowM=new Date().getHours()*60+new Date().getMinutes();
+  return real.map(r=>{const[hh,mm]=String(r.t).split(":").map(Number);return{...r,min:hh*60+(mm||0)};})
+    .filter(r=>r.min>nowM).sort((a,b)=>a.min-b.min)[0]||null;
 }
+function daysUntil(d){const t=new Date();t.setHours(0,0,0,0);const e=new Date(d);e.setHours(0,0,0,0);return Math.round((e-t)/864e5);}
+function nextExam(){return getExams().map(e=>({...e,j:daysUntil(e.d)})).filter(e=>e.j>=0).sort((a,b)=>a.j-b.j)[0]||null;}
+function pickNow(){
+  const now=new Date(),h=now.getHours(),m=now.getMinutes(),cur=h*60+m;
+  const habits=store.get("habits_"+dayKey(),{});const H=getHabits();
+  const doneH=H.filter(x=>habits[x.id]).length;
+  const todos=store.get("todos",DEFAULT_TODOS);const urgent=todos.find(t=>!t.done&&t.p==="u");
+  const sess=daySession();const ex=nextExam();const nextC=nextCourseToday();
+  // 1. Un cours commence dans moins d'1h → se préparer
+  if(nextC&&nextC.min-cur<=60&&nextC.min-cur>0)
+    return {task:"Prépare : "+nextC.b,reason:"Cours à "+nextC.t+(nextC.n?" · "+nextC.n:"")+". Rassemble tes affaires.",target:"planning",kick:false};
+  // 2. Matin tôt : lumière
+  if(h<8&&!habits.lumiere)
+    return {task:"Lumière du matin",reason:"15 min dehors ou à la fenêtre pour lancer la journée.",target:"habitudes",kick:true};
+  // 3. Exam proche (≤5j) en journée/soirée de révision : réviser
+  if(ex&&ex.j<=5&&h>=17&&h<22)
+    return {task:"Réviser "+ex.n,reason:"Exam dans "+(ex.j===0?"aujourd'hui":ex.j+" jour"+(ex.j>1?"s":""))+". "+(ex.note||"Fiche + exos."),target:"etudes",kick:true};
+  // 4. Créneau sport du soir (20h-22h) un jour de séance
+  if(h>=19&&h<22&&sess&&sess!=="Repos")
+    return {task:"Séance "+sess,reason:"C'est ton créneau. 1h30 et c'est fait.",target:"seances",kick:false};
+  // 5. Soir : anglais avant de manger
+  if(h>=17&&h<20&&!habits.anglais)
+    return {task:"Anglais du jour",reason:"20 min en rentrant, avant de manger.",target:"etudes",kick:true};
+  // 6. Tâche urgente en attente
+  if(urgent)
+    return {task:urgent.t,reason:"Ta tâche urgente du moment.",target:"todo",kick:true};
+  // 7. Fin de journée : habitudes restantes
+  if(h>=12&&doneH<H.length){const miss=H.find(x=>!habits[x.id]);
+    return {task:miss?miss.lbl:"Habitudes du jour",reason:doneH+"/"+H.length+" faites aujourd'hui.",target:"habitudes",kick:true};}
+  // 8. Tard : coucher
+  if(h>=22)
+    return {task:"Au lit bientôt",reason:"Garde une heure de coucher régulière.",target:"sommeil",kick:false};
+  // 9. Reste des habitudes (matin)
+  if(doneH<H.length){const miss=H.find(x=>!habits[x.id]);
+    return {task:miss?miss.lbl:"Habitudes du jour",reason:doneH+"/"+H.length+" faites.",target:"habitudes",kick:true};}
+  // 10. Tout est fait
+  return {task:"Tout est à jour 🌿",reason:"Rien d'urgent. Profite, ou avance un truc qui te tient à cœur.",target:"",kick:false};
+}
+function renderNow(){
+  const a=pickNow();nowAction=a;
+  $("#now-task").textContent=a.task;$("#now-meta").textContent=a.reason;
+  $("#now-go").dataset.v=a.target;
+  $("#now-go").classList.toggle("on",!!a.target);
+  $("#now-start").hidden=!a.kick;
+  renderValBanner();renderProgCards();renderHomeToday();renderHomeTodos();renderScroll();renderRecap();
+}
+// Mini-minuteur "démarrage 2 min"
+let kickTimer=null,kickLeft=120;
+function openKick(task){
+  kickLeft=120;$("#kick-task").textContent=task||"Allez, on commence";
+  $("#kick-time").textContent="2:00";$("#kick").hidden=false;
+  clearInterval(kickTimer);
+  kickTimer=setInterval(()=>{kickLeft--;const mm=Math.floor(kickLeft/60),ss=kickLeft%60;
+    $("#kick-time").textContent=mm+":"+(ss<10?"0":"")+ss;
+    if(kickLeft<=0){clearInterval(kickTimer);$("#kick-time").textContent="C'est parti 💪";}},1000);
+}
+function closeKick(done){clearInterval(kickTimer);$("#kick").hidden=true;if(done)addPts(2);}
+$("#now-start").addEventListener("click",()=>openKick(nowAction?nowAction.task:""));
+$("#kick-stop").addEventListener("click",()=>closeKick(false));
+$("#kick-done").addEventListener("click",()=>closeKick(true));
+$("#now-go").addEventListener("click",()=>{const v=$("#now-go").dataset.v;if(v)show(v);});
+// Conscience du scroll : compteur quotidien doux + tendance 7 jours
+function scrollKey(dt){return "scroll_"+dayKey(dt);}
+function renderScroll(){
+  const today=store.get(scrollKey(),0);
+  $("#sc-today").textContent=today;
+  // moyenne 7j
+  let sum=0;const data=[];
+  for(let i=6;i>=0;i--){const dt=new Date();dt.setDate(dt.getDate()-i);const v=store.get(scrollKey(dt),0);sum+=v;
+    data.push({v,lbl:["L","M","M","J","V","S","D"][(dt.getDay()+6)%7],hl:i===0});}
+  const avg=Math.round(sum/7*10)/10;
+  $("#sc-sub").textContent=today===0?"Aucun scroll noté aujourd'hui. Bravo 🌿":"Noté sans jugement · juste pour prendre conscience.";
+  barChart($("#sc-chart"),data,{fmt:v=>v});
+}
+$("#sc-mark").addEventListener("click",()=>{
+  const k=scrollKey();store.set(k,store.get(k,0)+1);renderScroll();
+  $("#sc-mark").textContent="Noté — rien de grave, on continue";setTimeout(()=>$("#sc-mark").textContent="+1 · j'ai scrollé pour rien",1600);
+});
+$("#sc-instead").addEventListener("click",()=>openKick(nowAction&&nowAction.task&&nowAction.target?nowAction.task:"2 minutes utiles"));
+// Récap de la semaine (dimanche soir + lundi)
+function mondayOf(dt){const d=new Date(dt);d.setHours(0,0,0,0);d.setDate(d.getDate()-((d.getDay()+6)%7));return d;}
+function renderRecap(){
+  const el=$("#recap");if(!el)return;
+  const now=new Date(),dow=(now.getDay()+6)%7,h=now.getHours();
+  // Affiche le dimanche à partir de 18h, ou le lundi toute la journée
+  const show=(dow===6&&h>=18)||dow===0;
+  if(!show){el.hidden=true;return;}
+  // Semaine à résumer : la semaine écoulée (lundi dernier → dimanche)
+  const thisMon=mondayOf(now);
+  const targetMon=(dow===0)?new Date(thisMon.getTime()-7*864e5):thisMon; // lundi : semaine d'avant ; dimanche : semaine en cours qui s'achève
+  const weekId2=dayKey(targetMon);
+  if(store.get("recap_seen",null)===weekId2){el.hidden=true;return;}
+  el.hidden=false;
+  // Calculs sur les 7 jours de la semaine cible
+  const days=[];for(let i=0;i<7;i++){const d=new Date(targetMon);d.setDate(d.getDate()+i);days.push(d);}
+  const H=getHabits();
+  let reg=0;days.forEach(d=>reg+=dayScore(d));reg=Math.round(reg/7*100);
+  const musc=getMusc().filter(s=>{const k=dayKey(targetMon),e=dayKey(new Date(targetMon.getTime()+7*864e5));return s.date>=k&&s.date<e;}).length;
+  let sleepNights=0,sleepOk=0;const tgt=store.get("sleep_target","23:00");
+  days.forEach(d=>{const n=store.get("sleep_list",[]).find(x=>x.k===dayKey(d));if(n){sleepNights++;}});
+  const slList=store.get("sleep_list",[]);
+  days.forEach(d=>{const n=slList.find(x=>x.k===dayKey(d));if(n){const dur=sleepDur(n.bed,n.wake);if(dur&&dur>=420)sleepOk++;}});
+  let scroll=0;days.forEach(d=>scroll+=store.get("scroll_"+dayKey(d),0));
+  const perfectDays=days.filter(d=>dayScore(d)>=0.999).length;
+  $("#recap-title").textContent=(dow===0?"Ta semaine dernière":"Ta semaine");
+  $("#recap-grid").innerHTML=
+    `<div class="recap-cell"><div class="rv">${musc}</div><div class="rk">séances muscu</div></div>
+     <div class="recap-cell"><div class="rv">${reg}%</div><div class="rk">régularité habitudes</div></div>
+     <div class="recap-cell"><div class="rv">${sleepOk}/${sleepNights||0}</div><div class="rk">nuits ≥ 7h</div></div>
+     <div class="recap-cell"><div class="rv">${perfectDays}</div><div class="rk">jours à 100%</div></div>`;
+  // Note factuelle, sans jugement
+  let note;
+  if(reg>=70)note="Belle constance cette semaine. Tu construis quelque chose de solide.";
+  else if(reg>=40)note="Une semaine correcte. Repère le jour le plus dur et allège-le la prochaine fois.";
+  else note="Semaine en dents de scie — ça arrive. On repart cette semaine, un jour à la fois.";
+  if(scroll>0)note+=` Scroll noté : ${scroll} fois.`;
+  $("#recap-note").textContent=note;
+}
+$("#recap-x").addEventListener("click",()=>{
+  const now=new Date(),dow=(now.getDay()+6)%7;const thisMon=mondayOf(now);
+  const targetMon=(dow===0)?new Date(thisMon.getTime()-7*864e5):thisMon;
+  store.set("recap_seen",dayKey(targetMon));$("#recap").hidden=true;
+});
 const RM_C=2*Math.PI*18;
 function renderProgCards(){
   const habits=store.get("habits_"+dayKey(),{});const H=getHabits();
@@ -1332,7 +1534,6 @@ function renderValBanner(){
     <span><span class="vb-k">${p.k}</span><div class="vb-t">${esc(p.t)}</div></span>`;
 }
 function renderHomeSummary(){renderProgCards();renderHomeToday();renderHomeTodos();}
-$("#now-block").addEventListener("click",()=>{const v=$("#now-block").dataset.v;if(v)show(v);});
 $(".prog-cards").addEventListener("click",e=>{const b=e.target.closest(".pcard");if(b)show(b.dataset.v);});
 document.querySelector('[data-view="home"]').addEventListener("click",e=>{const b=e.target.closest(".editbtn[data-v]");if(b)show(b.dataset.v);});
 
@@ -2038,9 +2239,40 @@ const RULES_SEED=[
 ];
 const getValues=()=>store.get("values",VALUES_SEED);
 const getRules=()=>store.get("rules",RULES_SEED);
+// Quelles habitudes nourrissent chaque valeur (par mots-clés du nom de la valeur)
+const VAL_MAP={
+  discipline:["couche","scroll","petitdej","anglais","lecture"],
+  "dépassement":["sport","anglais","lecture"],depassement:["sport","anglais","lecture"],
+  "équilibre":["calme","lumiere","eau","skincare","couche"],equilibre:["calme","lumiere","eau","skincare","couche"],
+};
+function habitsForValue(v){
+  const key=(v.t||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"");
+  for(const k in VAL_MAP){const kk=k.normalize("NFD").replace(/[̀-ͯ]/g,"");if(key.includes(kk))return VAL_MAP[k];}
+  return [];
+}
+function valueScore(ids){
+  if(!ids.length)return null;
+  const H=getHabits();const present=ids.filter(id=>H.some(h=>h.id===id));
+  if(!present.length)return null;
+  let s=0;present.forEach(id=>s+=habitRate(id,14));
+  return Math.round(s/present.length);
+}
+function renderValActions(){
+  const V=getValues();const H=getHabits();
+  $("#val-actions").innerHTML=V.map(v=>{
+    const ids=habitsForValue(v);const sc=valueScore(ids);
+    const names=ids.map(id=>{const h=H.find(x=>x.id===id);return h?h.lbl:null;}).filter(Boolean);
+    if(!names.length)return `<div class="va"><div class="va-top"><span class="va-name">${esc(v.t)}</span><span class="va-sc muted">—</span></div>
+      <div class="va-habs">Associe des habitudes à cette valeur en les ajoutant (sport, lecture…).</div></div>`;
+    return `<div class="va"><div class="va-top"><span class="va-name">${esc(v.t)}</span><span class="va-sc">${sc}%</span></div>
+      <div class="va-bar"><i style="width:${sc}%"></i></div>
+      <div class="va-habs">${names.map(n=>`<span class="va-chip">${esc(n)}</span>`).join("")}</div></div>`;
+  }).join("")||`<div class="empty">Ajoute des valeurs pour voir ce qui les nourrit.</div>`;
+}
 let valEdit=false;
 function renderValues(){
   const V=getValues();
+  renderValActions();
   $("#values").className="values-list";
   $("#values").innerHTML=V.length?V.map(v=>`<div class="bud-row"><span style="display:flex;align-items:center;gap:9px">${ic("objectifs")}<span class="vtext" style="font-weight:600">${esc(v.t)}</span></span>
     <button class="del" data-del-v="${v.id}" aria-label="Supprimer">✕</button></div>`).join(""):`<div class="empty">Ajoute ta première valeur.</div>`;
