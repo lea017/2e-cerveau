@@ -149,6 +149,14 @@ section[role="tabpanel"]{padding-bottom:44px}
 .check .hdel{background:none;border:0;color:var(--muted);cursor:pointer;font-size:.95rem;padding:2px 5px;border-radius:7px;flex:none}
 .check .hdel:hover{color:var(--crit);background:var(--surface-2)}
 .check .streak .fire-ic{width:12px;height:12px;stroke:var(--accent-ink);fill:var(--accent-soft)}
+.check .rate{font-size:.72rem;color:var(--accent-ink);background:var(--accent-soft);padding:3px 9px;border-radius:999px;font-weight:600;flex:none;font-variant-numeric:tabular-nums}
+.hrate{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--line)}
+.hrate:last-child{border-bottom:0}
+.hrate .hr-lbl{flex:1 1 auto;min-width:0;display:flex;align-items:center;gap:7px;font-size:.9rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hrate .hr-lbl svg{width:16px;height:16px;flex:none;stroke:var(--muted)}
+.hrate .hr-bar{flex:0 0 72px;height:7px;border-radius:999px;background:var(--line);overflow:hidden}
+.hrate .hr-bar i{display:block;height:100%;background:var(--accent);border-radius:999px}
+.hrate .hr-v{flex:0 0 38px;text-align:right;font-size:.82rem;font-weight:600;color:var(--accent-ink)}
 .prog{height:7px;border-radius:999px;background:var(--line);overflow:hidden;margin-top:14px}
 .prog i{display:block;height:100%;background:var(--accent);border-radius:999px;transition:width .3s}
 .prog-row{display:flex;justify-content:space-between;align-items:center;font-size:.78rem;color:var(--muted);margin-top:8px}
@@ -485,8 +493,8 @@ svg.bchart{width:100%;height:150px;display:block;margin-top:8px;overflow:visible
       <span class="pc-k">Habitudes</span>
     </button>
     <button class="pcard" data-v="stats">
-      <span class="pc-big" id="pc-streak">0</span>
-      <span class="pc-k">Jours d'affilée</span>
+      <span class="pc-big" id="pc-streak">0%</span>
+      <span class="pc-k">Régularité 30j</span>
     </button>
     <button class="pcard" data-v="recompenses">
       <span class="pc-big" id="pc-pts">0</span>
@@ -554,13 +562,13 @@ svg.bchart{width:100%;height:150px;display:block;margin-top:8px;overflow:visible
     <svg class="chart" id="chart" viewBox="0 0 320 170" preserveAspectRatio="none" aria-hidden="true"></svg>
     <div class="stat-grid" style="margin-top:14px">
       <div class="stat"><div class="v tnum" id="s-avg">0%</div><div class="k">Moyenne 30 j</div></div>
-      <div class="stat"><div class="v tnum" id="s-best">0</div><div class="k">Meilleure série</div></div>
+      <div class="stat"><div class="v tnum" id="s-rate14">0%</div><div class="k">Régularité 14 j</div></div>
       <div class="stat"><div class="v tnum" id="s-perfect">0</div><div class="k">Jours à 100%</div></div>
     </div>
   </div>
   <div class="card">
-    <h3><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3c3 4 5 6 5 9a5 5 0 01-10 0c0-1.5.5-2.5 1.5-3.5C9 10 9 11.5 10 12c0-2 1-4 2-9z"/></svg> Séries en cours</h3>
-    <div class="sub">Ne casse pas la chaîne</div>
+    <h3><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V5"/><path d="M4 19h16"/><path d="M8 16v-3M12 16v-6M16 16v-4"/></svg> Régularité par habitude</h3>
+    <div class="sub">Sur les 14 derniers jours · vise la constance, pas la perfection</div>
     <div id="streaks"></div>
   </div>
   <div class="card">
@@ -964,7 +972,7 @@ const ICONS={
   flame:'<path d="M12 3c3 4 5 6 5 9a5 5 0 01-10 0c0-1.5.5-2.5 1.5-3.5C9 10 9 11.5 10 12c0-2 1-4 2-9z"/>',
   fire:'<path d="M12 3c3 4 5 6 5 9a5 5 0 01-10 0c0-1.5.5-2.5 1.5-3.5C9 10 9 11.5 10 12c0-2 1-4 2-9z"/>',
 };
-const HICONS={couche:'sommeil',scroll:'focus',lumiere:'humeur',eau:'budget',sport:'seances',lecture:'etudes',anglais:'journal',repas:'habitudes',calme:'focus',rien:'home'};
+const HICONS={couche:'sommeil',scroll:'focus',lumiere:'humeur',eau:'budget',sport:'seances',skincare:'valeurs',petitdej:'habitudes',lecture:'etudes',anglais:'journal',repas:'habitudes',calme:'focus',rien:'home'};
 function ic(name,cls="ic"){return `<svg class="${cls}" viewBox="0 0 24 24" aria-hidden="true">${ICONS[name]||ICONS.home}</svg>`;}
 const d=new Date();
 $("#today").textContent=d.toLocaleDateString("fr-FR",{weekday:"long",day:"numeric",month:"long"});
@@ -980,6 +988,8 @@ const DEFAULT_HABITS=[
   {id:"lumiere",emo:"🌅",lbl:"Lumière / sortir le matin"},
   {id:"eau",emo:"💧",lbl:"Boire assez d'eau"},
   {id:"sport",emo:"🏋️",lbl:"Bouger (séance ou marche)"},
+  {id:"skincare",emo:"🧴",lbl:"Skincare matin + soir"},
+  {id:"petitdej",emo:"🥣",lbl:"Petit déj préparé la veille"},
   {id:"lecture",emo:"📖",lbl:"Lire 10 min"},
   {id:"anglais",emo:"🇬🇧",lbl:"Anglais du jour"},
   {id:"calme",emo:"🧘",lbl:"Décompression / respiration"},
@@ -1014,6 +1024,28 @@ const BUD_CATS_SEED=[
 ];
 const getBudCats=()=>store.get("bud_cats",BUD_CATS_SEED);
 const budCat=(id)=>getBudCats().find(c=>c.id===id)||{id:"autre",lbl:"Autre",c:"#a0a0a0"};
+// Devine la catégorie d'un poste de budget à partir de son libellé
+function guessBudCat(t){
+  const s=(t||"").toLowerCase();
+  const rules=[
+    ["loyer",/loyer|charge|edf|élec|electric|gaz|eau\b|internet|box|assurance habit|quittance/],
+    ["courses",/course|aliment|supermarch|carrefour|lidl|leclerc|auchan|intermarch|franprix|monoprix|épicerie|boulanger|nourriture/],
+    ["transport",/transport|train|sncf|tcl|bus|métro|metro|essence|carburant|péage|parking|uber|blablacar|vélo|tram|abonnement.*transp/],
+    ["sport",/salle|basic.?fit|fitness|muscu|escalade|climb|vertical|sport|gym/],
+    ["abo",/abonnement|téléphone|telephone|forfait|mobile|sfr|orange|free|bouygues|netflix|spotify|deezer|disney|prime|canal|streaming|icloud|chatgpt|claude/],
+    ["resto",/resto|restaurant|bar\b|café|cafe|sortie|ciné|cinema|mcdo|burger|kebab|pizza|uber.?eats|deliveroo|boisson|verre|soirée/],
+    ["shopping",/shopping|vêtement|vetement|zara|shein|zalando|amazon|fnac|cadeau|déco|decoration|coiffeur|cosmét|maquillage|skincare|pharmacie/],
+  ];
+  for(const[id,re]of rules)if(re.test(s))return id;
+  return "autre";
+}
+// Au chargement : complète/corrige les dépenses dont la catégorie est absente ou invalide
+function autoCategorize(){
+  const B=getBudget(),CATS=getBudCats();let changed=false;
+  const valid=id=>CATS.some(c=>c.id===id);
+  const out=B.map(b=>{if(!b.in&&!valid(b.cat)){changed=true;return {...b,cat:guessBudCat(b.t)};}return b;});
+  if(changed)store.set("budget",out);
+}
 const BUDGET_SEED=[
   {id:"b1",t:"Salaire alternance",a:1400,in:true},
   {id:"b10",t:"CAF (prime activité + APL)",a:450,in:true},
@@ -1239,7 +1271,9 @@ function renderProgCards(){
   const doneH=H.filter(x=>habits[x.id]).length;const pct=H.length?Math.round(doneH/H.length*100):0;
   const fg=$("#rm-fg");fg.style.strokeDasharray=RM_C;fg.style.strokeDashoffset=RM_C*(1-pct/100);
   $("#rm-pct").textContent=pct+"%";
-  $("#pc-streak").textContent=Math.max(0,...H.map(h=>habitStreak(h.id)),0);
+  // Régularité moyenne sur 30 jours (globalité, pas la série)
+  let acc=0;for(let i=0;i<30;i++){const dt=new Date();dt.setDate(dt.getDate()-i);acc+=dayScore(dt);}
+  $("#pc-streak").textContent=Math.round(acc/30*100)+"%";
   $("#pc-pts").textContent=store.get("points",0);
 }
 function renderHomeToday(){
@@ -1277,9 +1311,10 @@ document.querySelector('[data-view="home"]').addEventListener("click",e=>{const 
 let habitEdit=false;
 function renderHabits(){
   const key="habits_"+dayKey();const st=store.get(key,{});const H=getHabits();
-  $("#habits").innerHTML=H.map(h=>`<div class="check ${st[h.id]?"done":""}" data-id="${h.id}">
+  $("#habits").innerHTML=H.map(h=>{const r=habitRate(h.id,14);
+    return `<div class="check ${st[h.id]?"done":""}" data-id="${h.id}">
     <span class="box">${check}</span>${ic(HICONS[h.id]||"objectifs","ic hemo")}<span class="lbl">${esc(h.lbl)}</span>
-    ${habitEdit?`<button class="hdel" data-del="${h.id}" aria-label="Supprimer">✕</button>`:`<span class="streak">${ic("fire","ic fire-ic")} ${habitStreak(h.id)}</span>`}</div>`).join("");
+    ${habitEdit?`<button class="hdel" data-del="${h.id}" aria-label="Supprimer">✕</button>`:`<span class="rate" title="Régularité sur 14 jours">${r}%</span>`}</div>`;}).join("");
   const done=H.filter(h=>st[h.id]).length,pct=H.length?Math.round(done/H.length*100):0;
   $("#habit-bar").style.width=pct+"%";$("#habit-pct").textContent=pct+" %";
   const days=["L","M","M","J","V","S","D"];const wd=(new Date().getDay()+6)%7;
@@ -1293,6 +1328,12 @@ function habitStreak(id){
   let n=0;const dt=new Date();
   for(let i=0;i<365;i++){const s=store.get("habits_"+dayKey(dt),{});if(s[id]){n++;dt.setDate(dt.getDate()-1);}else break;}
   return n;
+}
+// Régularité : % de jours faits sur les N derniers jours (ne retombe pas à 0 si on saute un jour)
+function habitRate(id,N){
+  let done=0;const dt=new Date();
+  for(let i=0;i<N;i++){const s=store.get("habits_"+dayKey(dt),{});if(s[id])done++;dt.setDate(dt.getDate()-1);}
+  return Math.round(done/N*100);
 }
 $("#habits").addEventListener("click",e=>{
   const del=e.target.closest(".hdel");
@@ -1351,10 +1392,14 @@ function renderStats(){
     <path d="${dLine}" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
     <circle cx="${xs(N-1)}" cy="${ys(pts[N-1])}" r="4" fill="var(--accent)"/>`;
   const avg=Math.round(pts.reduce((a,b)=>a+b,0)/N*100);
-  let best=0,cur=0,perfect=0;pts.forEach(v=>{if(v>=0.999){perfect++;cur++;best=Math.max(best,cur);}else cur=0;});
-  $("#s-avg").textContent=avg+"%";$("#s-best").textContent=best;$("#s-perfect").textContent=perfect;
+  let perfect=0;pts.forEach(v=>{if(v>=0.999)perfect++;});
+  const rate14=Math.round(pts.slice(-14).reduce((a,b)=>a+b,0)/14*100);
+  $("#s-avg").textContent=avg+"%";$("#s-rate14").textContent=rate14+"%";$("#s-perfect").textContent=perfect;
   const H=getHabits();
-  $("#streaks").innerHTML=H.map(h=>`<div class="bud-row"><span style="display:flex;align-items:center;gap:8px">${ic(HICONS[h.id]||"objectifs")} ${h.lbl}</span><span class="amt" style="display:inline-flex;align-items:center;gap:4px">${ic("fire")} ${habitStreak(h.id)} j</span></div>`).join("")||`<div class="sub">Ajoute des habitudes pour suivre tes séries.</div>`;
+  // Régularité par habitude : barre + % (pas de série qui retombe à 0)
+  $("#streaks").innerHTML=H.map(h=>{const r=habitRate(h.id,14);
+    return `<div class="hrate"><span class="hr-lbl">${ic(HICONS[h.id]||"objectifs")} ${esc(h.lbl)}</span>
+      <span class="hr-bar"><i style="width:${r}%"></i></span><span class="hr-v tnum">${r}%</span></div>`;}).join("")||`<div class="sub">Ajoute des habitudes pour suivre ta régularité.</div>`;
   let hDone=0,hTot=0;for(let i=0;i<7;i++){const dt=new Date();dt.setDate(dt.getDate()-((new Date().getDay()+6)%7)+i);if(dt<=new Date()){hTot++;if(dayScore(dt)>=0.999)hDone++;}}
   const fsec=store.get("focus_week_"+weekId(),{min:0,n:0});
   const bw=(icn,lbl,val)=>`<div class="bud-row"><span style="display:flex;align-items:center;gap:8px">${ic(icn)} ${lbl}</span><span class="amt">${val}</span></div>`;
@@ -1748,6 +1793,7 @@ $("#goal-add").addEventListener("click",()=>{
 });
 let budPickCat="courses",budCatEdit=false;
 function renderBudget(){
+  autoCategorize();
   const B=getBudget(),CATS=getBudCats();
   const inc=B.filter(b=>b.in).reduce((s,b)=>s+b.a,0),out=B.filter(b=>!b.in).reduce((s,b)=>s+b.a,0);
   const net=inc-out;
