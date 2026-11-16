@@ -1,6 +1,14 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="claude:viewport-fit-sides" content="cover">
 <title>2e Cerveau</title>
 <style>
+/* Reset de base (autonome, hors Claude) */
+html{-webkit-text-size-adjust:100%}
+img{max-width:100%}
 /* Layout : app en tuiles + modules, nav par vues (#hash). Palette blanc lumineux & vert. */
 /* Thème unique : blanc cassé & vert, toujours clair (pas de mode sombre) */
 :root{
@@ -373,7 +381,8 @@ svg.chart{width:100%;height:170px;display:block;margin-top:6px;overflow:visible}
 .valbanner .vb-k{font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600}
 .valbanner .vb-t{font-weight:600;font-size:.92rem;margin-top:1px}
 </style>
-
+</head>
+<body>
 <header>
   <div class="head-row">
     <div class="brand"><span class="dot"></span><h1>2e Cerveau</h1></div>
@@ -1652,3 +1661,6 @@ renderAll();
   });
 })();
 </script>
+
+</body>
+</html>
