@@ -290,11 +290,11 @@ svg.chart{width:100%;height:170px;display:block;margin-top:6px;overflow:visible}
 .viewtog{display:flex;gap:4px;background:var(--surface-2);border-radius:999px;padding:3px}
 .viewtog button{border:0;background:none;font-family:inherit;font-weight:600;font-size:.8rem;color:var(--muted);padding:6px 14px;border-radius:999px;cursor:pointer}
 .viewtog button[aria-current="true"]{background:var(--accent);color:#fff}
-/* Catégories en pastel doux, distincts mais harmonieux */
-.cat-cours{--c:#8ab4a0;--cs:#e4efe9;--ci:#4d7a66}
-.cat-revision{--c:#a7c3d9;--cs:#e8eff5;--ci:#5c7f9c}
-.cat-sport{--c:#e3b58c;--cs:#f6ebdf;--ci:#9a6b40}
-.cat-perso{--c:#c6aed6;--cs:#efe8f4;--ci:#7d5f94}
+/* Catégories : 4 verts pastel distincts (du plus profond au plus tendre) */
+.cat-cours{--c:#6f9e85;--cs:#dde9e2;--ci:#456b57}
+.cat-revision{--c:#9cc2a0;--cs:#e4efe3;--ci:#527a56}
+.cat-sport{--c:#b9d2a0;--cs:#ecf3e2;--ci:#6a8a4a}
+.cat-perso{--c:#cfe0b4;--cs:#f2f6e8;--ci:#7c9456}
 .cal-nav{display:flex;align-items:center;gap:8px;margin:12px 0 4px}
 .cal-arrow{flex:none;width:34px;height:34px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--accent-ink);font-size:1.3rem;line-height:1;cursor:pointer;display:grid;place-items:center}
 .cal-arrow:active{background:var(--accent-soft)}
@@ -945,7 +945,7 @@ function getPlanning(){return store.get("planning",PLANNING_SEED);}
 function savePlanning(p){store.set("planning",p);}
 /* Events réels importés du calendrier (par date AAAA-MM-JJ). Mis à jour sur demande. */
 const REAL_EVENTS_SEED={
-  "2026-11-16":[{t:"08:15",e:"10:15",b:"Atelier écrit anglais (ORA)",n:"F.1130_B"},{t:"10:30",e:"12:30",b:"IP.Com (TP)",n:"F.2240"},{t:"14:00",e:"18:15",b:"Simulation numérique (TP)",n:"F.2250"}],
+  "2026-11-16":[{t:"08:15",e:"10:15",b:"Atelier écrit anglais (ORA)",n:"F.1130_B"},{t:"10:30",e:"12:30",b:"IP.Com (TP)",n:"F.2240"},{t:"14:00",e:"18:00",b:"Simulation numérique (TP)",n:"F.2250"}],
   "2026-11-17":[{t:"08:15",e:"10:15",b:"Rhéologie TD",n:"E.118 Boole"},{t:"10:30",e:"12:30",b:"IP.Com (TP)",n:"F.2240"},{t:"14:00",e:"16:00",b:"TT TD MMA",n:"E.201"}],
   "2026-11-18":[{t:"08:15",e:"10:15",b:"MPO CM",n:"F.1230"},{t:"10:30",e:"12:30",b:"MPO CM",n:"F.1180"},{t:"14:00",e:"16:00",b:"Business plan (CM)",n:"Amphi3"},{t:"16:15",e:"18:15",b:"Business plan (CM)",n:"Amphi3"}],
   "2026-11-19":[{t:"08:15",e:"10:15",b:"Anglais professionnel (TD)",n:"E.201"},{t:"10:30",e:"12:30",b:"PCCP autonomie",n:"F.2290"},{t:"16:15",e:"18:15",b:"Conduite de projet (CM)",n:"F.1240"}],
