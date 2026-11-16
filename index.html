@@ -290,11 +290,11 @@ svg.chart{width:100%;height:170px;display:block;margin-top:6px;overflow:visible}
 .viewtog{display:flex;gap:4px;background:var(--surface-2);border-radius:999px;padding:3px}
 .viewtog button{border:0;background:none;font-family:inherit;font-weight:600;font-size:.8rem;color:var(--muted);padding:6px 14px;border-radius:999px;cursor:pointer}
 .viewtog button[aria-current="true"]{background:var(--accent);color:#fff}
-/* Catégories : verts très tranchés, fonds pleins et distincts */
-.cat-cours{--c:#1f4328;--cs:#aecbb4;--ci:#153020}
-.cat-revision{--c:#3f8a3a;--cs:#c2e6b8;--ci:#2b5f26}
-.cat-sport{--c:#9bbf1e;--cs:#e4f0b0;--ci:#54700f}
-.cat-perso{--c:#5fb89a;--cs:#c5ece0;--ci:#2f6b57}
+/* Catégories en pastel doux, distincts mais harmonieux */
+.cat-cours{--c:#8ab4a0;--cs:#e4efe9;--ci:#4d7a66}
+.cat-revision{--c:#a7c3d9;--cs:#e8eff5;--ci:#5c7f9c}
+.cat-sport{--c:#e3b58c;--cs:#f6ebdf;--ci:#9a6b40}
+.cat-perso{--c:#c6aed6;--cs:#efe8f4;--ci:#7d5f94}
 .cal-nav{display:flex;align-items:center;gap:8px;margin:12px 0 4px}
 .cal-arrow{flex:none;width:34px;height:34px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--accent-ink);font-size:1.3rem;line-height:1;cursor:pointer;display:grid;place-items:center}
 .cal-arrow:active{background:var(--accent-soft)}
@@ -1321,14 +1321,15 @@ function renderDayGrid(grid){
       layer.insertAdjacentHTML("beforeend",`<div class="nowline" style="top:${ny}px"></div>`);}}
   evs.forEach((e,idx)=>{
     const m=toMin(e.t);if(m==null||m<CAL_START*60)return;
-    const em=endMin(e,m);
+    const realEnd=toMin(e.e);                 // heure de fin réelle (si présente)
+    const em=realEnd!=null&&realEnd>m?realEnd:m+60; // durée visuelle (1h par défaut si pas de fin)
     const top=(m-CAL_START*60)/60*SLOT_H;
     const h=Math.max(24,(em-m)/60*SLOT_H-2);
     const bl=document.createElement("div");bl.className="evblock cat-"+e.cat;
     bl.style.cssText=`top:${top}px;height:${h}px`;
-    const endLbl=minToStr(em); // toujours une heure de fin (réelle ou estimée)
-    bl.innerHTML=`<div class="eb-t">${esc(e.b)}</div><div class="eb-m">${esc(e.t)}–${endLbl}${e.n?" · "+esc(e.n):""}</div>`;
-    bl.dataset.ev=JSON.stringify({t:e.t,e:endLbl,realEnd:!!toMin(e.e),b:e.b,n:e.n,cat:e.cat});
+    const timeLbl=realEnd!=null?esc(e.t)+"–"+esc(e.e):esc(e.t); // n'affiche la fin QUE si réelle
+    bl.innerHTML=`<div class="eb-t">${esc(e.b)}</div><div class="eb-m">${timeLbl}${e.n?" · "+esc(e.n):""}</div>`;
+    bl.dataset.ev=JSON.stringify({t:e.t,e:realEnd!=null?e.e:"",b:e.b,n:e.n,cat:e.cat});
     layer.appendChild(bl);
   });
 }
@@ -1355,11 +1356,12 @@ function renderWeekGrid(grid){
       const h=Math.floor(m/60);const cell=grid.querySelector(`.wcell[data-d="${d}"][data-h="${h}"]`);if(!cell)return;
       const top=(m-h*60)/60*WROW_H;
       const hgt=Math.max(WROW_H-2,(endMin(e,m)-m)/60*WROW_H-1);
-      const em=endMin(e,m);
+      const realEnd=toMin(e.e);
       const ev=document.createElement("div");ev.className="wev cat-"+e.cat;
       ev.style.cssText=`top:${top}px;height:${hgt}px`;
-      ev.innerHTML=`<div class="we-t">${esc(e.b)}</div>`;ev.title=e.t+"–"+minToStr(em)+" · "+e.b+(e.n?" ("+e.n+")":"");
-      ev.dataset.ev=JSON.stringify({t:e.t,e:minToStr(em),realEnd:!!toMin(e.e),b:e.b,n:e.n,cat:e.cat});
+      ev.innerHTML=`<div class="we-t">${esc(e.b)}</div>`;
+      ev.title=(realEnd!=null?e.t+"–"+e.e:e.t)+" · "+e.b+(e.n?" ("+e.n+")":"");
+      ev.dataset.ev=JSON.stringify({t:e.t,e:realEnd!=null?e.e:"",b:e.b,n:e.n,cat:e.cat});
       cell.appendChild(ev);
     });
   }
@@ -1367,12 +1369,11 @@ function renderWeekGrid(grid){
 // Détail d'un événement au clic
 function openEvDetail(ev){
   const cat=CATS[ev.cat]||ev.cat;
-  const endTxt=ev.e?(ev.realEnd===false?ev.e+" (estimée)":ev.e):"";
   $("#evd-content").innerHTML=`
     <div class="evd-cat cat-${ev.cat}"><span class="sw" style="background:var(--c)"></span>${cat}</div>
     <div class="evd-title">${esc(ev.b)}</div>
     <div class="evd-row"><span class="evd-k">Début</span><span>${esc(ev.t)}</span></div>
-    ${endTxt?`<div class="evd-row"><span class="evd-k">Fin</span><span>${esc(endTxt)}</span></div>`:""}
+    ${ev.e?`<div class="evd-row"><span class="evd-k">Fin</span><span>${esc(ev.e)}</span></div>`:""}
     ${ev.n?`<div class="evd-row"><span class="evd-k">Lieu</span><span>${esc(ev.n)}</span></div>`:""}`;
   $("#evdetail").hidden=false;$("#fab").hidden=true;
 }
