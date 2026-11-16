@@ -35,7 +35,11 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .brand{display:flex;align-items:center;gap:9px}
 .brand h1{font-size:1.3rem}
 .brand .dot{width:11px;height:11px;border-radius:50%;background:var(--accent);flex:none}
-.date{font-size:.8rem;color:var(--muted);text-transform:capitalize;margin-left:4px}
+.date{font-size:.8rem;color:var(--muted);text-transform:capitalize;margin-left:10px}
+.sync-badge{font-size:.68rem;font-weight:600;padding:3px 9px;border-radius:999px;background:var(--surface-2);color:var(--muted);white-space:nowrap}
+.sync-badge.ok{background:var(--accent-soft);color:var(--accent-ink)}
+.sync-badge.err{background:#f3e3d0;color:#9a6a2a}
+.sync-badge.sync{background:var(--surface-2);color:var(--muted)}
 .theme-btn{margin-left:auto;background:var(--surface);border:1px solid var(--line);color:var(--muted);
   width:34px;height:34px;border-radius:10px;cursor:pointer;font-size:1rem;display:grid;place-items:center}
 nav{display:flex;gap:6px;overflow-x:auto;padding-block:12px 2px;margin-top:8px;scrollbar-width:none}
@@ -348,7 +352,8 @@ svg.chart{width:100%;height:170px;display:block;margin-top:6px;overflow:visible}
 <header>
   <div class="head-row">
     <div class="brand"><span class="dot"></span><h1>2e Cerveau</h1></div>
-    <span class="date" id="today" style="margin-left:auto"></span>
+    <span class="sync-badge" id="sync-badge" style="margin-left:auto">Synchro…</span>
+    <span class="date" id="today"></span>
   </div>
   <nav id="nav" hidden>
     <button data-v="home" aria-current="true">Accueil</button>
@@ -754,10 +759,43 @@ svg.chart{width:100%;height:170px;display:block;margin-top:6px;overflow:visible}
 <script>
 "use strict";
 const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+
+/* ===== Synchro cloud (Supabase) : mêmes données sur PC et téléphone ===== */
+const SB_URL="https://uvyasnsincpvvkfaokfj.supabase.co";
+const SB_KEY="sb_publishable_Qbqpu9XxXVq8kwwNSJaTsA_e0slVYdj";
+const SB_ROW="lea"; // identifiant du jeu de données partagé
+const SB_HEAD={apikey:SB_KEY,Authorization:"Bearer "+SB_KEY,"Content-Type":"application/json"};
+let sbPushT=null,sbReady=false;
 const store={
   get(k,d){try{const v=localStorage.getItem("c2_"+k);return v==null?d:JSON.parse(v)}catch(e){return d}},
-  set(k,v){try{localStorage.setItem("c2_"+k,JSON.stringify(v))}catch(e){}}
+  set(k,v){try{localStorage.setItem("c2_"+k,JSON.stringify(v))}catch(e){} sbSchedulePush();}
 };
+// Récupère tout le localStorage c2_* en un objet
+function collectState(){const o={};try{for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&k.startsWith("c2_"))o[k]=localStorage.getItem(k);}}catch(e){}return o;}
+// Pousse l'état complet vers Supabase (débordé pour ne pas spammer)
+function sbSchedulePush(){if(!sbReady)return;clearTimeout(sbPushT);sbPushT=setTimeout(sbPush,900);}
+async function sbPush(){
+  try{
+    const body={id:SB_ROW,data:collectState(),updated_at:new Date().toISOString()};
+    await fetch(SB_URL+"/rest/v1/app_data",{method:"POST",headers:{...SB_HEAD,Prefer:"resolution=merge-duplicates,return=minimal"},body:JSON.stringify(body)});
+    setSyncBadge("ok");
+  }catch(e){setSyncBadge("err");}
+}
+// Tire l'état depuis Supabase et l'applique (au démarrage)
+async function sbPull(){
+  try{
+    const r=await fetch(SB_URL+"/rest/v1/app_data?id=eq."+SB_ROW+"&select=data,updated_at",{headers:SB_HEAD});
+    if(!r.ok)return false;
+    const rows=await r.json();if(!rows.length||!rows[0].data)return false;
+    const remote=rows[0].data;
+    for(const k in remote){try{localStorage.setItem(k,remote[k]);}catch(e){}}
+    return true;
+  }catch(e){return false;}
+}
+function setSyncBadge(s){const el=$("#sync-badge");if(!el)return;
+  el.className="sync-badge "+s;
+  el.textContent=s==="ok"?"Synchronisé ✓":s==="err"?"Hors ligne":"Synchro…";}
+
 const dayKey=(dt=new Date())=>dt.toISOString().slice(0,10);
 const check=`<svg viewBox="0 0 14 14"><path d="M2 7l3.5 3.5L12 3"/></svg>`;
 /* Icônes au trait, monochromes (vert via currentColor/stroke) */
@@ -1583,9 +1621,27 @@ $("#ics-sync").addEventListener("click",()=>syncICS(false));
  // auto-synchro si jamais fait ou > 6h
  if(Date.now()-last>6*3600e3)syncICS(true);}
 
+/* ---- Rendu complet (réutilisable après synchro) ---- */
+function renderAll(){
+  renderPts();renderNow();renderHomeSummary();renderHabits();renderPlanning();renderTodos();renderRoutines();renderValues();
+  renderSessChips();renderSessExos();renderExams();renderToeic();renderJournal();renderBudget();renderGoals();
+  bindMood("#mood","mood");bindMood("#energy","energy");fRender();renderFocus();
+}
+
 /* ---- Init ---- */
-renderPts();renderNow();renderHomeSummary();renderHabits();renderPlanning();renderTodos();renderRoutines();renderValues();
-renderSessChips();renderSessExos();renderExams();renderToeic();renderJournal();renderBudget();renderGoals();
-bindMood("#mood","mood");bindMood("#energy","energy");fRender();renderFocus();
+renderAll();
 {const h=location.hash.slice(1);if(h&&$(`#nav button[data-v="${h}"]`))show(h);}
+
+/* ---- Synchro cloud au démarrage ---- */
+(async()=>{
+  setSyncBadge("sync");
+  const got=await sbPull();
+  sbReady=true;
+  if(got){renderAll();setSyncBadge("ok");}
+  else{setSyncBadge("ok");sbPush();} // première fois : on envoie l'état local
+  // re-synchro quand on revient sur l'appli (autre appareil a pu modifier)
+  document.addEventListener("visibilitychange",async()=>{
+    if(!document.hidden){const g=await sbPull();if(g)renderAll();}
+  });
+})();
 </script>
