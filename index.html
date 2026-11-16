@@ -247,6 +247,41 @@ svg.chart{width:100%;height:170px;display:block;margin-top:6px;overflow:visible}
 .daynav button[aria-current="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
 .daynav button.has::after{content:"";display:block;width:4px;height:4px;border-radius:50%;background:currentColor;margin:3px auto 0;opacity:.6}
 .empty{color:var(--muted);font-size:.86rem;text-align:center;padding:18px 0}
+
+/* Calendrier visuel */
+.viewtog{display:flex;gap:4px;background:var(--surface-2);border-radius:999px;padding:3px}
+.viewtog button{border:0;background:none;font-family:inherit;font-weight:600;font-size:.8rem;color:var(--muted);padding:6px 14px;border-radius:999px;cursor:pointer}
+.viewtog button[aria-current="true"]{background:var(--accent);color:#fff}
+.cat-cours{--c:#5a86b0;--cs:#e4edf4}
+.cat-sport{--c:#c08a4a;--cs:#f3e8d6}
+.cat-revision{--c:#7a9a6b;--cs:#e8efe0}
+.cat-perso{--c:#9a7fb0;--cs:#ece4f2}
+.cal-head{font-family:var(--f-display);font-weight:600;font-size:.95rem;margin:12px 0 2px;text-transform:capitalize}
+.cal-scroll{max-height:62vh;overflow-y:auto;border:1px solid var(--line);border-radius:12px;margin-top:10px;background:var(--surface)}
+.calgrid{position:relative}
+/* Vue JOUR */
+.calgrid.day{display:block;position:relative}
+.calgrid.day .hourline{display:flex;height:52px;border-bottom:1px solid var(--line)}
+.calgrid.day .hourline:last-child{border-bottom:0}
+.calgrid.day .hlabel{flex:0 0 46px;font-size:.68rem;color:var(--muted);text-align:right;padding:3px 8px 0 0;font-variant-numeric:tabular-nums}
+.calgrid.day .hslot{flex:1;border-left:1px solid var(--line)}
+.calgrid.day .ev-layer{position:absolute;left:46px;right:4px;top:0;bottom:0}
+.calgrid.day .evblock{position:absolute;left:4px;right:0;border-radius:7px;padding:3px 8px;overflow:hidden;
+  background:var(--cs);border-left:3px solid var(--c);cursor:pointer}
+.calgrid.day .evblock .eb-t{font-size:.76rem;font-weight:600;color:var(--fg);line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.calgrid.day .evblock .eb-m{font-size:.64rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* Vue SEMAINE */
+.calgrid.week{display:grid;grid-template-columns:34px repeat(7,1fr);font-size:.6rem}
+.calgrid.week .wh{position:sticky;top:0;background:var(--surface);z-index:2;text-align:center;padding:5px 0;font-weight:700;color:var(--muted);border-bottom:1px solid var(--line);font-size:.62rem}
+.calgrid.week .wh.today{color:var(--accent)}
+.calgrid.week .corner{position:sticky;top:0;background:var(--surface);z-index:2;border-bottom:1px solid var(--line)}
+.calgrid.week .wrow-h{grid-column:1;font-size:.58rem;color:var(--muted);text-align:right;padding:2px 4px 0 0;border-top:1px solid var(--line);min-height:30px}
+.calgrid.week .wcell{border-top:1px solid var(--line);border-left:1px solid var(--line);position:relative;min-height:30px}
+.calgrid.week .wev{position:absolute;left:1px;right:1px;border-radius:4px;background:var(--cs);border-left:2px solid var(--c);padding:1px 2px;overflow:hidden;cursor:pointer}
+.calgrid.week .wev .we-t{font-size:.54rem;font-weight:600;line-height:1.1;overflow:hidden}
+.cat-legend{display:flex;gap:12px;flex-wrap:wrap;margin:12px 0 4px}
+.cat-legend .cl{display:flex;align-items:center;gap:6px;font-size:.76rem;color:var(--muted)}
+.cat-legend .cl .sw{width:11px;height:11px;border-radius:3px}
 .realtag{font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--accent-ink);margin:4px 0 2px}
 .ev.real{opacity:.82}
 .ev.real .t{color:var(--muted)}
@@ -518,20 +553,24 @@ svg.chart{width:100%;height:170px;display:block;margin-top:6px;overflow:visible}
 <!-- PLANNING -->
 <section role="tabpanel" data-view="planning" hidden>
   <div class="card">
-    <div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap">
-      <div><h3><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg> Mon planning</h3><div class="sub" id="plan-day-lbl">—</div></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
+      <h3><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg> Mon calendrier</h3>
+      <div class="viewtog"><button id="vt-jour" aria-current="true">Jour</button><button id="vt-sem">Semaine</button></div>
     </div>
+    <div class="cal-head" id="cal-head"></div>
     <div class="daynav" id="daynav"></div>
-    <div id="planning"></div>
+    <div class="cal-scroll"><div id="calendar" class="calgrid"></div></div>
+    <div class="cat-legend" id="cat-legend"></div>
     <div class="add-row" style="flex-wrap:wrap">
-      <input id="ev-time" placeholder="19:30" style="flex:0 0 72px" maxlength="12">
+      <input id="ev-time" placeholder="19:30" style="flex:0 0 66px" maxlength="12">
       <input id="ev-title" placeholder="Titre (ex. Révision polymères)" maxlength="50">
     </div>
     <div class="add-row">
-      <input id="ev-note" placeholder="Détail / lieu (optionnel)" maxlength="50">
+      <select id="ev-cat"><option value="perso">Perso</option><option value="sport">Sport</option><option value="revision">Révision</option></select>
+      <input id="ev-note" placeholder="Lieu (optionnel)" maxlength="40">
       <button id="ev-add">Ajouter</button>
     </div>
-    <div class="note">Les cours viennent de ton emploi du temps Polytech (synchro auto). En dessous tu ajoutes tes blocs perso (sport, révision), modifiables et supprimables.</div>
+    <div class="note">Les cours (synchro Polytech) et tes blocs perso s'affichent par couleur. Touche un bloc perso pour le supprimer.</div>
   </div>
   <div class="card">
     <h3><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a9 9 0 11-3-6.7M21 4v4h-4"/></svg> Emploi du temps</h3>
@@ -1087,49 +1126,104 @@ $("#f-start").addEventListener("click",()=>{
 });
 $("#f-reset").addEventListener("click",()=>{clearInterval(fTimer);fTimer=null;fRunning=false;fLeft=fMin*60;$("#f-start").textContent="Démarrer";fRender();});
 
-/* ---- Planning (éditable) ---- */
+/* ---- Calendrier visuel (jour / semaine, catégories colorées) ---- */
 const DAYS_FR=["Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi","Dimanche"];
+const DAYS_MIN=["Lun","Mar","Mer","Jeu","Ven","Sam","Dim"];
+const CATS={cours:"Cours",sport:"Sport",revision:"Révision",perso:"Perso"};
+const CAL_START=7,CAL_END=23; // heures affichées
 let planDay=(new Date().getDay()+6)%7;
+let calView="jour";
+function toMin(t){const m=String(t).match(/(\d{1,2})[:h](\d{2})?/);if(!m)return null;return (+m[1])*60+(+(m[2]||0));}
+function guessCat(title){
+  const l=(title||"").toLowerCase();
+  if(/push|pull|legs|upper|escalade|s[ée]ance|muscu|sport|v[ée]lo|abdos|gym/.test(l))return "sport";
+  if(/r[ée]vis|exam|fiche|annales|polym[eè]re|proba|anglais toeic/.test(l))return "revision";
+  return "perso";
+}
+// Récupère tous les events d'un jour (wd 0=lundi) : cours ICS + perso
+function dayEvents(wd){
+  const out=[];const dk=dateForWeekday(wd);
+  (getReal()[dk]||[]).forEach(r=>out.push({t:r.t,b:r.b,n:r.n,cat:"cours",real:true}));
+  (getPlanning()[wd]||[]).forEach((r,i)=>out.push({t:r.t,b:r.b,n:r.n,cat:r.cat||guessCat(r.b),idx:i}));
+  return out.filter(e=>toMin(e.t)!=null).sort((a,b)=>toMin(a.t)-toMin(b.t));
+}
 function renderDaynav(){
-  const p=getPlanning();const todayWd=(new Date().getDay()+6)%7;
-  $("#daynav").innerHTML=["L","M","M","J","V","S","D"].map((lbl,i)=>
-    `<button data-d="${i}" aria-current="${i===planDay}" class="${(p[i]&&p[i].length)?"has":""}" title="${DAYS_FR[i]}">${lbl}</button>`).join("");
+  $("#daynav").hidden=(calView!=="jour");
+  const todayWd=(new Date().getDay()+6)%7;
+  $("#daynav").innerHTML=DAYS_MIN.map((lbl,i)=>{
+    const has=dayEvents(i).length;
+    return `<button data-d="${i}" aria-current="${i===planDay}" class="${has?"has":""}" title="${DAYS_FR[i]}">${lbl[0]}</button>`;
+  }).join("");
 }
 function renderPlanning(){
+  $("#vt-jour").setAttribute("aria-current",calView==="jour");
+  $("#vt-sem").setAttribute("aria-current",calView==="semaine");
   renderDaynav();
-  const p=getPlanning();const rows=(p[planDay]||[]).slice();
-  const isThisWeek=true;const dk=dateForWeekday(planDay);
-  const real=isThisWeek?(getReal()[dk]||[]):[];
-  $("#plan-day-lbl").textContent=DAYS_FR[planDay]+(planDay===((new Date().getDay()+6)%7)?" · aujourd'hui":"");
-  rows.sort((a,b)=>String(a.t).localeCompare(String(b.t),"fr",{numeric:true}));
-  let html="";
-  if(real.length){
-    html+=`<div class="realtag">📚 Cours (agenda) · ${new Date(dk).toLocaleDateString("fr-FR",{day:"numeric",month:"short"})}</div>`;
-    html+=real.map(r=>`<div class="ev real"><span class="t">${esc(r.t)}</span><span class="b">${esc(r.b)}${r.n?`<small>${esc(r.n)}</small>`:""}</span></div>`).join("");
-    html+=`<div class="realtag" style="margin-top:14px">✎ Mes blocs perso</div>`;
-  }
-  html+=rows.length?rows.map((r,i)=>`<div class="ev" data-i="${i}">
-    <span class="t">${esc(r.t)}</span>
-    <span class="b" contenteditable="true" data-i="${i}">${esc(r.b)}${r.n?`<small>${esc(r.n)}</small>`:""}</span>
-    <button class="del" data-i="${i}" aria-label="Supprimer">✕</button></div>`).join("")
-    :`<div class="empty">Aucun bloc perso ce jour.<br>Ajoute-en un ci-dessous.</div>`;
-  $("#planning").innerHTML=html;
+  // légende
+  $("#cat-legend").innerHTML=Object.keys(CATS).map(c=>`<span class="cl cat-${c}"><span class="sw" style="background:var(--c)"></span>${CATS[c]}</span>`).join("");
+  const grid=$("#calendar");
+  if(calView==="jour")renderDayGrid(grid);else renderWeekGrid(grid);
 }
+function renderDayGrid(grid){
+  const dk=dateForWeekday(planDay);const isToday=planDay===((new Date().getDay()+6)%7);
+  $("#cal-head").textContent=new Date(dk).toLocaleDateString("fr-FR",{weekday:"long",day:"numeric",month:"long"})+(isToday?" · aujourd'hui":"");
+  grid.className="calgrid day";
+  const slotH=52;
+  let html="";
+  for(let h=CAL_START;h<=CAL_END;h++){
+    html+=`<div class="hourline"><div class="hlabel">${String(h).padStart(2,"0")}:00</div><div class="hslot"></div></div>`;
+  }
+  // calque des événements, positionné en absolu au-dessus de la colonne horaire
+  html+=`<div class="ev-layer" id="ev-layer"></div>`;
+  grid.innerHTML=html;
+  const evs=dayEvents(planDay);
+  const layer=grid.querySelector("#ev-layer");
+  evs.forEach(e=>{
+    const m=toMin(e.t);if(m==null||m<CAL_START*60)return;
+    const top=(m-CAL_START*60)/60*slotH;
+    const bl=document.createElement("div");bl.className="evblock cat-"+e.cat;
+    bl.style.cssText=`top:${top}px;height:${(e.real?46:42)}px`;
+    bl.innerHTML=`<div class="eb-t">${esc(e.b)}</div><div class="eb-m">${esc(e.t)}${e.n?" · "+esc(e.n):""}</div>`;
+    if(e.idx!=null){bl.dataset.del=e.idx;bl.title="Toucher pour supprimer";}
+    layer.appendChild(bl);
+  });
+}
+function renderWeekGrid(grid){
+  const monday=dateForWeekday(0);
+  $("#cal-head").textContent="Semaine du "+new Date(monday).toLocaleDateString("fr-FR",{day:"numeric",month:"long"});
+  grid.className="calgrid week";
+  const todayWd=(new Date().getDay()+6)%7;const rowH=30;
+  let html=`<div class="corner"></div>`;
+  for(let d=0;d<7;d++)html+=`<div class="wh ${d===todayWd?"today":""}">${DAYS_MIN[d]}</div>`;
+  for(let h=CAL_START;h<=CAL_END;h++){
+    html+=`<div class="wrow-h">${String(h).padStart(2,"0")}h</div>`;
+    for(let d=0;d<7;d++)html+=`<div class="wcell" data-d="${d}" data-h="${h}"></div>`;
+  }
+  grid.innerHTML=html;
+  for(let d=0;d<7;d++){
+    dayEvents(d).forEach(e=>{
+      const m=toMin(e.t);if(m==null||m<CAL_START*60)return;
+      const h=Math.floor(m/60);const cell=grid.querySelector(`.wcell[data-d="${d}"][data-h="${h}"]`);if(!cell)return;
+      const top=(m-h*60)/60*rowH;
+      const ev=document.createElement("div");ev.className="wev cat-"+e.cat;
+      ev.style.cssText=`top:${top}px;height:${rowH-2}px`;
+      ev.innerHTML=`<div class="we-t">${esc(e.b)}</div>`;ev.title=e.t+" · "+e.b+(e.n?" ("+e.n+")":"");
+      cell.appendChild(ev);
+    });
+  }
+}
+$("#vt-jour").addEventListener("click",()=>{calView="jour";renderPlanning();});
+$("#vt-sem").addEventListener("click",()=>{calView="semaine";renderPlanning();});
 $("#daynav").addEventListener("click",e=>{const b=e.target.closest("button");if(b){planDay=+b.dataset.d;renderPlanning();}});
-$("#planning").addEventListener("click",e=>{
-  const del=e.target.closest(".del");if(!del)return;
-  const p=getPlanning();(p[planDay]=p[planDay]||[]).splice(+del.dataset.i,1);savePlanning(p);renderPlanning();
+$("#calendar").addEventListener("click",e=>{
+  const bl=e.target.closest("[data-del]");if(!bl)return;
+  const p=getPlanning();(p[planDay]=p[planDay]||[]).splice(+bl.dataset.del,1);savePlanning(p);renderPlanning();renderNow();
 });
-$("#planning").addEventListener("blur",e=>{
-  const b=e.target.closest(".b[contenteditable]");if(!b)return;
-  const p=getPlanning();const row=p[planDay][+b.dataset.i];if(!row)return;
-  const txt=b.textContent.trim();if(txt)row.b=txt;savePlanning(p);renderPlanning();
-},true);
 $("#ev-add").addEventListener("click",()=>{
-  const t=$("#ev-time").value.trim()||"—",b=$("#ev-title").value.trim();if(!b)return;
-  const n=$("#ev-note").value.trim();
-  const p=getPlanning();(p[planDay]=p[planDay]||[]).push({t,b,n});savePlanning(p);
-  $("#ev-time").value="";$("#ev-title").value="";$("#ev-note").value="";renderPlanning();
+  const t=$("#ev-time").value.trim(),b=$("#ev-title").value.trim();if(!b||toMin(t)==null){$("#ev-title").focus();return;}
+  const n=$("#ev-note").value.trim();const cat=$("#ev-cat").value;
+  const p=getPlanning();(p[planDay]=p[planDay]||[]).push({t,b,n,cat});savePlanning(p);
+  $("#ev-time").value="";$("#ev-title").value="";$("#ev-note").value="";renderPlanning();renderNow();
 });
 $("#ev-title").addEventListener("keydown",e=>{if(e.key==="Enter")$("#ev-add").click();});
 
