@@ -24,6 +24,31 @@ body{background:var(--bg);color:var(--fg);font-family:var(--f-body);line-height:
   body{max-width:860px}
   section[role="tabpanel"]{max-width:680px;margin:0 auto}
 }
+/* Mobile : tout plus grand et lisible (le défaut 14px était trop petit) */
+@media (max-width:600px){
+  body{font-size:15.5px}
+  .card{padding:20px 17px}
+  .card h3{font-size:1.1rem}
+  .card .sub{font-size:.86rem}
+  .now .task{font-size:1.65rem}
+  .now .meta{font-size:.92rem}
+  .pcard .pc-big{font-size:1.9rem}
+  .pcard .pc-k{font-size:.74rem}
+  .check{padding:14px 0}
+  .check .lbl{font-size:1rem}
+  .box{width:25px;height:25px}
+  .todo{padding:13px 0}.todo .tt{font-size:.98rem}
+  .tbox{width:22px;height:22px}
+  .bud-row{font-size:.96rem;padding:11px 0}
+  .tabbar button{font-size:.72rem;padding:11px 0 9px}
+  .tabbar button svg{width:25px;height:25px}
+  .exam .en{font-size:1rem}.exam .cd{font-size:1.45rem}
+  .big{font-size:2.1rem}
+  .add-row input,.add-row select{font-size:.95rem;padding:11px 12px}
+  .btn,.add-row button{font-size:.9rem;padding:11px 15px}
+  .cat-legend .cl{font-size:.82rem}
+  nav button,.viewtog button{font-size:.88rem}
+}
 h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;letter-spacing:-.01em}
 .eyebrow{font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:600}
 .tnum{font-variant-numeric:tabular-nums}
@@ -357,21 +382,18 @@ svg.chart{width:100%;height:170px;display:block;margin-top:6px;overflow:visible}
   </div>
   <nav id="nav" hidden>
     <button data-v="home" aria-current="true">Accueil</button>
-    <button data-v="routines">Routines</button>
     <button data-v="habitudes">Habitudes</button>
+    <button data-v="planning">Planning</button>
+    <button data-v="todo">To-do</button>
+    <button data-v="etudes">Études</button>
+    <button data-v="seances">Séances</button>
     <button data-v="stats">Stats</button>
     <button data-v="recompenses">Récompenses</button>
     <button data-v="focus">Focus</button>
     <button data-v="sommeil">Sommeil</button>
-    <button data-v="planning">Planning</button>
-    <button data-v="todo">To-do</button>
-    <button data-v="seances">Séances</button>
-    <button data-v="etudes">Études</button>
     <button data-v="journal">Journal</button>
-    <button data-v="valeurs">Valeurs</button>
-    <button data-v="objectifs">Objectifs</button>
+    <button data-v="valeurs">Repères</button>
     <button data-v="budget">Budget</button>
-    <button data-v="humeur">Humeur</button>
   </nav>
 </header>
 
@@ -425,26 +447,14 @@ svg.chart{width:100%;height:170px;display:block;margin-top:6px;overflow:visible}
 </section>
 
 <!-- ROUTINES -->
-<section role="tabpanel" data-view="routines" hidden>
-  <div class="card" id="routine-card">
-    <h3 id="routine-title"></h3>
-    <div class="sub" id="routine-sub"></div>
-    <div id="routine-steps"></div>
-    <div class="prog"><i id="routine-bar" style="width:0%"></i></div>
-    <div class="prog-row"><span id="routine-pct">0 %</span><span id="routine-switch-lbl"></span></div>
-    <button class="btn ghost" id="routine-switch" style="margin-top:14px;width:100%">Voir l'autre routine</button>
-    <div class="note" id="routine-note"></div>
-  </div>
-</section>
-
-<!-- HABITUDES -->
+<!-- HABITUDES + ROUTINES -->
 <section role="tabpanel" data-view="habitudes" hidden>
   <div class="card">
     <div style="display:flex;justify-content:space-between;align-items:center;gap:10px">
       <h3><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 12l2 2 4-4"/><rect x="3" y="4" width="18" height="16" rx="3"/></svg> Mes habitudes</h3>
       <button class="editbtn" id="habit-edit">Modifier</button>
     </div>
-    <div class="sub">Les fondations. Un jour manqué = une donnée, pas un échec.</div>
+    <div class="sub">Les fondations du jour. Un jour manqué = une donnée, pas un échec.</div>
     <div id="habits"></div>
     <div class="prog"><i id="habit-bar" style="width:0%"></i></div>
     <div class="prog-row"><span id="habit-pct">0 %</span><span>objectif du jour</span></div>
@@ -453,7 +463,17 @@ svg.chart{width:100%;height:170px;display:block;margin-top:6px;overflow:visible}
       <input id="habit-new" placeholder="Nouvelle habitude (ex. 10 min lecture)" maxlength="40">
       <button id="habit-add">Ajouter</button>
     </div>
-    <div class="note">💡 Couché à heure fixe + lumière le matin calent ton horloge interne — le levier le plus sous-estimé pour l'énergie.</div>
+  </div>
+  <div class="card" id="routine-card">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:10px">
+      <h3 id="routine-title"></h3>
+      <button class="editbtn" id="routine-switch">Voir l'autre</button>
+    </div>
+    <div class="sub" id="routine-sub"></div>
+    <div id="routine-steps"></div>
+    <div class="prog"><i id="routine-bar" style="width:0%"></i></div>
+    <div class="prog-row"><span id="routine-pct">0 %</span><span id="routine-switch-lbl"></span></div>
+    <div class="note" id="routine-note"></div>
   </div>
 </section>
 
@@ -648,19 +668,6 @@ svg.chart{width:100%;height:170px;display:block;margin-top:6px;overflow:visible}
 </section>
 
 <!-- OBJECTIFS -->
-<section role="tabpanel" data-view="objectifs" hidden>
-  <div class="card">
-    <h3><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="0.6" fill="currentColor" stroke="none"/></svg> Mes objectifs</h3>
-    <div class="sub">Le cap. Pourquoi tu te lèves.</div>
-    <div id="goals"></div>
-    <div class="add-row" style="flex-wrap:wrap">
-      <input id="goal-title" placeholder="Objectif (ex. Courir 5 km)" maxlength="40">
-      <input id="goal-sub" placeholder="Pourquoi / détail" maxlength="40">
-      <button id="goal-add">+</button>
-    </div>
-  </div>
-</section>
-
 <!-- BUDGET -->
 <section role="tabpanel" data-view="budget" hidden>
   <div class="card">
@@ -683,20 +690,30 @@ svg.chart{width:100%;height:170px;display:block;margin-top:6px;overflow:visible}
   </div>
 </section>
 
-<!-- VALEURS -->
+<!-- REPÈRES : objectifs + valeurs + règles -->
 <section role="tabpanel" data-view="valeurs" hidden>
   <div class="card">
+    <h3><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="0.6" fill="currentColor" stroke="none"/></svg> Mes objectifs</h3>
+    <div class="sub">Le cap. Pourquoi tu te lèves.</div>
+    <div id="goals"></div>
+    <div class="add-row" style="flex-wrap:wrap">
+      <input id="goal-title" placeholder="Objectif (ex. Courir 5 km)" maxlength="40">
+      <input id="goal-sub" placeholder="Pourquoi / détail" maxlength="40">
+      <button id="goal-add">+</button>
+    </div>
+  </div>
+  <div class="card">
     <h3><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l2.5 5.5 6 .5-4.5 4 1.4 5.8L12 15.8 6.6 18.8 8 13 3.5 9l6-.5z"/></svg> Mes valeurs</h3>
-    <div class="sub">Qui je choisis d'être. À relire quand je doute ou que je procrastine.</div>
+    <div class="sub">Qui je choisis d'être. À relire quand je doute.</div>
     <div id="values"></div>
     <div class="add-row">
-      <input id="value-new" placeholder="Une valeur (ex. Discipline, Authenticité)" maxlength="40">
+      <input id="value-new" placeholder="Une valeur (ex. Discipline)" maxlength="40">
       <button id="value-add">+</button>
     </div>
   </div>
   <div class="card">
     <h3><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h14v16l-7-3-7 3z"/></svg> Mes règles de vie</h3>
-    <div class="sub">Mes non-négociables. Ce que je m'engage à incarner.</div>
+    <div class="sub">Mes non-négociables.</div>
     <div id="rules"></div>
     <div class="add-row">
       <input id="rule-new" placeholder="Une règle (ex. Je prépare demain ce soir)" maxlength="60">
@@ -706,17 +723,6 @@ svg.chart{width:100%;height:170px;display:block;margin-top:6px;overflow:visible}
 </section>
 
 <!-- HUMEUR -->
-<section role="tabpanel" data-view="humeur" hidden>
-  <div class="card">
-    <h3><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M9 10h.01M15 10h.01M8.5 14a4 4 0 007 0"/></svg> Humeur & énergie · aujourd'hui</h3>
-    <div class="sub">Un check-in de 5 secondes</div>
-    <div class="eyebrow" style="margin-top:8px">Humeur</div>
-    <div class="moods" id="mood"><button>😞</button><button>😐</button><button>🙂</button><button>😄</button><button>🤩</button></div>
-    <div class="eyebrow" style="margin-top:16px">Énergie</div>
-    <div class="moods" id="energy"><button>🔋</button><button>⚡</button><button>💪</button></div>
-    <div class="note">Note ton état chaque soir : avec le temps, tu verras ce qui te fatigue et ce qui te recharge.</div>
-  </div>
-</section>
 </main>
 
 <!-- Plus sheet -->
@@ -984,7 +990,7 @@ function show(v){
   $$("section[role=tabpanel]").forEach(s=>s.hidden=s.dataset.view!==v);
   if(/^[a-z]+$/.test(v))location.hash=v;
   if(v==="stats")renderStats();
-  if(v==="routines")renderRoutines();
+  if(v==="habitudes")renderRoutines();
   if(v==="recompenses")renderRewards();
   if(v==="sommeil")renderSleep();
   if(v==="valeurs")renderValues();
@@ -996,11 +1002,12 @@ $("#valbanner").addEventListener("click",()=>show("valeurs"));
 $("#tabbar").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;if(b.dataset.sheet)openSheet();else show(b.dataset.v);});
 
 /* ---- Plus sheet ---- */
+// Menu "Plus" — trié du plus utile au moins utile
 const SHEET_ITEMS=[
-  {v:"routines",ic:"humeur",l:"Routines"},{v:"stats",ic:"stats",l:"Stats"},{v:"recompenses",ic:"recompenses",l:"Récompenses"},
-  {v:"focus",ic:"focus",l:"Focus"},{v:"sommeil",ic:"sommeil",l:"Sommeil"},{v:"todo",ic:"todo",l:"To-do"},
-  {v:"seances",ic:"seances",l:"Séances"},{v:"etudes",ic:"etudes",l:"Études"},{v:"journal",ic:"journal",l:"Journal"},
-  {v:"valeurs",ic:"objectifs",l:"Valeurs"},{v:"objectifs",ic:"objectifs",l:"Objectifs"},{v:"budget",ic:"budget",l:"Budget"},{v:"humeur",ic:"humeur",l:"Humeur"},
+  {v:"todo",ic:"todo",l:"To-do"},{v:"etudes",ic:"etudes",l:"Études"},{v:"seances",ic:"seances",l:"Séances"},
+  {v:"stats",ic:"stats",l:"Stats"},{v:"focus",ic:"focus",l:"Focus"},{v:"sommeil",ic:"sommeil",l:"Sommeil"},
+  {v:"budget",ic:"budget",l:"Budget"},{v:"recompenses",ic:"recompenses",l:"Récompenses"},{v:"journal",ic:"journal",l:"Journal"},
+  {v:"valeurs",ic:"objectifs",l:"Repères"},
 ];
 $("#sheet-grid").innerHTML=SHEET_ITEMS.map(s=>`<button data-v="${s.v}">${ic(s.ic)}<span>${s.l}</span></button>`).join("");
 function openSheet(){$("#sheet").hidden=false;$("#fab").hidden=true;$$("#tabbar button").forEach(b=>b.setAttribute("aria-current",!!b.dataset.sheet));}
@@ -1014,7 +1021,7 @@ function renderNow(){
   const H=getHabits();const doneH=H.filter(x=>habits[x.id]).length;
   const todos=store.get("todos",DEFAULT_TODOS);const nextTodo=todos.find(t=>!t.done&&t.p==="u")||todos.find(t=>!t.done);
   let task,meta,target="";
-  if(h<9){task="Lumière du matin";meta="15 min dehors ou à la fenêtre.";target="routines";}
+  if(h<9){task="Lumière du matin";meta="15 min dehors ou à la fenêtre.";target="habitudes";}
   else if(h>=20&&h<22){const s=daySession();if(s==="Repos"){task="Récupération";meta="Jour off.";target="habitudes";}else{task="Séance "+s;meta="Programme du jour.";target="seances";}}
   else if(h>=22){task="Coucher";meta="Heure de coucher régulière.";target="sommeil";}
   else if(doneH<H.length){task="Habitudes du jour";meta=doneH+"/"+H.length+" faites.";target="habitudes";}
@@ -1625,7 +1632,7 @@ $("#ics-sync").addEventListener("click",()=>syncICS(false));
 function renderAll(){
   renderPts();renderNow();renderHomeSummary();renderHabits();renderPlanning();renderTodos();renderRoutines();renderValues();
   renderSessChips();renderSessExos();renderExams();renderToeic();renderJournal();renderBudget();renderGoals();
-  bindMood("#mood","mood");bindMood("#energy","energy");fRender();renderFocus();
+  fRender();renderFocus();
 }
 
 /* ---- Init ---- */
