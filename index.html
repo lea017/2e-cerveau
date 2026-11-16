@@ -290,11 +290,11 @@ svg.chart{width:100%;height:170px;display:block;margin-top:6px;overflow:visible}
 .viewtog{display:flex;gap:4px;background:var(--surface-2);border-radius:999px;padding:3px}
 .viewtog button{border:0;background:none;font-family:inherit;font-weight:600;font-size:.8rem;color:var(--muted);padding:6px 14px;border-radius:999px;cursor:pointer}
 .viewtog button[aria-current="true"]{background:var(--accent);color:#fff}
-/* Catégories en nuances de vert bien contrastées (foncé → clair) */
-.cat-cours{--c:#2e5339;--cs:#d4e2d7;--ci:#24412c}
-.cat-revision{--c:#4e8a44;--cs:#dcefd5;--ci:#39662f}
-.cat-sport{--c:#7fb03a;--cs:#eaf6d9;--ci:#557524}
-.cat-perso{--c:#9cc47e;--cs:#f0f5e8;--ci:#5c7742}
+/* Catégories : verts très tranchés, fonds pleins et distincts */
+.cat-cours{--c:#1f4328;--cs:#aecbb4;--ci:#153020}
+.cat-revision{--c:#3f8a3a;--cs:#c2e6b8;--ci:#2b5f26}
+.cat-sport{--c:#9bbf1e;--cs:#e4f0b0;--ci:#54700f}
+.cat-perso{--c:#5fb89a;--cs:#c5ece0;--ci:#2f6b57}
 .cal-nav{display:flex;align-items:center;gap:8px;margin:12px 0 4px}
 .cal-arrow{flex:none;width:34px;height:34px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--accent-ink);font-size:1.3rem;line-height:1;cursor:pointer;display:grid;place-items:center}
 .cal-arrow:active{background:var(--accent-soft)}
@@ -304,6 +304,14 @@ svg.chart{width:100%;height:170px;display:block;margin-top:6px;overflow:visible}
 .add-sep{font-size:.72rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--accent-ink);margin:14px 0 8px;padding-top:12px;border-top:1px solid var(--line)}
 .nowline{position:absolute;left:0;right:0;height:2px;background:var(--crit);z-index:3}
 .nowline::before{content:"";position:absolute;left:-3px;top:-3px;width:8px;height:8px;border-radius:50%;background:var(--crit)}
+.calgrid.day .evblock,.calgrid.week .wev{cursor:pointer}
+/* Détail événement */
+.evd-cat{display:inline-flex;align-items:center;gap:7px;font-size:.74rem;font-weight:700;color:var(--ci);background:var(--cs);padding:4px 11px;border-radius:999px;margin-bottom:10px}
+.evd-cat .sw{width:10px;height:10px;border-radius:3px}
+.evd-title{font-family:var(--f-display);font-weight:700;font-size:1.3rem;margin-bottom:12px;line-height:1.2}
+.evd-row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--line);font-size:.95rem}
+.evd-row:last-child{border-bottom:0}
+.evd-row .evd-k{color:var(--muted);font-weight:600}
 .cal-scroll{max-height:62vh;overflow-y:auto;border:1px solid var(--line);border-radius:12px;margin-top:10px;background:var(--surface)}
 .calgrid{position:relative}
 /* Vue JOUR */
@@ -774,6 +782,17 @@ svg.chart{width:100%;height:170px;display:block;margin-top:6px;overflow:visible}
 <button id="fab" aria-label="Note rapide">
   <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
 </button>
+
+<!-- Détail d'un événement -->
+<div id="evdetail" class="capture" hidden>
+  <div class="cap-panel">
+    <div class="sheet-handle"></div>
+    <div id="evd-content"></div>
+    <div class="cap-actions">
+      <button class="btn ghost" id="evd-close">Fermer</button>
+    </div>
+  </div>
+</div>
 
 <!-- Modale capture -->
 <div id="capture" class="capture" hidden>
@@ -1300,17 +1319,20 @@ function renderDayGrid(grid){
   if(isToday){const nowM=new Date().getHours()*60+new Date().getMinutes();
     if(nowM>=CAL_START*60&&nowM<=CAL_END*60){const ny=(nowM-CAL_START*60)/60*SLOT_H;
       layer.insertAdjacentHTML("beforeend",`<div class="nowline" style="top:${ny}px"></div>`);}}
-  evs.forEach(e=>{
+  evs.forEach((e,idx)=>{
     const m=toMin(e.t);if(m==null||m<CAL_START*60)return;
+    const em=endMin(e,m);
     const top=(m-CAL_START*60)/60*SLOT_H;
-    const h=Math.max(22,(endMin(e,m)-m)/60*SLOT_H-2);
+    const h=Math.max(24,(em-m)/60*SLOT_H-2);
     const bl=document.createElement("div");bl.className="evblock cat-"+e.cat;
     bl.style.cssText=`top:${top}px;height:${h}px`;
-    const endLbl=e.e?"–"+e.e:"";
-    bl.innerHTML=`<div class="eb-t">${esc(e.b)}</div><div class="eb-m">${esc(e.t)}${endLbl}${e.n?" · "+esc(e.n):""}</div>`;
+    const endLbl=minToStr(em); // toujours une heure de fin (réelle ou estimée)
+    bl.innerHTML=`<div class="eb-t">${esc(e.b)}</div><div class="eb-m">${esc(e.t)}–${endLbl}${e.n?" · "+esc(e.n):""}</div>`;
+    bl.dataset.ev=JSON.stringify({t:e.t,e:endLbl,realEnd:!!toMin(e.e),b:e.b,n:e.n,cat:e.cat});
     layer.appendChild(bl);
   });
 }
+function minToStr(m){return String(Math.floor(m/60)).padStart(2,"0")+":"+String(m%60).padStart(2,"0");}
 function renderWeekGrid(grid){
   const monday=weekMonday(calOffset);
   const end=new Date(monday);end.setDate(end.getDate()+6);
@@ -1333,13 +1355,34 @@ function renderWeekGrid(grid){
       const h=Math.floor(m/60);const cell=grid.querySelector(`.wcell[data-d="${d}"][data-h="${h}"]`);if(!cell)return;
       const top=(m-h*60)/60*WROW_H;
       const hgt=Math.max(WROW_H-2,(endMin(e,m)-m)/60*WROW_H-1);
+      const em=endMin(e,m);
       const ev=document.createElement("div");ev.className="wev cat-"+e.cat;
       ev.style.cssText=`top:${top}px;height:${hgt}px`;
-      ev.innerHTML=`<div class="we-t">${esc(e.b)}</div>`;ev.title=e.t+(e.e?"–"+e.e:"")+" · "+e.b+(e.n?" ("+e.n+")":"");
+      ev.innerHTML=`<div class="we-t">${esc(e.b)}</div>`;ev.title=e.t+"–"+minToStr(em)+" · "+e.b+(e.n?" ("+e.n+")":"");
+      ev.dataset.ev=JSON.stringify({t:e.t,e:minToStr(em),realEnd:!!toMin(e.e),b:e.b,n:e.n,cat:e.cat});
       cell.appendChild(ev);
     });
   }
 }
+// Détail d'un événement au clic
+function openEvDetail(ev){
+  const cat=CATS[ev.cat]||ev.cat;
+  const endTxt=ev.e?(ev.realEnd===false?ev.e+" (estimée)":ev.e):"";
+  $("#evd-content").innerHTML=`
+    <div class="evd-cat cat-${ev.cat}"><span class="sw" style="background:var(--c)"></span>${cat}</div>
+    <div class="evd-title">${esc(ev.b)}</div>
+    <div class="evd-row"><span class="evd-k">Début</span><span>${esc(ev.t)}</span></div>
+    ${endTxt?`<div class="evd-row"><span class="evd-k">Fin</span><span>${esc(endTxt)}</span></div>`:""}
+    ${ev.n?`<div class="evd-row"><span class="evd-k">Lieu</span><span>${esc(ev.n)}</span></div>`:""}`;
+  $("#evdetail").hidden=false;$("#fab").hidden=true;
+}
+function closeEvDetail(){$("#evdetail").hidden=true;$("#fab").hidden=false;}
+$("#evd-close").addEventListener("click",closeEvDetail);
+$("#evdetail").addEventListener("click",e=>{if(e.target.id==="evdetail")closeEvDetail();});
+$("#calendar").addEventListener("click",e=>{
+  const bl=e.target.closest("[data-ev]");if(!bl)return;
+  try{openEvDetail(JSON.parse(bl.dataset.ev));}catch(err){}
+});
 $("#vt-jour").addEventListener("click",()=>{calView="jour";calOffset=0;renderPlanning();});
 $("#vt-sem").addEventListener("click",()=>{calView="semaine";calOffset=0;renderPlanning();});
 $("#cal-prev").addEventListener("click",()=>{calOffset--;renderPlanning();});
