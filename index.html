@@ -973,7 +973,10 @@ function parseICS(raw){
     const parseDt=(raw)=>{const m=raw.match(/(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})/);if(!m)return null;
       return /Z/.test(raw)?new Date(Date.UTC(+m[1],+m[2]-1,+m[3],+m[4],+m[5])):new Date(+m[1],+m[2]-1,+m[3],+m[4],+m[5]);};
     const dt=parseDt(dtRaw);if(!dt)continue;
-    const dtEnd=parseDt(get("DTEND"));
+    let dtEnd=parseDt(get("DTEND"));
+    // Fallback : certains agendas ADE donnent DURATION (ex. PT2H, PT1H30M) au lieu de DTEND
+    if(!dtEnd){const dur=get("DURATION");const dm=dur.match(/PT(?:(\d+)H)?(?:(\d+)M)?/i);
+      if(dm&&(dm[1]||dm[2])){const mins=(+(dm[1]||0))*60+(+(dm[2]||0));dtEnd=new Date(dt.getTime()+mins*60000);}}
     const fmt=(d)=>String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0");
     const dk=dayKey(dt);const hh=fmt(dt);const he=dtEnd?fmt(dtEnd):"";
     let title=icsDecode(get("SUMMARY"))||"Cours";
@@ -1746,7 +1749,7 @@ $("#cap-confirm").addEventListener("click",()=>{
 $("#ics-sync").addEventListener("click",()=>syncICS(false));
 {
  // Migration : cette version lit les heures de fin → on force une resynchro propre une fois
- if(store.get("ics_fmt",0)<2){store.set("real_events_synced",null);store.set("ics_last",0);store.set("ics_fmt",2);}
+ if(store.get("ics_fmt",0)<3){store.set("real_events_synced",null);store.set("ics_last",0);store.set("ics_fmt",3);}
  const last=store.get("ics_last",0);
  if($("#ics-status")&&store.get("real_events_synced",null))$("#ics-status").textContent="Cours à jour · "+new Date(last).toLocaleString("fr-FR",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"});
  // auto-synchro si jamais fait ou > 6h
