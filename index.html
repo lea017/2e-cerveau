@@ -983,10 +983,17 @@ const REAL_EVENTS_SEED={
 // Lien ICS de l'emploi du temps Polytech (ADE univ-tours)
 const ICS_URL="https://ade.univ-tours.fr/jsp/custom/modules/plannings/V3LM5EYA.shu";
 function getReal(){
-  // fusionne le seed (cours connus de cette semaine) et les cours synchronisés (prioritaires par date)
+  // Le seed (emploi du temps réel intégré, avec heures de fin + noms courts) est prioritaire.
+  // La synchro ICS ne complète QUE les jours absents du seed, et seulement si elle a des heures de fin.
   const synced=store.get("real_events_synced",null);
   if(!synced)return REAL_EVENTS_SEED;
-  return {...REAL_EVENTS_SEED,...synced};
+  const out={...REAL_EVENTS_SEED};
+  for(const dk in synced){
+    if(out[dk])continue; // le seed gagne toujours sur un jour qu'il connaît
+    const arr=synced[dk];
+    if(Array.isArray(arr)&&arr.length&&arr.every(e=>e&&e.e))out[dk]=arr; // synchro acceptée seulement si complète
+  }
+  return out;
 }
 function dateForWeekday(wd){const dt=new Date();const cur=(dt.getDay()+6)%7;dt.setDate(dt.getDate()-(cur-wd));return dayKey(dt);}
 
@@ -1777,8 +1784,8 @@ $("#cap-confirm").addEventListener("click",()=>{
 /* ---- Synchro ICS : bouton + auto ---- */
 $("#ics-sync").addEventListener("click",()=>syncICS(false));
 {
- // Migration : cette version lit les heures de fin → on force une resynchro propre une fois
- if(store.get("ics_fmt",0)<3){store.set("real_events_synced",null);store.set("ics_last",0);store.set("ics_fmt",3);}
+ // Migration : purge toute synchro ICS en cache (localStorage + Supabase) qui écrasait le seed
+ if(store.get("ics_fmt",0)<4){store.set("real_events_synced",null);store.set("ics_last",0);store.set("ics_fmt",4);}
  const last=store.get("ics_last",0);
  if($("#ics-status")&&store.get("real_events_synced",null))$("#ics-status").textContent="Cours à jour · "+new Date(last).toLocaleString("fr-FR",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"});
  // auto-synchro si jamais fait ou > 6h
