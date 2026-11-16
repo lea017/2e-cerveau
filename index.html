@@ -449,6 +449,22 @@ svg.chart{width:100%;height:170px;display:block;margin-top:6px;overflow:visible}
 /* ---- Mini bar chart (sommeil, budget, sport) ---- */
 svg.bchart{width:100%;height:150px;display:block;margin-top:8px;overflow:visible}
 .chart-cap{display:flex;justify-content:space-between;font-size:.72rem;color:var(--muted);margin-top:4px}
+/* ---- Heatmap année ---- */
+.hm-count{font-size:.8rem;font-weight:700;color:var(--accent-ink);background:var(--accent-soft);padding:3px 11px;border-radius:999px}
+.hm-pick{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0 4px}
+.hm-pick button{font-family:inherit;font-size:.74rem;font-weight:600;color:var(--muted);padding:5px 11px;border-radius:999px;border:1px solid var(--line);background:var(--surface);cursor:pointer;white-space:nowrap}
+.hm-pick button[aria-current="true"]{border-color:var(--accent);background:var(--accent-soft);color:var(--accent-ink)}
+.hm-scroll{overflow-x:auto;margin-top:10px;-webkit-overflow-scrolling:touch;padding-bottom:6px}
+.hm-inner{min-width:max-content}
+.hm-wrap{display:grid;grid-auto-flow:column;grid-template-rows:repeat(7,12px);gap:3px}
+.hm-cell{width:12px;height:12px;border-radius:3px;background:var(--line)}
+.hm-cell.l1{background:#cfe6cf}.hm-cell.l2{background:#9ecf9e}.hm-cell.l3{background:#6fae73}.hm-cell.l4{background:var(--accent)}
+.hm-mlabels{display:grid;grid-auto-flow:column;grid-auto-columns:15px;font-size:.66rem;color:var(--muted);margin-bottom:5px}
+.hm-mlabels span{line-height:1}
+.hm-legend{display:flex;align-items:center;gap:4px;justify-content:flex-end;margin-top:8px;font-size:.7rem;color:var(--muted)}
+.hm-legend i{width:11px;height:11px;border-radius:3px}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .hm-cell.l1{background:#35543b}:root:not([data-theme="light"]) .hm-cell.l2{background:#4a7a53}:root:not([data-theme="light"]) .hm-cell.l3{background:#6fa876}}
+:root[data-theme="dark"] .hm-cell.l1{background:#35543b}:root[data-theme="dark"] .hm-cell.l2{background:#4a7a53}:root[data-theme="dark"] .hm-cell.l3{background:#6fa876}
 </style>
 
 <header>
@@ -565,6 +581,19 @@ svg.bchart{width:100%;height:150px;display:block;margin-top:8px;overflow:visible
       <div class="stat"><div class="v tnum" id="s-rate14">0%</div><div class="k">Régularité 14 j</div></div>
       <div class="stat"><div class="v tnum" id="s-perfect">0</div><div class="k">Jours à 100%</div></div>
     </div>
+  </div>
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
+      <h3><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/></svg> Mon année</h3>
+      <span class="hm-count" id="hm-count"></span>
+    </div>
+    <div class="sub">Chaque jour fait, sur l'année · ta régularité d'un coup d'œil</div>
+    <div class="hm-pick" id="hm-pick"></div>
+    <div class="hm-scroll"><div class="hm-inner">
+      <div class="hm-mlabels" id="hm-labels"></div>
+      <div class="hm-wrap" id="hm-grid"></div>
+    </div></div>
+    <div class="hm-legend"><span>Moins</span><i class="hm-cell"></i><i class="hm-cell l1"></i><i class="hm-cell l2"></i><i class="hm-cell l3"></i><i class="hm-cell l4"></i><span>Plus</span></div>
   </div>
   <div class="card">
     <h3><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V5"/><path d="M4 19h16"/><path d="M8 16v-3M12 16v-6M16 16v-4"/></svg> Régularité par habitude</h3>
@@ -1404,8 +1433,45 @@ function renderStats(){
   const fsec=store.get("focus_week_"+weekId(),{min:0,n:0});
   const bw=(icn,lbl,val)=>`<div class="bud-row"><span style="display:flex;align-items:center;gap:8px">${ic(icn)} ${lbl}</span><span class="amt">${val}</span></div>`;
   $("#weekbilan").innerHTML=bw("habitudes","Jours habitudes complets",hDone+"/"+hTot)+bw("focus","Sessions focus",fsec.n)+bw("recompenses","Points cumulés",store.get("points",0));
+  renderHeatmap();
 }
-
+/* ---- Heatmap année (type GitHub) ---- */
+let hmSel="all";
+function hmLevel(dt,sel){
+  const s=store.get("habits_"+dayKey(dt),{});const H=getHabits();
+  if(sel==="all"){if(!H.length)return 0;const f=H.filter(h=>s[h.id]).length/H.length;
+    return f<=0?0:f<0.26?1:f<0.51?2:f<0.76?3:4;}
+  return s[sel]?4:0;
+}
+function renderHeatmap(){
+  const H=getHabits();const year=new Date().getFullYear();
+  const opts=[{id:"all",lbl:"Toutes"}].concat(H.map(h=>({id:h.id,lbl:h.lbl})));
+  if(!opts.some(o=>o.id===hmSel))hmSel="all";
+  $("#hm-pick").innerHTML=opts.map(o=>`<button data-hm="${o.id}" aria-current="${o.id===hmSel}">${esc(o.lbl)}</button>`).join("");
+  const end=new Date(year,11,31);
+  const today=new Date();today.setHours(0,0,0,0);
+  // 1er jan reculé au lundi précédent → colonnes = semaines, 7 lignes (L→D)
+  const first=new Date(year,0,1);first.setDate(first.getDate()-((first.getDay()+6)%7));
+  const totalCols=Math.ceil((end-first)/(7*864e5))+1;
+  // Étiquettes de mois (une par colonne où un mois commence)
+  const ML=["J","F","M","A","M","J","J","A","S","O","N","D"];let lastM=-1,labels="";
+  for(let c=0;c<totalCols;c++){const md=new Date(first);md.setDate(md.getDate()+c*7);
+    const m=md.getMonth();let t="";if(md.getFullYear()===year&&m!==lastM&&md.getDate()<=7){t=ML[m];lastM=m;}
+    labels+=`<span>${t}</span>`;}
+  // Cellules (ordre colonne par colonne, comme le grid)
+  let cells="",count=0,cur=new Date(first);
+  while(cur<=end){
+    const inYear=cur.getFullYear()===year,future=cur>today;
+    let cls="hm-cell";
+    if(inYear&&!future){const lv=hmLevel(cur,hmSel);if(lv){cls+=" l"+lv;count++;}}
+    cells+=`<div class="${cls}" title="${dayKey(cur)}"></div>`;
+    cur.setDate(cur.getDate()+1);
+  }
+  $("#hm-grid").innerHTML=cells;
+  $("#hm-labels").innerHTML=labels;
+  $("#hm-count").textContent=count+" jour"+(count>1?"s":"");
+}
+$("#hm-pick")&&$("#hm-pick").addEventListener("click",e=>{const b=e.target.closest("[data-hm]");if(!b)return;hmSel=b.dataset.hm;renderHeatmap();});
 /* ---- Focus ---- */
 let fMin=25,fLeft=25*60,fTimer=null,fRunning=false;
 const RING=2*Math.PI*88;
