@@ -3,13 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>html{-webkit-text-size-adjust:100%}img{max-width:100%}body{margin:0}[hidden]{display:none!important}</style>
+</head>
+<body>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="claude:viewport-fit-sides" content="cover">
 <title>2e Cerveau</title>
 <style>
-/* Reset de base (autonome, hors Claude) */
-html{-webkit-text-size-adjust:100%}
-img{max-width:100%}
-
 /* Layout : app en tuiles + modules, nav par vues (#hash). Palette blanc lumineux & vert. */
 /* Thème unique : blanc cassé & vert, toujours clair (pas de mode sombre) */
 :root{
@@ -404,8 +405,7 @@ svg.chart{width:100%;height:170px;display:block;margin-top:6px;overflow:visible}
 .valbanner .vb-k{font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600}
 .valbanner .vb-t{font-weight:600;font-size:.92rem;margin-top:1px}
 </style>
-</head>
-<body>
+
 <header>
   <div class="head-row">
     <div class="brand"><span class="dot"></span><h1>2e Cerveau</h1></div>
@@ -945,11 +945,40 @@ function getPlanning(){return store.get("planning",PLANNING_SEED);}
 function savePlanning(p){store.set("planning",p);}
 /* Events réels importés du calendrier (par date AAAA-MM-JJ). Mis à jour sur demande. */
 const REAL_EVENTS_SEED={
-  "2026-11-16":[{t:"08:15",e:"10:15",b:"Atelier écrit anglais (ORA)",n:"F.1130_B"},{t:"10:30",e:"12:30",b:"IP.Com (TP)",n:"F.2240"},{t:"14:00",e:"18:00",b:"Simulation numérique (TP)",n:"F.2250"}],
-  "2026-11-17":[{t:"08:15",e:"10:15",b:"Rhéologie TD",n:"E.118 Boole"},{t:"10:30",e:"12:30",b:"IP.Com (TP)",n:"F.2240"},{t:"14:00",e:"16:00",b:"TT TD MMA",n:"E.201"}],
-  "2026-11-18":[{t:"08:15",e:"10:15",b:"MPO CM",n:"F.1230"},{t:"10:30",e:"12:30",b:"MPO CM",n:"F.1180"},{t:"14:00",e:"16:00",b:"Business plan (CM)",n:"Amphi3"},{t:"16:15",e:"18:15",b:"Business plan (CM)",n:"Amphi3"}],
-  "2026-11-19":[{t:"08:15",e:"10:15",b:"Anglais professionnel (TD)",n:"E.201"},{t:"10:30",e:"12:30",b:"PCCP autonomie",n:"F.2290"},{t:"16:15",e:"18:15",b:"Conduite de projet (CM)",n:"F.1240"}],
-  "2026-11-20":[{t:"08:15",e:"10:15",b:"PCCP autonomie",n:"F.0130"},{t:"10:30",e:"12:30",b:"Probabilités-Stats TD",n:"F.1210"},{t:"14:00",e:"16:00",b:"Conduite de projet TD",n:"F.1230"},{t:"16:15",e:"18:15",b:"Conduite de projet TD",n:"F.1230"}],
+  "2026-11-16":[{"t":"08:15","e":"10:15","b":"Atelier écrit anglais","n":"F.1130_B"},{"t":"10:30","e":"12:30","b":"IP.Com (TP)","n":"F.2240 Info2"},{"t":"14:00","e":"18:15","b":"Simulation num._TP","n":"F.2250 Info3"}],
+  "2026-11-17":[{"t":"08:15","e":"10:15","b":"1Rhéologie TD","n":"E.118 (Boole)"},{"t":"10:30","e":"12:30","b":"IP.Com (TP)","n":"F.2240 Info2"},{"t":"14:00","e":"16:00","b":"TT TD","n":"E.201"}],
+  "2026-11-18":[{"t":"08:15","e":"10:15","b":"MPO CM","n":"F.1230"},{"t":"10:30","e":"12:30","b":"MPO CM","n":"F.1180"},{"t":"14:00","e":"16:00","b":"Business plan (CM)","n":"Amphi3"},{"t":"16:15","e":"18:15","b":"Business plan (CM)","n":"Amphi3"}],
+  "2026-11-19":[{"t":"08:15","e":"10:15","b":"Anglais professionnel (TD)","n":"E.201"},{"t":"10:30","e":"12:30","b":"PCCP autonomie","n":"F.2290 Info5"},{"t":"16:15","e":"18:15","b":"Conduite projet (CM)","n":"F.1240"}],
+  "2026-11-20":[{"t":"08:15","e":"10:15","b":"PCCP autonomie","n":"F.0130 Espace gros projets"},{"t":"10:30","e":"12:30","b":"Probas-Stats_TD","n":"F.1210"},{"t":"14:00","e":"16:00","b":"Conduite projet TD","n":"F.1230"},{"t":"16:15","e":"18:15","b":"Conduite projet TD","n":"F.1230"}],
+  "2026-11-23":[{"t":"08:15","e":"10:15","b":"Atelier écrit anglais","n":"F.1130_B"},{"t":"10:30","e":"12:30","b":"MPO CM","n":"F.1210"}],
+  "2026-11-24":[{"t":"08:15","e":"12:30","b":"Simulation num._TP","n":"F.2250 Info3"},{"t":"14:00","e":"16:00","b":"Info.2 TP Gr2","n":"F.2260 Info4"},{"t":"16:15","e":"18:15","b":"Polymères (TD)","n":"E.118 (Boole)"}],
+  "2026-11-25":[{"t":"08:15","e":"10:15","b":"Probas-Stats_CM","n":"F.1240"},{"t":"14:00","e":"16:00","b":"1Rhéologie TD","n":"E.201"},{"t":"16:15","e":"18:15","b":"Business plan TD","n":"F.1170"}],
+  "2026-11-26":[{"t":"08:15","e":"10:15","b":"Anglais professionnel (TD)","n":"E.201"},{"t":"10:30","e":"12:30","b":"Business plan TD","n":"F.1250"},{"t":"14:00","e":"16:00","b":"Business plan TD","n":"F.1240"},{"t":"16:15","e":"18:15","b":"PCCP autonomie","n":"F.2250 Info3"}],
+  "2026-11-27":[{"t":"08:15","e":"10:15","b":"Probas-Stats_TD","n":"F.1250"},{"t":"10:30","e":"12:30","b":"PCCP autonomie","n":"F.2290 Info5"},{"t":"14:00","e":"16:00","b":"MPO TD","n":"E.201"},{"t":"16:15","e":"18:15","b":"Calcul de structure TD","n":"E.201"}],
+  "2026-11-30":[{"t":"08:15","e":"10:15","b":"Atelier écrit anglais","n":"F.1130_B"},{"t":"10:30","e":"12:30","b":"Rhéologie CM Examen","n":"Amphi5"},{"t":"14:00","e":"16:00","b":"Conduite projet (TD)","n":"F.1190"},{"t":"16:15","e":"18:15","b":"Calcul de structure TD","n":"F.1190"}],
+  "2026-12-01":[{"t":"08:15","e":"10:15","b":"Probas-Stats_TD","n":"F.1190"},{"t":"10:30","e":"12:30","b":"MPO CM","n":"F.1190"},{"t":"14:00","e":"16:00","b":"Polymères (TD)","n":"F.1190"},{"t":"16:15","e":"18:15","b":"PCCP autonomie","n":"F.0170 Info1"}],
+  "2026-12-02":[{"t":"14:00","e":"16:00","b":"Info.2 TP Gr2","n":"F.2240 Info2"},{"t":"16:15","e":"18:15","b":"PCCP autonomie","n":"F.0130 Espace gros projets"}],
+  "2026-12-03":[{"t":"08:15","e":"10:15","b":"Anglais professionnel (TD)","n":"E.201"},{"t":"10:30","e":"12:30","b":"MPO CM","n":"F.1250"},{"t":"14:00","e":"18:15","b":"Simulation num._TP","n":"E.230 Info8 (Unix A)"}],
+  "2026-12-04":[{"t":"08:15","e":"10:15","b":"MPO TD","n":"F.1240"},{"t":"10:30","e":"12:30","b":"Probas-Stats_CM","n":"F.1240"}],
+  "2026-12-07":[{"t":"08:15","e":"10:15","b":"Atelier écrit anglais","n":"F.1130_B"},{"t":"10:30","e":"12:30","b":"MPO CM","n":"F.1240"},{"t":"14:00","e":"18:15","b":"Simulation num._TP","n":"F.2240 Info2"}],
+  "2026-12-08":[{"t":"10:30","e":"12:30","b":"CS TP Gr2","n":"F.2360 Méca3 (Ex1)"},{"t":"14:00","e":"16:00","b":"CS TP Gr2","n":"F.2360 Méca3 (Ex1)"},{"t":"16:15","e":"18:15","b":"TT TP Gr2","n":"E.231 Info9 (Unix B)"}],
+  "2026-12-09":[{"t":"08:15","e":"10:15","b":"MPO TD","n":"F.1230"},{"t":"10:30","e":"12:30","b":"TT Examen","n":"Amphi4"},{"t":"14:00","e":"16:00","b":"Polymères (TD) CC","n":"Amphi5"},{"t":"16:15","e":"18:15","b":"PCCP autonomie","n":"F.2260 Info4"}],
+  "2026-12-10":[{"t":"08:15","e":"10:15","b":"Anglais professionnel (TD)","n":"E.201"},{"t":"14:00","e":"16:00","b":"Info.2 TP Gr2","n":"E.230 Info8 (Unix A)"},{"t":"16:15","e":"18:15","b":"Probas-Stats_TP","n":"F.1240"}],
+  "2026-12-11":[{"t":"09:00","e":"12:00","b":"TOEIC de rattrapage &5A","n":"Amphi2"},{"t":"16:15","e":"18:15","b":"PCCP autonomie","n":"F.2250 Info3"}],
+  "2027-01-11":[{"t":"08:15","e":"10:15","b":"Atelier écrit anglais","n":"F.1130_B"},{"t":"10:30","e":"12:30","b":"Examen Calcul de Structures","n":"Amphi4"},{"t":"14:00","e":"16:00","b":"MPO TD","n":"F.1230"},{"t":"16:15","e":"18:15","b":"Contrôle_Terminal_Anglais","n":"Amphi5"}],
+  "2027-01-12":[{"t":"08:15","e":"10:15","b":"MPO TD","n":"E.118 (Boole)"},{"t":"10:30","e":"12:30","b":"CS TP Gr2","n":"F.2360 Méca3 (Ex1)"}],
+  "2027-01-13":[{"t":"08:15","e":"10:15","b":"MPO TD Examen","n":"F.1210"},{"t":"10:30","e":"12:30","b":"TT TP Gr2","n":"F.0170 Info1"}],
+  "2027-01-14":[{"t":"08:15","e":"10:15","b":"Anglais professionnel (TD)","n":"E.201"},{"t":"10:30","e":"12:30","b":"CS TP Gr2","n":"F.2360 Méca3 (Ex1)"},{"t":"14:00","e":"16:00","b":"Info.2 TP Gr2","n":"F.2260 Info4"}],
+  "2027-01-15":[{"t":"08:15","e":"10:15","b":"Probas-Stats_TP","n":"F.1230"},{"t":"14:00","e":"16:00","b":"PCCP autonomie","n":"E.125 Info6 (Windows A)"},{"t":"16:15","e":"18:15","b":"PCCP autonomie","n":"F.2250 Info3"}],
+  "2027-01-18":[{"t":"08:15","e":"10:15","b":"CS TP Gr2","n":"F.2360 Méca3 (Ex1)"},{"t":"10:30","e":"12:30","b":"TT TP Gr2","n":"F.0170 Info1"}],
+  "2027-01-19":[{"t":"10:30","e":"12:30","b":"Conduite projet / Soutenances","n":""},{"t":"14:00","e":"16:00","b":"CS TP Gr2","n":"F.2360 Méca3 (Ex1)"}],
+  "2027-01-20":[{"t":"08:15","e":"10:15","b":"Evasys S7 - Carnet de Suivi","n":"E.230 Info8 (Unix A)"},{"t":"10:30","e":"12:30","b":"Réunion bilan S7","n":"Amphi3"}],
+  "2027-01-21":[{"t":"08:15","e":"10:15","b":"Contrôle_Continu_Probas-Stats_CM","n":"Amphi5"},{"t":"14:00","e":"16:00","b":"Info.2 TP Gr2","n":"F.2290 Info5"}],
+  "2027-01-22":[{"t":"14:00","e":"16:00","b":"PCCP autonomie","n":"F.2250 Info3"},{"t":"16:15","e":"18:15","b":"PCCP autonomie","n":"F.2250 Info3"}],
+  "2027-01-25":[{"t":"08:15","e":"10:15","b":"Toeic préparation","n":"E.201"}],
+  "2027-01-28":[{"t":"14:00","e":"16:00","b":"Toeic préparation","n":"E.201"}],
+  "2027-02-01":[{"t":"08:15","e":"10:15","b":"Toeic préparation","n":"E.201"}],
+  "2027-02-04":[{"t":"14:00","e":"16:00","b":"Toeic préparation","n":"E.222"}],
 };
 // Lien ICS de l'emploi du temps Polytech (ADE univ-tours)
 const ICS_URL="https://ade.univ-tours.fr/jsp/custom/modules/plannings/V3LM5EYA.shu";
