@@ -267,7 +267,7 @@ svg.chart{width:100%;height:170px;display:block;margin-top:6px;overflow:visible}
 .calgrid.day .hslot{flex:1;border-left:1px solid var(--line)}
 .calgrid.day .ev-layer{position:absolute;left:46px;right:4px;top:0;bottom:0}
 .calgrid.day .evblock{position:absolute;left:4px;right:0;border-radius:7px;padding:3px 8px;overflow:hidden;
-  background:var(--cs);border-left:3px solid var(--c);cursor:pointer}
+  background:var(--cs);border-left:3px solid var(--c)}
 .calgrid.day .evblock .eb-t{font-size:.76rem;font-weight:600;color:var(--fg);line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .calgrid.day .evblock .eb-m{font-size:.64rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 /* Vue SEMAINE */
@@ -277,7 +277,7 @@ svg.chart{width:100%;height:170px;display:block;margin-top:6px;overflow:visible}
 .calgrid.week .corner{position:sticky;top:0;background:var(--surface);z-index:2;border-bottom:1px solid var(--line)}
 .calgrid.week .wrow-h{grid-column:1;font-size:.58rem;color:var(--muted);text-align:right;padding:2px 4px 0 0;border-top:1px solid var(--line);min-height:30px}
 .calgrid.week .wcell{border-top:1px solid var(--line);border-left:1px solid var(--line);position:relative;min-height:30px}
-.calgrid.week .wev{position:absolute;left:1px;right:1px;border-radius:4px;background:var(--cs);border-left:2px solid var(--c);padding:1px 2px;overflow:hidden;cursor:pointer}
+.calgrid.week .wev{position:absolute;left:1px;right:1px;border-radius:4px;background:var(--cs);border-left:2px solid var(--c);padding:1px 2px;overflow:hidden}
 .calgrid.week .wev .we-t{font-size:.54rem;font-weight:600;line-height:1.1;overflow:hidden}
 .cat-legend{display:flex;gap:12px;flex-wrap:wrap;margin:12px 0 4px}
 .cat-legend .cl{display:flex;align-items:center;gap:6px;font-size:.76rem;color:var(--muted)}
@@ -561,6 +561,7 @@ svg.chart{width:100%;height:170px;display:block;margin-top:6px;overflow:visible}
     <div class="daynav" id="daynav"></div>
     <div class="cal-scroll"><div id="calendar" class="calgrid"></div></div>
     <div class="cat-legend" id="cat-legend"></div>
+    <div id="perso-manage"></div>
     <div class="add-row" style="flex-wrap:wrap">
       <input id="ev-time" placeholder="19:30" style="flex:0 0 66px" maxlength="12">
       <input id="ev-title" placeholder="Titre (ex. Révision polymères)" maxlength="50">
@@ -1163,7 +1164,21 @@ function renderPlanning(){
   $("#cat-legend").innerHTML=Object.keys(CATS).map(c=>`<span class="cl cat-${c}"><span class="sw" style="background:var(--c)"></span>${CATS[c]}</span>`).join("");
   const grid=$("#calendar");
   if(calView==="jour")renderDayGrid(grid);else renderWeekGrid(grid);
+  renderPersoManage();
 }
+function renderPersoManage(){
+  const box=$("#perso-manage");if(!box)return;
+  if(calView!=="jour"){box.innerHTML="";return;}
+  const perso=(getPlanning()[planDay]||[]);
+  if(!perso.length){box.innerHTML="";return;}
+  box.innerHTML=`<div class="realtag" style="margin-top:10px">Mes blocs perso du jour</div>`+
+    perso.map((r,i)=>`<div class="bud-row"><span style="display:flex;align-items:center;gap:8px"><span class="sw-dot cat-${r.cat||guessCat(r.b)}" style="width:10px;height:10px;border-radius:3px;background:var(--c);display:inline-block"></span>${esc(r.t)} · ${esc(r.b)}</span>
+      <button class="del" data-pdel="${i}" aria-label="Supprimer">✕</button></div>`).join("");
+}
+$("#perso-manage").addEventListener("click",e=>{
+  const del=e.target.closest("[data-pdel]");if(!del)return;
+  const p=getPlanning();(p[planDay]=p[planDay]||[]).splice(+del.dataset.pdel,1);savePlanning(p);renderPlanning();renderNow();
+});
 function renderDayGrid(grid){
   const dk=dateForWeekday(planDay);const isToday=planDay===((new Date().getDay()+6)%7);
   $("#cal-head").textContent=new Date(dk).toLocaleDateString("fr-FR",{weekday:"long",day:"numeric",month:"long"})+(isToday?" · aujourd'hui":"");
@@ -1184,7 +1199,6 @@ function renderDayGrid(grid){
     const bl=document.createElement("div");bl.className="evblock cat-"+e.cat;
     bl.style.cssText=`top:${top}px;height:${(e.real?46:42)}px`;
     bl.innerHTML=`<div class="eb-t">${esc(e.b)}</div><div class="eb-m">${esc(e.t)}${e.n?" · "+esc(e.n):""}</div>`;
-    if(e.idx!=null){bl.dataset.del=e.idx;bl.title="Toucher pour supprimer";}
     layer.appendChild(bl);
   });
 }
@@ -1215,10 +1229,6 @@ function renderWeekGrid(grid){
 $("#vt-jour").addEventListener("click",()=>{calView="jour";renderPlanning();});
 $("#vt-sem").addEventListener("click",()=>{calView="semaine";renderPlanning();});
 $("#daynav").addEventListener("click",e=>{const b=e.target.closest("button");if(b){planDay=+b.dataset.d;renderPlanning();}});
-$("#calendar").addEventListener("click",e=>{
-  const bl=e.target.closest("[data-del]");if(!bl)return;
-  const p=getPlanning();(p[planDay]=p[planDay]||[]).splice(+bl.dataset.del,1);savePlanning(p);renderPlanning();renderNow();
-});
 $("#ev-add").addEventListener("click",()=>{
   const t=$("#ev-time").value.trim(),b=$("#ev-title").value.trim();if(!b||toMin(t)==null){$("#ev-title").focus();return;}
   const n=$("#ev-note").value.trim();const cat=$("#ev-cat").value;
