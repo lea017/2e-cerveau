@@ -290,11 +290,11 @@ svg.chart{width:100%;height:170px;display:block;margin-top:6px;overflow:visible}
 .viewtog{display:flex;gap:4px;background:var(--surface-2);border-radius:999px;padding:3px}
 .viewtog button{border:0;background:none;font-family:inherit;font-weight:600;font-size:.8rem;color:var(--muted);padding:6px 14px;border-radius:999px;cursor:pointer}
 .viewtog button[aria-current="true"]{background:var(--accent);color:#fff}
-/* Catégories en nuances de vert (dégradé de la même famille) */
-.cat-cours{--c:#4f7a5a;--cs:#e3ece4}
-.cat-revision{--c:#6f9a6b;--cs:#e8efe0}
-.cat-sport{--c:#9ab87f;--cs:#edf2e2}
-.cat-perso{--c:#b7c9a0;--cs:#f1f4ea}
+/* Catégories en nuances de vert bien contrastées (foncé → clair) */
+.cat-cours{--c:#2e5339;--cs:#d4e2d7;--ci:#24412c}
+.cat-revision{--c:#4e8a44;--cs:#dcefd5;--ci:#39662f}
+.cat-sport{--c:#7fb03a;--cs:#eaf6d9;--ci:#557524}
+.cat-perso{--c:#9cc47e;--cs:#f0f5e8;--ci:#5c7742}
 .cal-nav{display:flex;align-items:center;gap:8px;margin:12px 0 4px}
 .cal-arrow{flex:none;width:34px;height:34px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--accent-ink);font-size:1.3rem;line-height:1;cursor:pointer;display:grid;place-items:center}
 .cal-arrow:active{background:var(--accent-soft)}
@@ -313,10 +313,10 @@ svg.chart{width:100%;height:170px;display:block;margin-top:6px;overflow:visible}
 .calgrid.day .hlabel{flex:0 0 46px;font-size:.68rem;color:var(--muted);text-align:right;padding:3px 8px 0 0;font-variant-numeric:tabular-nums}
 .calgrid.day .hslot{flex:1;border-left:1px solid var(--line)}
 .calgrid.day .ev-layer{position:absolute;left:46px;right:4px;top:0;bottom:0}
-.calgrid.day .evblock{position:absolute;left:4px;right:0;border-radius:7px;padding:3px 8px;overflow:hidden;
-  background:var(--cs);border-left:3px solid var(--c)}
-.calgrid.day .evblock .eb-t{font-size:.76rem;font-weight:600;color:var(--fg);line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.calgrid.day .evblock .eb-m{font-size:.64rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.calgrid.day .evblock{position:absolute;left:4px;right:2px;border-radius:8px;padding:4px 9px;overflow:hidden;
+  background:var(--cs);border-left:4px solid var(--c)}
+.calgrid.day .evblock .eb-t{font-size:.82rem;font-weight:700;color:var(--ci);line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.calgrid.day .evblock .eb-m{font-size:.68rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px}
 /* Vue SEMAINE */
 .calgrid.week{display:grid;grid-template-columns:34px repeat(7,1fr);font-size:.6rem}
 .calgrid.week .wh{position:sticky;top:0;background:var(--surface);z-index:2;text-align:center;padding:5px 0;font-weight:700;color:var(--muted);border-bottom:1px solid var(--line);font-size:.62rem;display:flex;flex-direction:column;gap:1px}
@@ -326,8 +326,8 @@ svg.chart{width:100%;height:170px;display:block;margin-top:6px;overflow:visible}
 .calgrid.week .corner{position:sticky;top:0;background:var(--surface);z-index:2;border-bottom:1px solid var(--line)}
 .calgrid.week .wrow-h{grid-column:1;font-size:.58rem;color:var(--muted);text-align:right;padding:2px 4px 0 0;border-top:1px solid var(--line);min-height:30px}
 .calgrid.week .wcell{border-top:1px solid var(--line);border-left:1px solid var(--line);position:relative;min-height:30px}
-.calgrid.week .wev{position:absolute;left:1px;right:1px;border-radius:4px;background:var(--cs);border-left:2px solid var(--c);padding:1px 2px;overflow:hidden}
-.calgrid.week .wev .we-t{font-size:.54rem;font-weight:600;line-height:1.1;overflow:hidden}
+.calgrid.week .wev{position:absolute;left:1px;right:1px;border-radius:4px;background:var(--cs);border-left:2.5px solid var(--c);padding:1px 3px;overflow:hidden}
+.calgrid.week .wev .we-t{font-size:.56rem;font-weight:700;line-height:1.1;overflow:hidden;color:var(--ci)}
 .cat-legend{display:flex;gap:12px;flex-wrap:wrap;margin:12px 0 4px}
 .cat-legend .cl{display:flex;align-items:center;gap:6px;font-size:.76rem;color:var(--muted)}
 .cat-legend .cl .sw{width:11px;height:11px;border-radius:3px}
@@ -838,7 +838,8 @@ function setSyncBadge(s){const el=$("#sync-badge");if(!el)return;
   el.className="sync-badge "+s;
   el.textContent=s==="ok"?"Synchronisé ✓":s==="err"?"Hors ligne":"Synchro…";}
 
-const dayKey=(dt=new Date())=>dt.toISOString().slice(0,10);
+// Clé de date en heure LOCALE (pas UTC, pour éviter le décalage d'un jour)
+const dayKey=(dt=new Date())=>{const y=dt.getFullYear(),m=String(dt.getMonth()+1).padStart(2,"0"),d=String(dt.getDate()).padStart(2,"0");return `${y}-${m}-${d}`;};
 const check=`<svg viewBox="0 0 14 14"><path d="M2 7l3.5 3.5L12 3"/></svg>`;
 /* Icônes au trait, monochromes (vert via currentColor/stroke) */
 const ICONS={
@@ -925,15 +926,20 @@ function getPlanning(){return store.get("planning",PLANNING_SEED);}
 function savePlanning(p){store.set("planning",p);}
 /* Events réels importés du calendrier (par date AAAA-MM-JJ). Mis à jour sur demande. */
 const REAL_EVENTS_SEED={
-  "2026-11-16":[{t:"08:15",b:"Atelier écrit anglais (ORA)",n:"F.1130_B"},{t:"10:30",b:"IP.Com (TP)",n:"F.2240"},{t:"14:00",b:"Simulation numérique (TP)",n:"F.2250"}],
-  "2026-11-17":[{t:"08:15",b:"Rhéologie TD",n:"E.118 Boole"},{t:"10:30",b:"IP.Com (TP)",n:"F.2240"},{t:"14:00",b:"TT TD MMA",n:"E.201"}],
-  "2026-11-18":[{t:"08:15",b:"MPO CM",n:"F.1230"},{t:"10:30",b:"MPO CM",n:"F.1180"},{t:"14:00",b:"Business plan (CM)",n:"Amphi3"},{t:"16:15",b:"Business plan (CM)",n:"Amphi3"}],
-  "2026-11-19":[{t:"08:15",b:"Anglais professionnel (TD)",n:"E.201"},{t:"10:30",b:"PCCP autonomie",n:"F.2290"},{t:"16:15",b:"Conduite de projet (CM)",n:"F.1240"}],
-  "2026-11-20":[{t:"08:15",b:"PCCP autonomie",n:"F.0130"},{t:"10:30",b:"Probabilités-Stats TD",n:"F.1210"},{t:"14:00",b:"Conduite de projet TD",n:"F.1230"},{t:"16:15",b:"Conduite de projet TD",n:"F.1230"}],
+  "2026-11-16":[{t:"08:15",e:"10:15",b:"Atelier écrit anglais (ORA)",n:"F.1130_B"},{t:"10:30",e:"12:30",b:"IP.Com (TP)",n:"F.2240"},{t:"14:00",e:"18:15",b:"Simulation numérique (TP)",n:"F.2250"}],
+  "2026-11-17":[{t:"08:15",e:"10:15",b:"Rhéologie TD",n:"E.118 Boole"},{t:"10:30",e:"12:30",b:"IP.Com (TP)",n:"F.2240"},{t:"14:00",e:"16:00",b:"TT TD MMA",n:"E.201"}],
+  "2026-11-18":[{t:"08:15",e:"10:15",b:"MPO CM",n:"F.1230"},{t:"10:30",e:"12:30",b:"MPO CM",n:"F.1180"},{t:"14:00",e:"16:00",b:"Business plan (CM)",n:"Amphi3"},{t:"16:15",e:"18:15",b:"Business plan (CM)",n:"Amphi3"}],
+  "2026-11-19":[{t:"08:15",e:"10:15",b:"Anglais professionnel (TD)",n:"E.201"},{t:"10:30",e:"12:30",b:"PCCP autonomie",n:"F.2290"},{t:"16:15",e:"18:15",b:"Conduite de projet (CM)",n:"F.1240"}],
+  "2026-11-20":[{t:"08:15",e:"10:15",b:"PCCP autonomie",n:"F.0130"},{t:"10:30",e:"12:30",b:"Probabilités-Stats TD",n:"F.1210"},{t:"14:00",e:"16:00",b:"Conduite de projet TD",n:"F.1230"},{t:"16:15",e:"18:15",b:"Conduite de projet TD",n:"F.1230"}],
 };
 // Lien ICS de l'emploi du temps Polytech (ADE univ-tours)
 const ICS_URL="https://ade.univ-tours.fr/jsp/custom/modules/plannings/V3LM5EYA.shu";
-function getReal(){return store.get("real_events_synced",null)||store.get("real_events",REAL_EVENTS_SEED);}
+function getReal(){
+  // fusionne le seed (cours connus de cette semaine) et les cours synchronisés (prioritaires par date)
+  const synced=store.get("real_events_synced",null);
+  if(!synced)return REAL_EVENTS_SEED;
+  return {...REAL_EVENTS_SEED,...synced};
+}
 function dateForWeekday(wd){const dt=new Date();const cur=(dt.getDay()+6)%7;dt.setDate(dt.getDate()-(cur-wd));return dayKey(dt);}
 
 /* ---- Synchro ICS (emploi du temps) ---- */
@@ -1260,8 +1266,11 @@ function scrollToFirst(){
   else{for(let d=0;d<7;d++){const dt=new Date(weekMonday(calOffset));dt.setDate(dt.getDate()+d);const evs=eventsForDate(dt);if(evs.length){const m=toMin(evs[0].t);if(firstMin==null||m<firstMin)firstMin=m;}}}
   if(firstMin==null)firstMin=8*60;
   const slot=calView==="jour"?SLOT_H:WROW_H;
-  const y=Math.max(0,(firstMin-CAL_START*60)/60*slot-10);
-  setTimeout(()=>{sc.scrollTop=y;},60);
+  const y=Math.max(0,(firstMin-CAL_START*60)/60*slot-12);
+  // double tentative pour être sûr que le layout est prêt
+  sc.scrollTop=y;
+  requestAnimationFrame(()=>{sc.scrollTop=y;});
+  setTimeout(()=>{sc.scrollTop=y;},120);
 }
 function renderPersoManage(){
   const box=$("#perso-manage");if(!box)return;
@@ -1691,7 +1700,10 @@ $("#cap-confirm").addEventListener("click",()=>{
 
 /* ---- Synchro ICS : bouton + auto ---- */
 $("#ics-sync").addEventListener("click",()=>syncICS(false));
-{const last=store.get("ics_last",0);
+{
+ // Migration : cette version lit les heures de fin → on force une resynchro propre une fois
+ if(store.get("ics_fmt",0)<2){store.set("real_events_synced",null);store.set("ics_last",0);store.set("ics_fmt",2);}
+ const last=store.get("ics_last",0);
  if($("#ics-status")&&store.get("real_events_synced",null))$("#ics-status").textContent="Cours à jour · "+new Date(last).toLocaleString("fr-FR",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"});
  // auto-synchro si jamais fait ou > 6h
  if(Date.now()-last>6*3600e3)syncICS(true);}
