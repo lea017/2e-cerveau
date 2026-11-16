@@ -9,6 +9,7 @@
 /* Reset de base (autonome, hors Claude) */
 html{-webkit-text-size-adjust:100%}
 img{max-width:100%}
+
 /* Layout : app en tuiles + modules, nav par vues (#hash). Palette blanc lumineux & vert. */
 /* Thème unique : blanc cassé & vert, toujours clair (pas de mode sombre) */
 :root{
@@ -325,11 +326,14 @@ svg.chart{width:100%;height:170px;display:block;margin-top:6px;overflow:visible}
 .pts{display:flex;align-items:center;gap:6px;background:var(--accent-soft);color:var(--accent-ink);padding:5px 11px;border-radius:999px;font-weight:700;font-size:.82rem}
 
 /* Bottom tab bar */
-.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:20;display:flex;
+.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:2147483646;display:flex;
   background:var(--surface);border-top:1px solid var(--line);
   padding-bottom:env(safe-area-inset-bottom,0px);
   padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px);
   box-shadow:0 -2px 16px rgba(42,43,36,.05)}
+/* Masque le badge "Powered by Netlify" qui recouvre la barre du bas */
+.netlify-badge,[class*="netlify-badge"],a[href*="netlify.com"][target="_blank"],
+#netlify-badge,div[style*="netlify"]{display:none!important}
 .tabbar button{flex:1;background:none;border:0;cursor:pointer;font-family:inherit;color:var(--muted);
   display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 0 8px;font-size:.66rem;font-weight:600}
 .tabbar button svg{width:23px;height:23px;stroke:currentColor;stroke-width:1.9;fill:none;stroke-linecap:round;stroke-linejoin:round}
@@ -1643,6 +1647,18 @@ function renderAll(){
   renderSessChips();renderSessExos();renderExams();renderToeic();renderJournal();renderBudget();renderGoals();
   fRender();renderFocus();
 }
+
+/* ---- Masque un éventuel badge Netlify qui gêne la barre du bas ---- */
+function killNetlifyBadge(){
+  try{document.querySelectorAll('a[href*="netlify.com"]').forEach(a=>{
+    // ne masque que les badges flottants, pas un vrai lien dans le contenu
+    const st=getComputedStyle(a);
+    if(st.position==="fixed"||st.position==="absolute"||a.closest('[style*="position: fixed"]'))a.style.display="none";
+    const box=a.getBoundingClientRect();
+    if(box.bottom>window.innerHeight-120)a.style.display="none";
+  });}catch(e){}
+}
+killNetlifyBadge();setTimeout(killNetlifyBadge,1200);setTimeout(killNetlifyBadge,3000);
 
 /* ---- Init ---- */
 renderAll();
