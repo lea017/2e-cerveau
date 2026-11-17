@@ -375,8 +375,10 @@ svg.chart{width:100%;height:170px;display:block;margin-top:6px;overflow:visible}
   padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px);
   box-shadow:0 -2px 16px rgba(42,43,36,.05)}
 /* Masque le badge "Powered by Netlify" qui recouvre la barre du bas */
-.netlify-badge,[class*="netlify-badge"],a[href*="netlify.com"][target="_blank"],
-#netlify-badge,div[style*="netlify"]{display:none!important}
+.netlify-badge,[class*="netlify-badge"],[id*="netlify-badge"],
+a[href*="netlify.com"],a[href*="netlify.app/drop"],
+[class*="deploy-badge"],[data-netlify-badge]{
+  display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important}
 .tabbar button{flex:1;background:none;border:0;cursor:pointer;font-family:inherit;color:var(--muted);
   display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 0 8px;font-size:.66rem;font-weight:600}
 .tabbar button svg{width:23px;height:23px;stroke:currentColor;stroke-width:1.9;fill:none;stroke-linecap:round;stroke-linejoin:round}
@@ -2476,17 +2478,26 @@ function renderAll(){
   fRender();renderFocus();
 }
 
-/* ---- Masque un éventuel badge Netlify qui gêne la barre du bas ---- */
+/* ---- Masque tout badge "Powered by Netlify" qui gêne la barre du bas ---- */
 function killNetlifyBadge(){
-  try{document.querySelectorAll('a[href*="netlify.com"]').forEach(a=>{
-    // ne masque que les badges flottants, pas un vrai lien dans le contenu
-    const st=getComputedStyle(a);
-    if(st.position==="fixed"||st.position==="absolute"||a.closest('[style*="position: fixed"]'))a.style.display="none";
-    const box=a.getBoundingClientRect();
-    if(box.bottom>window.innerHeight-120)a.style.display="none";
-  });}catch(e){}
+  try{
+    const sel='a[href*="netlify.com"],a[href*="netlify.app/drop"],.netlify-badge,[class*="netlify-badge"],[id*="netlify-badge"],[data-netlify-badge]';
+    document.querySelectorAll(sel).forEach(a=>{
+      // enlève le badge et son conteneur flottant éventuel (pas un vrai lien dans le contenu)
+      let el=a;const box=a.getBoundingClientRect();
+      const floating=(()=>{const st=getComputedStyle(a);return st.position==="fixed"||st.position==="absolute";})();
+      if(floating||box.bottom>window.innerHeight-130||/netlify/i.test(a.className)){
+        // remonte jusqu'au conteneur positionné pour tout retirer
+        let p=a;for(let i=0;i<3&&p.parentElement;i++){const ps=getComputedStyle(p.parentElement);if(ps.position==="fixed"||ps.position==="absolute"){p=p.parentElement;}else break;}
+        p.remove();
+      }
+    });
+  }catch(e){}
 }
-killNetlifyBadge();setTimeout(killNetlifyBadge,1200);setTimeout(killNetlifyBadge,3000);
+killNetlifyBadge();
+[400,1200,3000,6000].forEach(t=>setTimeout(killNetlifyBadge,t));
+// surveille le DOM : si Netlify réinjecte le badge plus tard, on le retire aussitôt
+try{const mo=new MutationObserver(()=>killNetlifyBadge());mo.observe(document.body,{childList:true,subtree:true});}catch(e){}
 
 /* ---- Init ---- */
 renderAll();
