@@ -2481,23 +2481,27 @@ function renderAll(){
 /* ---- Masque tout badge "Powered by Netlify" qui gêne la barre du bas ---- */
 function killNetlifyBadge(){
   try{
-    const sel='a[href*="netlify.com"],a[href*="netlify.app/drop"],.netlify-badge,[class*="netlify-badge"],[id*="netlify-badge"],[data-netlify-badge]';
-    document.querySelectorAll(sel).forEach(a=>{
-      // enlève le badge et son conteneur flottant éventuel (pas un vrai lien dans le contenu)
-      let el=a;const box=a.getBoundingClientRect();
-      const floating=(()=>{const st=getComputedStyle(a);return st.position==="fixed"||st.position==="absolute";})();
-      if(floating||box.bottom>window.innerHeight-130||/netlify/i.test(a.className)){
-        // remonte jusqu'au conteneur positionné pour tout retirer
-        let p=a;for(let i=0;i<3&&p.parentElement;i++){const ps=getComputedStyle(p.parentElement);if(ps.position==="fixed"||ps.position==="absolute"){p=p.parentElement;}else break;}
-        p.remove();
+    // 1. cibles connues : liens et classes Netlify
+    document.querySelectorAll('a[href*="netlify.com"],a[href*="netlify.app/drop"],.netlify-badge,[class*="netlify-badge"],[id*="netlify-badge"],[data-netlify-badge]').forEach(a=>{
+      let p=a;for(let i=0;i<4&&p.parentElement&&p.parentElement!==document.body;i++){const ps=getComputedStyle(p.parentElement);if(ps.position==="fixed"||ps.position==="absolute")p=p.parentElement;else break;}
+      p.remove();
+    });
+    // 2. filet de sécurité : tout élément fixé/absolu en bas de l'écran dont le contenu parle de Netlify
+    document.querySelectorAll('body > *, html > *').forEach(el=>{
+      if(el===document.body||el.tagName==="HEAD"||el.tagName==="SCRIPT"||el.tagName==="STYLE")return;
+      if(el.id==="tabbar"||el.id==="fab"||el.classList.contains("sheet")||el.classList.contains("capture")||el.classList.contains("kick"))return;
+      const st=getComputedStyle(el);
+      if((st.position==="fixed"||st.position==="absolute")&&/netlify|powered by/i.test(el.textContent||"")){
+        const box=el.getBoundingClientRect();
+        if(box.bottom>window.innerHeight-140||box.width<260)el.remove();
       }
     });
   }catch(e){}
 }
 killNetlifyBadge();
-[400,1200,3000,6000].forEach(t=>setTimeout(killNetlifyBadge,t));
-// surveille le DOM : si Netlify réinjecte le badge plus tard, on le retire aussitôt
-try{const mo=new MutationObserver(()=>killNetlifyBadge());mo.observe(document.body,{childList:true,subtree:true});}catch(e){}
+[300,800,1500,3000,6000].forEach(t=>setTimeout(killNetlifyBadge,t));
+// surveille le DOM en continu : si Netlify réinjecte le badge, on le retire aussitôt
+try{const mo=new MutationObserver(()=>killNetlifyBadge());mo.observe(document.documentElement,{childList:true,subtree:true});}catch(e){}
 
 /* ---- Init ---- */
 renderAll();
