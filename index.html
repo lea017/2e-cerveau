@@ -505,6 +505,20 @@ svg.bchart{width:100%;height:150px;display:block;margin-top:8px;overflow:visible
 .recap-cell .rv{font-family:var(--f-display);font-size:1.35rem;font-weight:700;color:var(--accent-ink);line-height:1}
 .recap-cell .rk{font-size:.74rem;color:var(--muted);margin-top:3px}
 .recap-note{font-size:.84rem;color:var(--fg);line-height:1.5;margin-top:10px;opacity:.9}
+/* ---- Liste de courses ---- */
+.shop-count{font-size:.78rem;font-weight:700;color:var(--accent-ink);background:var(--accent-soft);padding:3px 11px;border-radius:999px}
+.shop-rayon{font-size:.74rem;font-weight:700;letter-spacing:.02em;color:var(--muted);margin:14px 0 2px;padding-bottom:5px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:7px}
+.shop-item{display:flex;align-items:center;gap:11px;padding:11px 2px;border-bottom:1px solid var(--line);cursor:pointer}
+.shop-item:last-child{border-bottom:0}
+.shop-item .box{width:22px;height:22px;border-radius:7px;border:2px solid var(--line);flex:none;display:flex;align-items:center;justify-content:center;transition:.12s}
+.shop-item .box svg{width:13px;height:13px;stroke:#fff;stroke-width:3;fill:none;opacity:0}
+.shop-item .nm{flex:1 1 auto;min-width:0;font-size:.95rem}
+.shop-item .del{background:none;border:0;color:var(--muted);font-size:.95rem;cursor:pointer;padding:4px 6px;flex:none}
+.shop-item.done .box{background:var(--accent);border-color:var(--accent)}
+.shop-item.done .box svg{opacity:1}
+.shop-item.done .nm{text-decoration:line-through;color:var(--muted)}
+.shop-foot{margin-top:14px}
+.shop-clear{width:100%;font-family:inherit;font-size:.86rem;font-weight:600;color:var(--muted);background:var(--surface);border:1px solid var(--line);border-radius:11px;padding:11px;cursor:pointer}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .hm-cell.l1{background:#35543b}:root:not([data-theme="light"]) .hm-cell.l2{background:#4a7a53}:root:not([data-theme="light"]) .hm-cell.l3{background:#6fa876}}
 :root[data-theme="dark"] .hm-cell.l1{background:#35543b}:root[data-theme="dark"] .hm-cell.l2{background:#4a7a53}:root[data-theme="dark"] .hm-cell.l3{background:#6fa876}
 </style>
@@ -826,6 +840,34 @@ svg.bchart{width:100%;height:150px;display:block;margin-top:8px;overflow:visible
   </div>
 </section>
 
+<!-- COURSES -->
+<section role="tabpanel" data-view="courses" hidden>
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
+      <h3><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h15l-1.5 9h-12z"/><path d="M5 7L4 3H2"/><circle cx="9" cy="20" r="1.3"/><circle cx="17" cy="20" r="1.3"/></svg> Liste de courses</h3>
+      <span class="shop-count" id="shop-count"></span>
+    </div>
+    <div class="sub">Note au fil de la semaine, coche au magasin.</div>
+    <div class="add-row">
+      <input id="shop-new" placeholder="Article (ex. Lait)" maxlength="40" style="flex:1 1 130px">
+      <select id="shop-rayon">
+        <option value="Frais">Frais</option>
+        <option value="Fruits & légumes">Fruits & légumes</option>
+        <option value="Épicerie">Épicerie</option>
+        <option value="Boissons">Boissons</option>
+        <option value="Surgelés">Surgelés</option>
+        <option value="Hygiène">Hygiène</option>
+        <option value="Autre">Autre</option>
+      </select>
+      <button id="shop-add">+</button>
+    </div>
+    <div id="shop-list" style="margin-top:6px"></div>
+    <div class="shop-foot" id="shop-foot" hidden>
+      <button class="shop-clear" id="shop-clear">Retirer les articles pris</button>
+    </div>
+  </div>
+</section>
+
 <!-- SEANCES -->
 <section role="tabpanel" data-view="seances" hidden>
   <div class="card">
@@ -1083,6 +1125,7 @@ const ICONS={
   journal:'<path d="M6 3h11a2 2 0 012 2v16l-3-2-3 2-3-2-3 2V5a2 2 0 012-2z"/><path d="M9 8h6M9 12h6"/>',
   objectifs:'<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="0.6" fill="currentColor" stroke="none"/>',
   budget:'<rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18"/><circle cx="17" cy="14" r="1.3"/>',
+  courses:'<path d="M5 7h15l-1.5 9h-12z"/><path d="M5 7L4 3H2"/><circle cx="9" cy="20" r="1.3"/><circle cx="17" cy="20" r="1.3"/>',
   humeur:'<circle cx="12" cy="12" r="8"/><path d="M9 10h.01M15 10h.01M8.5 14a4 4 0 007 0"/>',
   recompenses:'<path d="M8 3h8v4a4 4 0 01-8 0V3z"/><path d="M8 5H5v1a3 3 0 003 3M16 5h3v1a3 3 0 01-3 3"/><path d="M12 11v4M9 20h6M10 17h4l1 3H9z"/>',
   sommeil:'<path d="M20 14a8 8 0 01-10-10 8 8 0 1010 10z"/>',
@@ -1344,6 +1387,7 @@ function show(v){
   if(v==="valeurs")renderValues();
   if(v==="seances")renderMusc();
   if(v==="budget")renderBudget();
+  if(v==="courses")renderShop();
   closeSheet();
   window.scrollTo(0,0);
 }
@@ -1354,7 +1398,7 @@ $("#tabbar").addEventListener("click",e=>{const b=e.target.closest("button");if(
 /* ---- Plus sheet ---- */
 // Menu "Plus" — trié du plus utile au moins utile
 const SHEET_ITEMS=[
-  {v:"todo",ic:"todo",l:"To-do"},{v:"etudes",ic:"etudes",l:"Études"},{v:"seances",ic:"seances",l:"Séances"},
+  {v:"todo",ic:"todo",l:"To-do"},{v:"courses",ic:"courses",l:"Courses"},{v:"etudes",ic:"etudes",l:"Études"},{v:"seances",ic:"seances",l:"Séances"},
   {v:"stats",ic:"stats",l:"Stats"},{v:"focus",ic:"focus",l:"Focus"},{v:"sommeil",ic:"sommeil",l:"Sommeil"},
   {v:"budget",ic:"budget",l:"Budget"},{v:"recompenses",ic:"recompenses",l:"Récompenses"},{v:"journal",ic:"journal",l:"Journal"},
   {v:"valeurs",ic:"objectifs",l:"Repères"},
@@ -1903,6 +1947,43 @@ $("#todo-add").addEventListener("click",()=>{
 });
 $("#todo-new").addEventListener("keydown",e=>{if(e.key==="Enter")$("#todo-add").click();});
 
+/* ---- Liste de courses ---- */
+const RAYON_ORDER=["Fruits & légumes","Frais","Épicerie","Surgelés","Boissons","Hygiène","Autre"];
+const getShop=()=>store.get("shop_list",[]);
+function renderShop(){
+  const list=getShop();
+  const toBuy=list.filter(x=>!x.done).length,done=list.filter(x=>x.done).length;
+  $("#shop-count").textContent=list.length?toBuy+" à prendre":"";
+  $("#shop-foot").hidden=done===0;
+  if(!list.length){$("#shop-list").innerHTML=`<div class="empty">Liste vide.<br>Ajoute ton premier article ci-dessus.</div>`;return;}
+  // groupe par rayon, non-pris d'abord puis pris
+  const byR={};list.forEach(it=>{(byR[it.rayon]=byR[it.rayon]||[]).push(it);});
+  const order=RAYON_ORDER.filter(r=>byR[r]).concat(Object.keys(byR).filter(r=>!RAYON_ORDER.includes(r)));
+  let html="";
+  order.forEach(r=>{
+    const items=byR[r].slice().sort((a,b)=>(a.done?1:0)-(b.done?1:0));
+    html+=`<div class="shop-rayon">${esc(r)}</div>`;
+    html+=items.map(it=>`<div class="shop-item ${it.done?"done":""}" data-id="${it.id}">
+      <span class="box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 6"/></svg></span>
+      <span class="nm">${esc(it.t)}</span>
+      <button class="del" data-del="${it.id}" aria-label="Retirer">✕</button></div>`).join("");
+  });
+  $("#shop-list").innerHTML=html;
+}
+$("#shop-add").addEventListener("click",()=>{
+  const v=$("#shop-new").value.trim();if(!v)return;
+  const list=getShop();list.push({id:"s"+Date.now(),t:v,rayon:$("#shop-rayon").value,done:false});
+  store.set("shop_list",list);$("#shop-new").value="";renderShop();$("#shop-new").focus();
+});
+$("#shop-new").addEventListener("keydown",e=>{if(e.key==="Enter")$("#shop-add").click();});
+$("#shop-list").addEventListener("click",e=>{
+  const del=e.target.closest("[data-del]");
+  if(del){store.set("shop_list",getShop().filter(x=>x.id!==del.dataset.del));renderShop();return;}
+  const row=e.target.closest(".shop-item");if(!row)return;
+  const list=getShop();const it=list.find(x=>x.id===row.dataset.id);if(it){it.done=!it.done;store.set("shop_list",list);renderShop();}
+});
+$("#shop-clear").addEventListener("click",()=>{store.set("shop_list",getShop().filter(x=>!x.done));renderShop();});
+
 /* ---- Sessions ---- */
 let curSess=daySession()==="Repos"?"PUSH":daySession();
 function renderSessChips(){$("#sess-chips").innerHTML=Object.keys(SESSIONS).map(s=>`<button class="chip" data-s="${s}" aria-current="${s===curSess}">${s}</button>`).join("");}
@@ -2387,7 +2468,7 @@ $("#ics-sync").addEventListener("click",()=>syncICS(false));
 /* ---- Rendu complet (réutilisable après synchro) ---- */
 function renderAll(){
   renderPts();renderNow();renderHomeSummary();renderHabits();renderPlanning();renderTodos();renderRoutines();renderValues();
-  renderSessChips();renderSessExos();renderExams();renderToeic();renderJournal();renderBudget();renderGoals();renderMusc();
+  renderSessChips();renderSessExos();renderExams();renderToeic();renderJournal();renderBudget();renderGoals();renderMusc();renderShop();
   fRender();renderFocus();
 }
 
