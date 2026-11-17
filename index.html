@@ -28,7 +28,7 @@ body{background:var(--bg);color:var(--fg);font-family:var(--f-body);line-height:
   padding-left:max(16px,env(safe-area-inset-left,0px));
   padding-right:max(16px,env(safe-area-inset-right,0px));
   padding-block:0;max-width:720px;margin:0 auto;
-  padding-bottom:calc(78px + env(safe-area-inset-bottom,0px))}
+  padding-bottom:calc(var(--tabbar-h,72px) + 24px + env(safe-area-inset-bottom,0px))}
 /* Desktop : on élargit et on centre proprement, sections lisibles */
 @media (min-width:860px){
   body{max-width:860px}
@@ -83,7 +83,7 @@ nav button{flex:none;background:transparent;border:1px solid transparent;color:v
   font-family:var(--f-body);font-size:.84rem;font-weight:500;padding:7px 13px;border-radius:999px;cursor:pointer;white-space:nowrap}
 nav button[aria-current="true"]{background:var(--accent-soft);color:var(--accent-ink);font-weight:600}
 
-section[role="tabpanel"]{padding-bottom:44px}
+section[role="tabpanel"]{padding-bottom:16px}
 .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
 @media (max-width:560px){.grid{grid-template-columns:1fr}}
 .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow)}
@@ -369,7 +369,7 @@ svg.chart{width:100%;height:170px;display:block;margin-top:6px;overflow:visible}
 .pts{display:flex;align-items:center;gap:6px;background:var(--accent-soft);color:var(--accent-ink);padding:5px 11px;border-radius:999px;font-weight:700;font-size:.82rem}
 
 /* Bottom tab bar */
-.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:2147483646;display:flex;
+.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:20;display:flex;
   background:var(--surface);border-top:1px solid var(--line);
   padding-bottom:env(safe-area-inset-bottom,0px);
   padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px);
@@ -1394,6 +1394,10 @@ function show(v){
 $("#nav").addEventListener("click",e=>{const b=e.target.closest("button");if(b)show(b.dataset.v)});
 $("#valbanner").addEventListener("click",()=>show("valeurs"));
 $("#tabbar").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;if(b.dataset.sheet)openSheet();else show(b.dataset.v);});
+// Mesure la hauteur réelle de la barre du bas pour que le contenu ne passe jamais dessous
+function measureTabbar(){const tb=$("#tabbar");if(!tb)return;const h=tb.getBoundingClientRect().height;if(h)document.documentElement.style.setProperty("--tabbar-h",Math.ceil(h)+"px");}
+measureTabbar();window.addEventListener("resize",measureTabbar);window.addEventListener("orientationchange",()=>setTimeout(measureTabbar,200));
+setTimeout(measureTabbar,300);
 
 /* ---- Plus sheet ---- */
 // Menu "Plus" — trié du plus utile au moins utile
