@@ -2502,6 +2502,9 @@ killNetlifyBadge();
 [300,800,1500,3000,6000].forEach(t=>setTimeout(killNetlifyBadge,t));
 // surveille le DOM en continu : si Netlify réinjecte le badge, on le retire aussitôt
 try{const mo=new MutationObserver(()=>killNetlifyBadge());mo.observe(document.documentElement,{childList:true,subtree:true});}catch(e){}
+// Le badge Netlify est hors de cette page (page parente). On lui demande de se cacher via postMessage.
+function hideNetlifyHud(){try{if(window.parent&&window.parent!==window){window.parent.postMessage({nlHud:"state",value:"hidden"},"*");}}catch(e){}}
+hideNetlifyHud();[200,600,1500,3000,6000].forEach(t=>setTimeout(hideNetlifyHud,t));
 
 /* ---- Init ---- */
 renderAll();
