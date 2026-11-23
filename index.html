@@ -164,6 +164,20 @@ section[role="tabpanel"]{padding-bottom:16px}
 .check .hdel:hover{color:var(--crit);background:var(--surface-2)}
 .check .streak .fire-ic{width:12px;height:12px;stroke:var(--accent-ink);fill:var(--accent-soft)}
 .check .rate{font-size:.72rem;color:var(--accent-ink);background:var(--accent-soft);padding:3px 9px;border-radius:999px;font-weight:600;flex:none;font-variant-numeric:tabular-nums}
+/* ---- Ma matinée ---- */
+.morn-tag{font-size:.72rem;font-weight:700;color:var(--accent-ink);background:var(--accent-soft);padding:3px 11px;border-radius:999px;white-space:nowrap}
+.morn-flow{margin-top:12px;position:relative;padding-left:4px}
+.morn-step{display:flex;align-items:center;gap:12px;padding:8px 0;position:relative}
+.morn-step::before{content:"";position:absolute;left:46px;top:0;bottom:0;width:2px;background:var(--line)}
+.morn-step:first-child::before{top:50%}.morn-step:last-child::before{bottom:50%}
+.morn-step .ms-t{flex:0 0 42px;text-align:right;font-size:.78rem;font-weight:700;color:var(--muted);font-variant-numeric:tabular-nums;z-index:1}
+.morn-step .ms-b{flex:1 1 auto;min-width:0;font-size:.9rem;padding-left:16px;position:relative}
+.morn-step .ms-b::before{content:"";position:absolute;left:-6px;top:50%;transform:translateY(-50%);width:9px;height:9px;border-radius:50%;background:var(--line);border:2px solid var(--card);z-index:1}
+.morn-step.now .ms-t{color:var(--accent-ink)}
+.morn-step.now .ms-b{font-weight:700}
+.morn-step.now .ms-b::before{background:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.morn-step.past .ms-t,.morn-step.past .ms-b{color:var(--muted);opacity:.7}
+.morn-step.past .ms-b::before{background:var(--accent)}
 .lbl-wrap{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:1px}
 .lbl-wrap .lbl{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .hab-t{font-size:.7rem;color:var(--muted);font-weight:600}
@@ -743,6 +757,15 @@ svg.bchart{width:100%;height:150px;display:block;margin-top:8px;overflow:visible
 <!-- ROUTINES -->
 <!-- HABITUDES + ROUTINES -->
 <section role="tabpanel" data-view="habitudes" hidden>
+  <!-- Ma matinée (planning calculé selon école/entreprise) -->
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <h3><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg> Ma matinée</h3>
+      <span class="morn-tag" id="morn-tag"></span>
+    </div>
+    <div class="sub" id="morn-sub">Ta routine calée sur ton heure de départ.</div>
+    <div class="morn-flow" id="morn-flow"></div>
+  </div>
   <div class="card">
     <div style="display:flex;justify-content:space-between;align-items:center;gap:10px">
       <h3><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 12l2 2 4-4"/><rect x="3" y="4" width="18" height="16" rx="3"/></svg> Mes habitudes</h3>
@@ -1288,7 +1311,7 @@ const DEFAULT_HABITS=[
   {id:"callis",lbl:"Callisthénie (maison)",dom:"physique",t:"18:30",why:"Le soir, la force musculaire est au max (température corporelle haute) — meilleures perfs qu'au réveil."},
   {id:"course",lbl:"Course à pied",dom:"physique",why:"Le cardio régulier booste l'humeur et la mémoire (BDNF). 2-3×/semaine suffit."},
   {id:"gainage",lbl:"Gainage / abdos",dom:"physique",why:"5 min de gainage quand tu peux dans la journée : ça renforce le centre pour l'escalade."},
-  {id:"etirements",lbl:"Étirements / mobilité",dom:"physique",t:"21:15",why:"Le soir, améliore la souplesse et prépare au sommeil."},
+  {id:"etirements",lbl:"Étirements du matin",dom:"physique",t:"05:50",tEnt:"05:40",why:"5-10 min au réveil, avant la douche : réveille le corps et améliore la mobilité pour l'escalade."},
   {id:"marche",lbl:"Marcher (10k pas)",dom:"physique",why:"La marche quotidienne réduit le stress et vaut un vrai cardio léger."},
   // Mental — tête & discipline
   {id:"lecture",lbl:"Lire 10 min",dom:"mental",t:"21:45",why:"Lire avant de dormir baisse le stress de 68% (étude Sussex) — mieux qu'un écran."},
@@ -1296,17 +1319,17 @@ const DEFAULT_HABITS=[
   {id:"calme",lbl:"Méditation / respiration",dom:"mental",t:"21:50",why:"Quelques minutes de respiration le soir pour redescendre avant de dormir."},
   {id:"journal",lbl:"Journaling du soir",dom:"mental",t:"22:00",why:"Écrire 3 lignes le soir améliore l'humeur et vide la tête avant de dormir."},
   {id:"scroll",lbl:"Pas de scroll inutile",dom:"mental",why:"Le scroll fragmente l'attention et vole des heures. Ton temps vaut mieux."},
-  {id:"nophone_am",lbl:"Pas de téléphone au réveil",dom:"mental",t:"05:50",tEnt:"06:00",why:"Les premières min sans écran protègent ta dopamine et ta concentration de la journée."},
-  {id:"intention",lbl:"Mon intention du jour",dom:"mental",t:"07:40",tEnt:"06:50",why:"Choisir LA chose qui compte évite de se disperser. Clarté dès le matin."},
+  {id:"nophone_am",lbl:"Pas de téléphone au réveil",dom:"mental",t:"05:50",tEnt:"05:40",why:"Les premières min sans écran protègent ta dopamine et ta concentration de la journée."},
+  {id:"intention",lbl:"Mon intention du jour",dom:"mental",t:"07:10",tEnt:"06:30",why:"Choisir LA chose qui compte évite de se disperser. Clarté dès le matin, pendant le petit déj."},
   // Scolaire — études
-  {id:"anglais",lbl:"Anglais (TOEIC) — le matin",dom:"scolaire",t:"06:00",tEnt:"06:10",why:"Cerveau frais le matin = meilleure mémorisation. École : 1h30 (6h-7h30). Entreprise : 30 min (6h10-6h40). L'exposition quotidienne bat les sessions espacées."},
+  {id:"anglais",lbl:"Anglais (TOEIC) — le matin",dom:"scolaire",t:"06:10",tEnt:"06:00",why:"Cerveau frais après la douche = meilleure mémorisation. École : 1h (6h10-7h10). Entreprise : 30 min (6h-6h30). L'exposition quotidienne bat les sessions espacées."},
   {id:"etudes",lbl:"Réviser / étudier",dom:"scolaire",why:"La répétition espacée (un peu chaque jour) ancre bien plus que le bachotage."},
   // Beauté — soin de soi
-  {id:"lever",lbl:"Se lever à heure fixe",dom:"beaute",t:"05:50",tEnt:"06:00",why:"Réveil régulier = réglage n°1 de l'horloge interne. École 5h50, entreprise 6h00 — pour faire ton anglais avant de partir."},
-  {id:"skincare_am",lbl:"Skincare du matin",dom:"beaute",t:"07:35",tEnt:"06:45",why:"Nettoyant + hydratant + SPF : la protection solaire est le n°1 anti-âge prouvé."},
-  {id:"skincare_pm",lbl:"Skincare du soir",dom:"beaute",t:"22:05",why:"Le soir, la peau se régénère. Démaquiller + soin = teint net au réveil."},
-  {id:"couche",lbl:"Se coucher à heure fixe",dom:"beaute",t:"22:20",tEnt:"22:30",why:"7h30 de sommeil mini. École coucher 22h20 (lever 5h50), entreprise 22h30 (lever 6h). La régularité compte plus que l'heure exacte."},
-  {id:"lumiere",lbl:"Lumière du matin",dom:"beaute",t:"07:30",tEnt:"06:50",why:"10-15 min de lumière le matin calent ton horloge et réveillent le corps naturellement."},
+  {id:"lever",lbl:"Se lever à heure fixe",dom:"beaute",t:"05:50",tEnt:"05:40",why:"Réveil régulier = réglage n°1 de l'horloge interne. École 5h50, entreprise 5h40 — pour toute ta routine + l'anglais avant de partir."},
+  {id:"skincare_am",lbl:"Skincare + douche du matin",dom:"beaute",t:"05:50",tEnt:"05:40",why:"Étirements + douche + soin juste après le réveil (~20 min). Nettoyant + hydratant + SPF : la protection solaire est le n°1 anti-âge prouvé."},
+  {id:"skincare_pm",lbl:"Skincare du soir",dom:"beaute",t:"21:55",why:"Le soir, la peau se régénère. Démaquiller + soin = teint net au réveil."},
+  {id:"couche",lbl:"Se coucher à heure fixe",dom:"beaute",t:"22:20",tEnt:"22:10",why:"7h30 de sommeil mini. École coucher 22h20 (lever 5h50), entreprise 22h10 (lever 5h40). La régularité compte plus que l'heure exacte."},
+  {id:"lumiere",lbl:"Lumière du matin",dom:"beaute",t:"07:10",tEnt:"06:30",why:"Pendant le petit déj, ouvre les rideaux / sors : la lumière du matin cale ton horloge."},
   // Nourriture — bien manger
   {id:"mealprep",lbl:"Repas healthy / meal prep",dom:"nourriture",why:"Préparer à l'avance = tu ne craques pas sur du rapide. Base de la constance."},
   {id:"eau",lbl:"Boire 2 à 2,5L d'eau",dom:"nourriture",why:"Même légèrement déshydratée, concentration et énergie chutent. Vise 2L, 2,5L les jours de sport."},
@@ -1775,7 +1798,38 @@ function habTime(h){
   if(h.tEnt&&isEntrepriseDay())return h.tEnt;
   return h.t;
 }
+// Ma matinée : séquence ordonnée avec horaires, selon école/entreprise
+function renderMorning(){
+  const flow=$("#morn-flow");if(!flow)return;
+  const ent=isEntrepriseDay();const wd=(new Date().getDay()+6)%7;
+  if(wd>=5){$("#morn-tag").textContent="Week-end";$("#morn-sub").textContent="Pas de départ aujourd'hui — garde quand même un lever régulier.";
+    flow.innerHTML=`<div class="morn-step"><span class="ms-t">~08:30</span><span class="ms-b">Lever tranquille + routine à ton rythme</span></div>`;return;}
+  $("#morn-tag").textContent=ent?"Jour entreprise":"Jour école";
+  $("#morn-sub").textContent=ent?"Départ 7h00 · anglais 30 min":"Départ 7h50 · anglais 1h";
+  const steps=ent?[
+    ["05:40","Lever + étirements (5-10 min)"],
+    ["05:50","Douche + skincare"],
+    ["06:00","Anglais TOEIC (30 min)"],
+    ["06:30","Petit déj + intention du jour"],
+    ["06:50","S'habiller + affaires"],
+    ["07:00","Départ ✓"],
+  ]:[
+    ["05:50","Lever + étirements (5-10 min)"],
+    ["06:00","Douche + skincare"],
+    ["06:10","Anglais TOEIC (1h)"],
+    ["07:10","Petit déj + intention + lumière"],
+    ["07:40","S'habiller + affaires"],
+    ["07:50","Départ ✓"],
+  ];
+  const nowM=new Date().getHours()*60+new Date().getMinutes();
+  flow.innerHTML=steps.map(([t,b])=>{
+    const[hh,mm]=t.split(":").map(Number);const sm=hh*60+mm;
+    const past=nowM>sm+5;const now=Math.abs(nowM-sm)<=15;
+    return `<div class="morn-step ${past?"past":""} ${now?"now":""}"><span class="ms-t">${t}</span><span class="ms-b">${b}</span></div>`;
+  }).join("");
+}
 function renderHabits(){
+  renderMorning();
   const key="habits_"+dayKey();const st=store.get(key,{});const H=getHabits();
   // barre de filtres par domaine
   const fbar=$("#hab-filter");
@@ -2869,8 +2923,8 @@ $("#ics-sync").addEventListener("click",()=>syncICS(false));
 {
  // Migration : purge toute synchro ICS en cache (localStorage + Supabase) qui écrasait le seed
  if(store.get("ics_fmt",0)<4){store.set("real_events_synced",null);store.set("ics_last",0);store.set("ics_fmt",4);}
- // Migration : horaires sommeil/anglais recalculés (garde les perso + l'historique)
- if(store.get("hab_fmt",0)<5){
+ // Migration : routine du matin complète recalculée (garde les perso + l'historique)
+ if(store.get("hab_fmt",0)<6){
    const stored=store.get("habit_defs",null);
    if(stored&&Array.isArray(stored)){
      // garde les habitudes perso (id commençant par "h"), met à jour le reste depuis les défauts
@@ -2878,7 +2932,7 @@ $("#ics-sync").addEventListener("click",()=>syncICS(false));
      const merged=[...DEFAULT_HABITS.map(d=>({...d})),...persos];
      store.set("habit_defs",merged);
    }
-   store.set("hab_fmt",5);
+   store.set("hab_fmt",6);
  }
  const last=store.get("ics_last",0);
  if($("#ics-status")&&store.get("real_events_synced",null))$("#ics-status").textContent="Cours à jour · "+new Date(last).toLocaleString("fr-FR",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"});
