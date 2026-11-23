@@ -1575,12 +1575,12 @@ function renderScroll(){
   for(let i=6;i>=0;i--){const dt=new Date();dt.setDate(dt.getDate()-i);const v=store.get(scrollKey(dt),0);sum+=v;
     data.push({v,lbl:["L","M","M","J","V","S","D"][(dt.getDay()+6)%7],hl:i===0});}
   const avg=Math.round(sum/7*10)/10;
-  $("#sc-sub").textContent=today===0?"Aucun scroll noté aujourd'hui. Bravo 🌿":"Noté sans jugement · juste pour prendre conscience.";
+  $("#sc-sub").textContent=today===0?"0 scroll inutile aujourd'hui. C'est ça, la discipline. 🔥":today>=3?"Ça fait beaucoup. Chaque scroll = du temps volé à la nouvelle toi.":"Repère-les, coupe-les. Ton temps vaut mieux que ça.";
   barChart($("#sc-chart"),data,{fmt:v=>v});
 }
 $("#sc-mark").addEventListener("click",()=>{
   const k=scrollKey();store.set(k,store.get(k,0)+1);renderScroll();
-  $("#sc-mark").textContent="Noté — rien de grave, on continue";setTimeout(()=>$("#sc-mark").textContent="+1 · j'ai scrollé pour rien",1600);
+  $("#sc-mark").textContent="Noté. Maintenant pose le tel et agis.";setTimeout(()=>$("#sc-mark").textContent="+1 · j'ai scrollé pour rien",1600);
 });
 $("#sc-instead").addEventListener("click",()=>openKick(nowAction&&nowAction.task&&nowAction.target?nowAction.task:"2 minutes utiles"));
 // Récap de la semaine (dimanche soir + lundi)
@@ -1614,12 +1614,12 @@ function renderRecap(){
      <div class="recap-cell"><div class="rv">${reg}%</div><div class="rk">régularité habitudes</div></div>
      <div class="recap-cell"><div class="rv">${sleepOk}/${sleepNights||0}</div><div class="rk">nuits ≥ 7h</div></div>
      <div class="recap-cell"><div class="rv">${perfectDays}</div><div class="rk">jours à 100%</div></div>`;
-  // Note factuelle, sans jugement
+  // Note cash
   let note;
-  if(reg>=70)note="Belle constance cette semaine. Tu construis quelque chose de solide.";
-  else if(reg>=40)note="Une semaine correcte. Repère le jour le plus dur et allège-le la prochaine fois.";
-  else note="Semaine en dents de scie — ça arrive. On repart cette semaine, un jour à la fois.";
-  if(scroll>0)note+=` Scroll noté : ${scroll} fois.`;
+  if(reg>=70)note="Voilà le niveau. C'est exactement ça, la nouvelle toi. Remets ça cette semaine.";
+  else if(reg>=40)note="Correct. Mais « correct » impressionne personne. Cette semaine tu montes d'un cran.";
+  else note="Semaine molle. Tu vaux mieux que ça et tu le sais. On se reprend dès aujourd'hui. Pas demain.";
+  if(scroll>3)note+=` Et ${scroll} scrolls dans le vide — c'est du temps volé à ta transformation.`;
   $("#recap-note").textContent=note;
 }
 $("#recap-x").addEventListener("click",()=>{
@@ -1874,11 +1874,15 @@ function hmLevel(dt,sel){
   const s=store.get("habits_"+dayKey(dt),{});const H=getHabits();
   if(sel==="all"){if(!H.length)return 0;const f=H.filter(h=>s[h.id]).length/H.length;
     return f<=0?0:f<0.26?1:f<0.51?2:f<0.76?3:4;}
+  if(sel&&sel.indexOf("dom:")===0){const did=sel.slice(4);const hs=H.filter(h=>habitDom(h)===did);
+    if(!hs.length)return 0;const f=hs.filter(h=>s[h.id]).length/hs.length;
+    return f<=0?0:f<0.26?1:f<0.51?2:f<0.76?3:4;}
   return s[sel]?4:0;
 }
 function renderHeatmap(){
   const H=getHabits();const year=new Date().getFullYear();
-  const opts=[{id:"all",lbl:"Toutes"}].concat(H.map(h=>({id:h.id,lbl:h.lbl})));
+  // Toutes + un onglet par domaine (pour voir chaque domaine se remplir)
+  const opts=[{id:"all",lbl:"Tout"}].concat(DOMAINS.map(d=>({id:"dom:"+d.id,lbl:d.emo+" "+d.lbl})));
   if(!opts.some(o=>o.id===hmSel))hmSel="all";
   $("#hm-pick").innerHTML=opts.map(o=>`<button data-hm="${o.id}" aria-current="${o.id===hmSel}">${esc(o.lbl)}</button>`).join("");
   const end=new Date(year,11,31);
@@ -2510,9 +2514,9 @@ const getValues=()=>store.get("values",VALUES_SEED);
 const getRules=()=>store.get("rules",RULES_SEED);
 // Quelles habitudes nourrissent chaque valeur (par mots-clés du nom de la valeur)
 const VAL_MAP={
-  discipline:["couche","scroll","petitdej","anglais","lecture"],
-  "dépassement":["sport","anglais","lecture"],depassement:["sport","anglais","lecture"],
-  "équilibre":["calme","lumiere","eau","skincare","couche"],equilibre:["calme","lumiere","eau","skincare","couche"],
+  discipline:["couche","scroll","anglais","etudes","mealprep"],
+  "dépassement":["escalade","callis","course","bouger","etudes"],depassement:["escalade","callis","course","bouger","etudes"],
+  "équilibre":["calme","dessin","eau","skincare","lecture"],equilibre:["calme","dessin","eau","skincare","lecture"],
 };
 function habitsForValue(v){
   const key=(v.t||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"");
