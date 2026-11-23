@@ -525,6 +525,33 @@ svg.bchart{width:100%;height:150px;display:block;margin-top:8px;overflow:visible
 .shop-clear{width:100%;font-family:inherit;font-size:.86rem;font-weight:600;color:var(--muted);background:var(--surface);border:1px solid var(--line);border-radius:11px;padding:11px;cursor:pointer}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .hm-cell.l1{background:#35543b}:root:not([data-theme="light"]) .hm-cell.l2{background:#4a7a53}:root:not([data-theme="light"]) .hm-cell.l3{background:#6fa876}}
 :root[data-theme="dark"] .hm-cell.l1{background:#35543b}:root[data-theme="dark"] .hm-cell.l2{background:#4a7a53}:root[data-theme="dark"] .hm-cell.l3{background:#6fa876}
+/* ---- Glow-up hero ---- */
+.glow{background:linear-gradient(140deg,#2f4a3d,#1f3329 70%);border:1px solid #3c5c4b;border-radius:var(--radius);padding:20px;margin-bottom:14px;color:#eef5ef}
+.glow-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.glow-eyebrow{font-size:.72rem;font-weight:700;letter-spacing:.12em;color:#9cc2a0}
+.glow-score{font-family:var(--f-display);font-size:3rem;font-weight:700;line-height:1;margin-top:2px;color:#fff}
+.glow-lvl{text-align:right}
+.glow-lvl-num{font-family:var(--f-display);font-size:1.15rem;font-weight:700;color:#cfe6cf}
+.glow-lvl-name{font-size:.76rem;color:#9cc2a0;margin-top:1px}
+.glow-bar{height:9px;border-radius:999px;background:rgba(255,255,255,.12);overflow:hidden;margin:14px 0 6px}
+.glow-bar i{display:block;height:100%;background:linear-gradient(90deg,#9cc2a0,#cfe6cf);border-radius:999px;transition:width .5s}
+.glow-next{font-size:.76rem;color:#9cc2a0}
+.glow-quote{font-size:.86rem;font-weight:600;color:#eef5ef;margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,.1);line-height:1.45}
+/* ---- Domaines ---- */
+.doms{display:flex;flex-direction:column;gap:12px;margin-top:10px}
+.dom{cursor:pointer}
+.dom-top{display:flex;align-items:center;gap:9px;margin-bottom:6px}
+.dom-emo{font-size:1.05rem;flex:none}
+.dom-name{font-weight:700;font-size:.95rem;flex:1 1 auto;min-width:0}
+.dom-sc{font-size:.8rem;font-weight:700;font-variant-numeric:tabular-nums;flex:none}
+.dom-bar{height:9px;border-radius:999px;background:var(--line);overflow:hidden}
+.dom-bar i{display:block;height:100%;border-radius:999px;transition:width .4s}
+.dom-hint{font-size:.72rem;color:var(--muted);margin-top:4px}
+/* ---- Domaine : page détail ---- */
+.domhdr{display:flex;align-items:center;gap:12px;margin-bottom:4px}
+.domhdr .e{font-size:2rem;flex:none}
+.domhdr .t{font-family:var(--f-display);font-size:1.5rem;font-weight:700}
+.dom-score-big{font-family:var(--f-display);font-size:2.6rem;font-weight:700;line-height:1}
 </style>
 
 <header>
@@ -553,6 +580,22 @@ svg.bchart{width:100%;height:150px;display:block;margin-top:8px;overflow:visible
 <main>
 <!-- HOME -->
 <section role="tabpanel" data-view="home">
+  <!-- Glow-up : score + niveau -->
+  <div class="glow" id="glow">
+    <div class="glow-top">
+      <div>
+        <div class="glow-eyebrow">GLOW-UP SCORE</div>
+        <div class="glow-score" id="glow-score">0</div>
+      </div>
+      <div class="glow-lvl">
+        <div class="glow-lvl-num" id="glow-lvl">Niv. 1</div>
+        <div class="glow-lvl-name" id="glow-lvl-name">Débutante</div>
+      </div>
+    </div>
+    <div class="glow-bar"><i id="glow-bar" style="width:0%"></i></div>
+    <div class="glow-next" id="glow-next"></div>
+    <div class="glow-quote" id="glow-quote"></div>
+  </div>
   <!-- Récap de la semaine (dimanche soir / lundi) -->
   <div class="recap" id="recap" hidden>
     <div class="recap-head">
@@ -584,6 +627,15 @@ svg.bchart{width:100%;height:150px;display:block;margin-top:8px;overflow:visible
         <button class="kick-done" id="kick-done">C'est lancé ✓</button>
       </div>
     </div>
+  </div>
+
+  <!-- Mes 5 domaines -->
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <h3><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v18M3 12h18"/></svg> Mes domaines</h3>
+      <span class="sub" style="margin:0">aujourd'hui</span>
+    </div>
+    <div class="doms" id="home-doms"></div>
   </div>
 
   <!-- Progression du jour -->
@@ -648,13 +700,15 @@ svg.bchart{width:100%;height:150px;display:block;margin-top:8px;overflow:visible
       <h3><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 12l2 2 4-4"/><rect x="3" y="4" width="18" height="16" rx="3"/></svg> Mes habitudes</h3>
       <button class="editbtn" id="habit-edit">Modifier</button>
     </div>
-    <div class="sub">Les fondations du jour. Un jour manqué = une donnée, pas un échec.</div>
+    <div class="sub">Tes fondations. Coche-les. Pas d'excuse, pas de « demain ».</div>
+    <div class="hm-pick" id="hab-filter"></div>
     <div id="habits"></div>
     <div class="prog"><i id="habit-bar" style="width:0%"></i></div>
     <div class="prog-row"><span id="habit-pct">0 %</span><span>objectif du jour</span></div>
     <div class="week" id="habit-week"></div>
-    <div class="add-row">
-      <input id="habit-new" placeholder="Nouvelle habitude (ex. 10 min lecture)" maxlength="40">
+    <div class="add-row" style="flex-wrap:wrap">
+      <input id="habit-new" placeholder="Nouvelle habitude (ex. 10 min lecture)" maxlength="40" style="flex:1 1 130px">
+      <select id="habit-dom"></select>
       <button id="habit-add">Ajouter</button>
     </div>
   </div>
@@ -1146,19 +1200,39 @@ function addPts(n){const p=store.get("points",0)+n;store.set("points",p);renderP
 function renderPts(){const el=$("#pc-pts");if(el)el.textContent=store.get("points",0);}
 
 /* ---- Data ---- */
+// Les 5 domaines du glow-up de Léa
+const DOMAINS=[
+  {id:"physique",lbl:"Physique",emo:"🔥",c:"#6f9e85",desc:"Escalade · callisthénie · course"},
+  {id:"mental",lbl:"Mental",emo:"🧠",c:"#8aa0b5",desc:"Lire · dessin · méditation"},
+  {id:"scolaire",lbl:"Scolaire",emo:"📚",c:"#bfa05a",desc:"Anglais · études"},
+  {id:"beaute",lbl:"Beauté",emo:"✨",c:"#c49bb0",desc:"Skincare · soin de soi"},
+  {id:"nourriture",lbl:"Nourriture",emo:"🥗",c:"#9cc27f",desc:"Healthy · meal prep"},
+];
+const domById=(id)=>DOMAINS.find(d=>d.id===id)||{id:"autre",lbl:"Autre",emo:"•",c:"#a0a0a0"};
 const DEFAULT_HABITS=[
-  {id:"couche",emo:"🌙",lbl:"Couché à heure fixe"},
-  {id:"scroll",emo:"📵",lbl:"Pas de scroll inutile"},
-  {id:"lumiere",emo:"🌅",lbl:"Lumière / sortir le matin"},
-  {id:"eau",emo:"💧",lbl:"Boire assez d'eau"},
-  {id:"sport",emo:"🏋️",lbl:"Bouger (séance ou marche)"},
-  {id:"skincare",emo:"🧴",lbl:"Skincare matin + soir"},
-  {id:"petitdej",emo:"🥣",lbl:"Petit déj préparé la veille"},
-  {id:"lecture",emo:"📖",lbl:"Lire 10 min"},
-  {id:"anglais",emo:"🇬🇧",lbl:"Anglais du jour"},
-  {id:"calme",emo:"🧘",lbl:"Décompression / respiration"},
+  // Physique
+  {id:"escalade",emo:"🧗",lbl:"Escalade",dom:"physique"},
+  {id:"callis",emo:"🤸",lbl:"Callisthénie",dom:"physique"},
+  {id:"course",emo:"🏃",lbl:"Course à pied",dom:"physique"},
+  {id:"bouger",emo:"🏋️",lbl:"Bouger (séance ou marche)",dom:"physique"},
+  // Mental
+  {id:"lecture",emo:"📖",lbl:"Lire 10 min",dom:"mental"},
+  {id:"dessin",emo:"🎨",lbl:"Dessiner",dom:"mental"},
+  {id:"calme",emo:"🧘",lbl:"Méditation / respiration",dom:"mental"},
+  {id:"scroll",emo:"📵",lbl:"Pas de scroll inutile",dom:"mental"},
+  // Scolaire
+  {id:"anglais",emo:"🇬🇧",lbl:"Anglais du jour",dom:"scolaire"},
+  {id:"etudes",emo:"✏️",lbl:"Réviser / étudier",dom:"scolaire"},
+  // Beauté
+  {id:"skincare",emo:"🧴",lbl:"Skincare matin + soir",dom:"beaute"},
+  {id:"couche",emo:"🌙",lbl:"Couché à heure fixe",dom:"beaute"},
+  // Nourriture
+  {id:"mealprep",emo:"🥗",lbl:"Meal prep / repas healthy",dom:"nourriture"},
+  {id:"eau",emo:"💧",lbl:"Boire assez d'eau",dom:"nourriture"},
 ];
 function getHabits(){return store.get("habit_defs",DEFAULT_HABITS);}
+// migration douce : si une habitude n'a pas de domaine (ancienne donnée), on la devine
+function habitDom(h){if(h.dom)return h.dom;const def=DEFAULT_HABITS.find(d=>d.id===h.id);return def?def.dom:"autre";}
 const SESSIONS={
   PUSH:["Développé couché haltères","Développé incliné","Dips / pompes","Élévations latérales","Extensions triceps"],
   LEGS:["Squat","Presse","Fentes","Soulevé roumain","Mollets"],
@@ -1472,8 +1546,10 @@ function renderNow(){
   $("#now-go").dataset.v=a.target;
   $("#now-go").classList.toggle("on",!!a.target);
   $("#now-start").hidden=!a.kick;
-  renderValBanner();renderProgCards();renderHomeToday();renderHomeTodos();renderScroll();renderRecap();
+  renderValBanner();renderProgCards();renderHomeToday();renderHomeTodos();renderScroll();renderRecap();renderGlow();renderHomeDoms();
 }
+// Clic sur un domaine → ouvre la page Habitudes (filtrée sur ce domaine)
+document.addEventListener("click",e=>{const d=e.target.closest(".dom[data-dom]");if(!d)return;habFilter=d.dataset.dom;show("habitudes");});
 // Mini-minuteur "démarrage 2 min"
 let kickTimer=null,kickLeft=120;
 function openKick(task){
@@ -1594,12 +1670,30 @@ document.querySelector('[data-view="home"]').addEventListener("click",e=>{const 
 
 /* ---- Habits ---- */
 let habitEdit=false;
+let habFilter="all";
 function renderHabits(){
   const key="habits_"+dayKey();const st=store.get(key,{});const H=getHabits();
-  $("#habits").innerHTML=H.map(h=>{const r=habitRate(h.id,14);
-    return `<div class="check ${st[h.id]?"done":""}" data-id="${h.id}">
-    <span class="box">${check}</span>${ic(HICONS[h.id]||"objectifs","ic hemo")}<span class="lbl">${esc(h.lbl)}</span>
-    ${habitEdit?`<button class="hdel" data-del="${h.id}" aria-label="Supprimer">✕</button>`:`<span class="rate" title="Régularité sur 14 jours">${r}%</span>`}</div>`;}).join("");
+  // barre de filtres par domaine
+  const fbar=$("#hab-filter");
+  if(fbar){
+    const opts=[{id:"all",lbl:"Tout",emo:"⚡"}].concat(DOMAINS.map(d=>({id:d.id,lbl:d.lbl,emo:d.emo})));
+    if(!opts.some(o=>o.id===habFilter))habFilter="all";
+    fbar.innerHTML=opts.map(o=>`<button data-hf="${o.id}" aria-current="${o.id===habFilter}">${o.emo} ${o.lbl}</button>`).join("");
+  }
+  // habitudes groupées par domaine (ou filtrées)
+  const shown=habFilter==="all"?H:H.filter(h=>habitDom(h)===habFilter);
+  const groups=habFilter==="all"?DOMAINS.map(d=>d.id):[habFilter];
+  let html="";
+  groups.forEach(did=>{
+    const d=domById(did);const hs=shown.filter(h=>habitDom(h)===did);if(!hs.length)return;
+    const done=hs.filter(h=>st[h.id]).length;
+    html+=`<div class="shop-rayon" style="color:${d.c}"><span class="dom-emo">${d.emo}</span>${esc(d.lbl)}<span style="margin-left:auto;color:var(--muted);font-weight:600">${done}/${hs.length}</span></div>`;
+    html+=hs.map(h=>{const r=habitRate(h.id,14);
+      return `<div class="check ${st[h.id]?"done":""}" data-id="${h.id}">
+      <span class="box">${check}</span><span class="dom-emo" style="margin-right:2px">${h.emo||"⭐"}</span><span class="lbl">${esc(h.lbl)}</span>
+      ${habitEdit?`<button class="hdel" data-del="${h.id}" aria-label="Supprimer">✕</button>`:`<span class="rate" title="Régularité sur 14 jours">${r}%</span>`}</div>`;}).join("");
+  });
+  $("#habits").innerHTML=html||`<div class="empty">Aucune habitude ici.</div>`;
   const done=H.filter(h=>st[h.id]).length,pct=H.length?Math.round(done/H.length*100):0;
   $("#habit-bar").style.width=pct+"%";$("#habit-pct").textContent=pct+" %";
   const days=["L","M","M","J","V","S","D"];const wd=(new Date().getDay()+6)%7;
@@ -1632,10 +1726,15 @@ $("#habits").addEventListener("click",e=>{
 $("#habit-edit").addEventListener("click",()=>{habitEdit=!habitEdit;$("#habit-edit").setAttribute("aria-pressed",habitEdit);$("#habit-edit").textContent=habitEdit?"Terminé":"Modifier";renderHabits();});
 $("#habit-add").addEventListener("click",()=>{
   const v=$("#habit-new").value.trim();if(!v)return;
-  const H=getHabits();H.push({id:"h"+Date.now(),emo:"⭐",lbl:v});store.set("habit_defs",H);
-  $("#habit-new").value="";renderHabits();
+  const dom=$("#habit-dom")?$("#habit-dom").value:"physique";
+  const H=getHabits();H.push({id:"h"+Date.now(),emo:domById(dom).emo,lbl:v,dom});store.set("habit_defs",H);
+  $("#habit-new").value="";renderHabits();renderNow();
 });
 $("#habit-new").addEventListener("keydown",e=>{if(e.key==="Enter")$("#habit-add").click();});
+// remplit le sélecteur de domaine
+if($("#habit-dom"))$("#habit-dom").innerHTML=DOMAINS.map(d=>`<option value="${d.id}">${d.emo} ${d.lbl}</option>`).join("");
+// filtre par domaine
+$("#hab-filter")&&$("#hab-filter").addEventListener("click",e=>{const b=e.target.closest("[data-hf]");if(!b)return;habFilter=b.dataset.hf;renderHabits();});
 
 /* ---- Helper : mini bar chart (valeurs + labels + ligne moyenne optionnelle) ---- */
 function barChart(el,data,opts={}){
@@ -1662,6 +1761,84 @@ function barChart(el,data,opts={}){
 }
 /* ---- Stats ---- */
 function dayScore(dt){const s=store.get("habits_"+dayKey(dt),{});const H=getHabits();if(!H.length)return 0;return H.filter(h=>s[h.id]).length/H.length;}
+/* ===== DOMAINES & GLOW-UP ===== */
+// habitudes d'un domaine
+function habitsOfDom(id){return getHabits().filter(h=>habitDom(h)===id);}
+// score du jour d'un domaine (0-1)
+function domDayScore(id,dt){const hs=habitsOfDom(id);if(!hs.length)return 0;const s=store.get("habits_"+dayKey(dt||new Date()),{});return hs.filter(h=>s[h.id]).length/hs.length;}
+// régularité d'un domaine sur N jours (0-100)
+function domRate(id,N){const hs=habitsOfDom(id);if(!hs.length)return 0;let sum=0;hs.forEach(h=>sum+=habitRate(h.id,N));return Math.round(sum/hs.length);}
+// Glow-up score : cumul de points de progression (chaque habitude cochée = +1 historique, + bonus régularité)
+function glowScore(){
+  // somme des jours-habitudes faits sur 90 jours, pondérée
+  let total=0;const H=getHabits();
+  for(let i=0;i<90;i++){const dt=new Date();dt.setDate(dt.getDate()-i);const s=store.get("habits_"+dayKey(dt),{});
+    total+=H.filter(h=>s[h.id]).length;}
+  // + points existants de l'app
+  total+=Math.round(store.get("points",0)/2);
+  return total;
+}
+const GLOW_LEVELS=[
+  {min:0,name:"Le déclic"},{min:40,name:"En mouvement"},{min:100,name:"Constante"},
+  {min:200,name:"Disciplinée"},{min:350,name:"Déterminée"},{min:550,name:"Obsédée"},
+  {min:800,name:"Transformée"},{min:1200,name:"Intouchable"}
+];
+function glowLevel(sc){let lvl=0;for(let i=0;i<GLOW_LEVELS.length;i++)if(sc>=GLOW_LEVELS[i].min)lvl=i;
+  const cur=GLOW_LEVELS[lvl],next=GLOW_LEVELS[lvl+1]||null;
+  const pct=next?Math.round((sc-cur.min)/(next.min-cur.min)*100):100;
+  return {lvl:lvl+1,name:cur.name,next,pct,toNext:next?next.min-sc:0};
+}
+// Phrases cash selon l'état du jour
+const GLOW_QUOTES_LOW=[
+  "T'es pas fatiguée. T'es juste pas encore devenue celle que tu veux être. Bouge.",
+  "Personne va le faire à ta place. Lève-toi.",
+  "Le scroll te vole la version de toi que tout le monde admirera. Reprends-le.",
+  "T'as dit « à partir de maintenant ». Maintenant, c'est maintenant.",
+  "Chaque jour où tu lâches, c'est un jour où ils ont raison. Prouve le contraire.",
+  "La discipline c'est faire le truc même quand t'as pas envie. Surtout quand t'as pas envie."
+];
+const GLOW_QUOTES_MID=[
+  "Bon début. Mais « bon début » c'est pas ton objectif. Continue.",
+  "T'es en route. Garde le rythme, lâche rien.",
+  "La moyenne, c'est pour les autres. Pousse plus fort.",
+  "T'as commencé la journée bien. Finis-la pareil."
+];
+const GLOW_QUOTES_HIGH=[
+  "Voilà celle que t'es en train de devenir. 🔥",
+  "C'est exactement ça. Reviens demain, et encore demain.",
+  "T'es en train de leur fermer le clapet un jour à la fois.",
+  "Discipline parfaite aujourd'hui. C'est ça, la nouvelle toi."
+];
+function glowQuote(todayPct){
+  const pool=todayPct>=0.75?GLOW_QUOTES_HIGH:todayPct>=0.4?GLOW_QUOTES_MID:GLOW_QUOTES_LOW;
+  // fixe par jour pour ne pas changer à chaque render
+  const seed=new Date().getDate()+new Date().getMonth()*31;
+  return pool[seed%pool.length];
+}
+function renderGlow(){
+  const sc=glowScore();const L=glowLevel(sc);
+  $("#glow-score").textContent=sc;
+  $("#glow-lvl").textContent="Niv. "+L.lvl;
+  $("#glow-lvl-name").textContent=L.name;
+  $("#glow-bar").style.width=L.pct+"%";
+  $("#glow-next").textContent=L.next?`Plus que ${L.toNext} pts → ${L.next.name}`:"Niveau max atteint. Intouchable. 🔥";
+  $("#glow-quote").textContent=glowQuote(dayScore(new Date()));
+}
+function renderHomeDoms(){
+  const el=$("#home-doms");if(!el)return;
+  el.innerHTML=DOMAINS.map(d=>{
+    const hs=habitsOfDom(d.id);if(!hs.length)return "";
+    const s=store.get("habits_"+dayKey(),{});
+    const done=hs.filter(h=>s[h.id]).length,tot=hs.length;
+    const pct=tot?Math.round(done/tot*100):0;
+    const rate=domRate(d.id,14);
+    return `<div class="dom" data-dom="${d.id}">
+      <div class="dom-top"><span class="dom-emo">${d.emo}</span><span class="dom-name">${d.lbl}</span>
+        <span class="dom-sc" style="color:${d.c}">${done}/${tot}</span></div>
+      <div class="dom-bar"><i style="width:${pct}%;background:${d.c}"></i></div>
+      <div class="dom-hint">${d.desc} · régularité ${rate}%</div></div>`;
+  }).join("");
+}
 function renderStats(){
   const N=30;const pts=[];for(let i=N-1;i>=0;i--){const dt=new Date();dt.setDate(dt.getDate()-i);pts.push(dayScore(dt));}
   const W=320,Hh=150,pad=6;
@@ -2471,6 +2648,18 @@ $("#ics-sync").addEventListener("click",()=>syncICS(false));
 {
  // Migration : purge toute synchro ICS en cache (localStorage + Supabase) qui écrasait le seed
  if(store.get("ics_fmt",0)<4){store.set("real_events_synced",null);store.set("ics_last",0);store.set("ics_fmt",4);}
+ // Migration : passage aux domaines de glow-up (garde les habitudes perso + l'historique)
+ if(store.get("hab_fmt",0)<1){
+   const stored=store.get("habit_defs",null);
+   if(stored&&Array.isArray(stored)){
+     // ajoute un domaine aux habitudes connues, garde les perso
+     const upgraded=stored.map(h=>{const def=DEFAULT_HABITS.find(d=>d.id===h.id);return def?{...h,dom:def.dom,emo:h.emo||def.emo}:{...h,dom:h.dom||"autre"};});
+     // ajoute les nouvelles habitudes de domaine qui manquent
+     DEFAULT_HABITS.forEach(d=>{if(!upgraded.some(h=>h.id===d.id))upgraded.push({...d});});
+     store.set("habit_defs",upgraded);
+   }
+   store.set("hab_fmt",1);
+ }
  const last=store.get("ics_last",0);
  if($("#ics-status")&&store.get("real_events_synced",null))$("#ics-status").textContent="Cours à jour · "+new Date(last).toLocaleString("fr-FR",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"});
  // auto-synchro si jamais fait ou > 6h
