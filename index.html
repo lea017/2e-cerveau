@@ -484,7 +484,7 @@ svg.bchart{width:100%;height:150px;display:block;margin-top:8px;overflow:visible
 /* ---- Heatmap par habitude : année entière, tient dans la largeur (pas de scroll latéral) ---- */
 .hmh{margin-bottom:14px}
 .hmh-top{display:flex;align-items:center;gap:9px;margin-bottom:8px}
-.hmh-emo{font-size:1.1rem;flex:none}
+.hmh-ic{width:17px;height:17px;flex:none;stroke:var(--habc,var(--accent))}
 .hmh-name{font-weight:700;font-size:.95rem;flex:1 1 auto;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .hmh-count{font-size:.74rem;font-weight:700;color:var(--muted);flex:none}
 .hmh-labels{display:grid;grid-template-columns:repeat(53,1fr);gap:1.4px;font-size:.55rem;color:var(--muted);margin-bottom:3px}
@@ -554,6 +554,10 @@ svg.bchart{width:100%;height:150px;display:block;margin-top:8px;overflow:visible
 .dom{cursor:pointer}
 .dom-top{display:flex;align-items:center;gap:9px;margin-bottom:6px}
 .dom-emo{font-size:1.05rem;flex:none}
+.dom-dot{width:11px;height:11px;border-radius:50%;flex:none}
+.chip-dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:5px;vertical-align:middle}
+.check .hemo{width:18px;height:18px;flex:none;stroke:var(--muted)}
+.shop-rayon .dom-dot{margin-right:2px}
 .dom-name{font-weight:700;font-size:.95rem;flex:1 1 auto;min-width:0}
 .dom-sc{font-size:.8rem;font-weight:700;font-variant-numeric:tabular-nums;flex:none}
 .dom-bar{height:9px;border-radius:999px;background:var(--line);overflow:hidden}
@@ -1192,7 +1196,37 @@ const ICONS={
   sommeil:'<path d="M20 14a8 8 0 01-10-10 8 8 0 1010 10z"/>',
   flame:'<path d="M12 3c3 4 5 6 5 9a5 5 0 01-10 0c0-1.5.5-2.5 1.5-3.5C9 10 9 11.5 10 12c0-2 1-4 2-9z"/>',
   fire:'<path d="M12 3c3 4 5 6 5 9a5 5 0 01-10 0c0-1.5.5-2.5 1.5-3.5C9 10 9 11.5 10 12c0-2 1-4 2-9z"/>',
+  // habitudes
+  climb:'<circle cx="13" cy="4.5" r="1.6"/><path d="M11 9l-3 2 2 3-1 6M11 9l4 1 3-2M11 9l1 5 4 2"/>',
+  calis:'<circle cx="12" cy="4" r="1.6"/><path d="M12 6v6M8 8l4 2 4-2M9 20l3-8 3 8"/>',
+  run:'<circle cx="14" cy="4.5" r="1.6"/><path d="M13 8l-3 3 2 3-2 5M10 11l-4 1M15 10l2 4 3 1"/>',
+  core:'<rect x="4" y="9" width="16" height="6" rx="3"/><path d="M9 9v6M15 9v6"/>',
+  stretch:'<circle cx="7" cy="5" r="1.6"/><path d="M7 7l2 5 7 2M9 12l-2 7M16 14l2 5"/>',
+  walk:'<circle cx="13" cy="4.5" r="1.6"/><path d="M12 8l-2 4 1 4-2 4M10 12l5 1 2 4"/>',
+  book:'<path d="M4 5a2 2 0 012-2h5v16H6a2 2 0 00-2 2V5z"/><path d="M20 5a2 2 0 00-2-2h-5v16h5a2 2 0 012 2V5z"/>',
+  draw:'<path d="M3 21l3-1 11-11-2-2L4 18l-1 3z"/><path d="M14 6l2 2"/><path d="M17 3l2 2-2 2-2-2z"/>',
+  meditate:'<circle cx="12" cy="5" r="2"/><path d="M12 8c-2 2-2 4-2 5M12 8c2 2 2 4 2 5M5 18c3-3 5-3 7-3s4 0 7 3"/>',
+  diary:'<rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 3v18M12 8h4M12 12h4"/>',
+  phoneoff:'<rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/><path d="M4 4l16 16"/>',
+  target:'<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="1" fill="currentColor" stroke="none"/>',
+  flag:'<path d="M6 21V4M6 4h11l-2 4 2 4H6"/>',
+  skincare:'<path d="M9 2h6v3H9z"/><rect x="7" y="5" width="10" height="16" rx="3"/><path d="M10 10h4"/>',
+  moon:'<path d="M20 14a8 8 0 01-10-10 8 8 0 1010 10z"/>',
+  sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M19 5l-1.5 1.5M6.5 17.5L5 19"/>',
+  salad:'<path d="M4 11h16a8 8 0 01-16 0z"/><path d="M12 11c0-3 2-5 4-5M12 11c-1-2-3-3-5-3M12 11c0-2-1-4-3-4"/>',
+  water:'<path d="M12 3c4 5 6 8 6 11a6 6 0 01-12 0c0-3 2-6 6-11z"/>',
+  protein:'<path d="M5 10a3 3 0 013-3h1a4 4 0 018 0h1a3 3 0 010 6h-1a4 4 0 01-8 0H8a3 3 0 01-3-3z"/><path d="M12 7v10"/>',
+  breakfast:'<path d="M4 8h12a4 4 0 010 8H4z"/><path d="M16 10h3a2 2 0 010 4h-3"/><path d="M6 4v2M9 4v2M12 4v2"/>',
 };
+// Une icône verte par habitude (remplace les emojis)
+const HAB_ICON={
+  escalade:"climb",callis:"calis",course:"run",gainage:"core",etirements:"stretch",marche:"walk",bouger:"seances",
+  lecture:"book",dessin:"draw",calme:"meditate",journal:"diary",scroll:"phoneoff",intention:"target",
+  anglais:"flag",etudes:"etudes",nophone_am:"phoneoff",
+  skincare_am:"skincare",skincare_pm:"moon",skincare:"skincare",couche:"moon",lumiere:"sun",
+  mealprep:"salad",eau:"water",proteine:"protein",petitdej:"breakfast",
+};
+function habIcon(h){return HAB_ICON[h.id]||"target";}
 const HICONS={couche:'sommeil',scroll:'focus',lumiere:'humeur',eau:'budget',sport:'seances',skincare:'valeurs',petitdej:'habitudes',lecture:'etudes',anglais:'journal',repas:'habitudes',calme:'focus',rien:'home'};
 function ic(name,cls="ic"){return `<svg class="${cls}" viewBox="0 0 24 24" aria-hidden="true">${ICONS[name]||ICONS.home}</svg>`;}
 const d=new Date();
@@ -1213,34 +1247,34 @@ const DOMAINS=[
 ];
 const domById=(id)=>DOMAINS.find(d=>d.id===id)||{id:"autre",lbl:"Autre",emo:"•",c:"#a0a0a0"};
 const DEFAULT_HABITS=[
-  // Physique
-  {id:"escalade",emo:"🧗",lbl:"Escalade",dom:"physique"},
-  {id:"callis",emo:"🤸",lbl:"Callisthénie (maison)",dom:"physique"},
-  {id:"course",emo:"🏃",lbl:"Course à pied",dom:"physique"},
-  {id:"gainage",emo:"🪵",lbl:"Gainage / abdos",dom:"physique"},
-  {id:"etirements",emo:"🧎",lbl:"Étirements / mobilité",dom:"physique"},
-  {id:"marche",emo:"🚶",lbl:"Marcher (10k pas)",dom:"physique"},
-  // Mental
-  {id:"lecture",emo:"📖",lbl:"Lire 10 min",dom:"mental"},
-  {id:"dessin",emo:"🎨",lbl:"Dessiner",dom:"mental"},
-  {id:"calme",emo:"🧘",lbl:"Méditation / respiration",dom:"mental"},
-  {id:"journal",emo:"📓",lbl:"Journaling du soir",dom:"mental"},
-  {id:"scroll",emo:"📵",lbl:"Pas de scroll inutile",dom:"mental"},
-  {id:"intention",emo:"🎯",lbl:"Mon intention du jour",dom:"mental"},
-  // Scolaire
-  {id:"anglais",emo:"🇬🇧",lbl:"Anglais du jour",dom:"scolaire"},
-  {id:"etudes",emo:"✏️",lbl:"Réviser / étudier",dom:"scolaire"},
-  {id:"nophone_am",emo:"🌅",lbl:"Pas de téléphone au réveil",dom:"scolaire"},
-  // Beauté
-  {id:"skincare_am",emo:"🧴",lbl:"Skincare du matin",dom:"beaute"},
-  {id:"skincare_pm",emo:"🌙",lbl:"Skincare du soir",dom:"beaute"},
-  {id:"couche",emo:"😴",lbl:"Couché à heure fixe",dom:"beaute"},
-  {id:"lumiere",emo:"☀️",lbl:"Lumière du matin",dom:"beaute"},
-  // Nourriture
-  {id:"mealprep",emo:"🥗",lbl:"Repas healthy / meal prep",dom:"nourriture"},
-  {id:"eau",emo:"💧",lbl:"Boire assez d'eau (2L)",dom:"nourriture"},
-  {id:"proteine",emo:"🍗",lbl:"Assez de protéines",dom:"nourriture"},
-  {id:"petitdej",emo:"🥣",lbl:"Petit déj préparé la veille",dom:"nourriture"},
+  // Physique — bouger le corps
+  {id:"escalade",lbl:"Escalade",dom:"physique"},
+  {id:"callis",lbl:"Callisthénie (maison)",dom:"physique"},
+  {id:"course",lbl:"Course à pied",dom:"physique"},
+  {id:"gainage",lbl:"Gainage / abdos",dom:"physique"},
+  {id:"etirements",lbl:"Étirements / mobilité",dom:"physique"},
+  {id:"marche",lbl:"Marcher (10k pas)",dom:"physique"},
+  // Mental — tête & discipline
+  {id:"lecture",lbl:"Lire 10 min",dom:"mental"},
+  {id:"dessin",lbl:"Dessiner",dom:"mental"},
+  {id:"calme",lbl:"Méditation / respiration",dom:"mental"},
+  {id:"journal",lbl:"Journaling du soir",dom:"mental"},
+  {id:"scroll",lbl:"Pas de scroll inutile",dom:"mental"},
+  {id:"nophone_am",lbl:"Pas de téléphone au réveil",dom:"mental"},
+  {id:"intention",lbl:"Mon intention du jour",dom:"mental"},
+  // Scolaire — études
+  {id:"anglais",lbl:"Anglais du jour",dom:"scolaire"},
+  {id:"etudes",lbl:"Réviser / étudier",dom:"scolaire"},
+  // Beauté — soin de soi
+  {id:"skincare_am",lbl:"Skincare du matin",dom:"beaute"},
+  {id:"skincare_pm",lbl:"Skincare du soir",dom:"beaute"},
+  {id:"couche",lbl:"Couché à heure fixe",dom:"beaute"},
+  {id:"lumiere",lbl:"Lumière du matin",dom:"beaute"},
+  // Nourriture — bien manger
+  {id:"mealprep",lbl:"Repas healthy / meal prep",dom:"nourriture"},
+  {id:"eau",lbl:"Boire assez d'eau (2L)",dom:"nourriture"},
+  {id:"proteine",lbl:"Assez de protéines",dom:"nourriture"},
+  {id:"petitdej",lbl:"Petit déj préparé la veille",dom:"nourriture"},
 ];
 function getHabits(){return store.get("habit_defs",DEFAULT_HABITS);}
 // migration douce : si une habitude n'a pas de domaine (ancienne donnée), on la devine
@@ -1688,9 +1722,9 @@ function renderHabits(){
   // barre de filtres par domaine
   const fbar=$("#hab-filter");
   if(fbar){
-    const opts=[{id:"all",lbl:"Tout",emo:"⚡"}].concat(DOMAINS.map(d=>({id:d.id,lbl:d.lbl,emo:d.emo})));
+    const opts=[{id:"all",lbl:"Tout",c:""}].concat(DOMAINS.map(d=>({id:d.id,lbl:d.lbl,c:d.c})));
     if(!opts.some(o=>o.id===habFilter))habFilter="all";
-    fbar.innerHTML=opts.map(o=>`<button data-hf="${o.id}" aria-current="${o.id===habFilter}">${o.emo} ${o.lbl}</button>`).join("");
+    fbar.innerHTML=opts.map(o=>`<button data-hf="${o.id}" aria-current="${o.id===habFilter}">${o.c?`<span class="chip-dot" style="background:${o.c}"></span>`:""}${o.lbl}</button>`).join("");
   }
   // habitudes groupées par domaine (ou filtrées)
   const shown=habFilter==="all"?H:H.filter(h=>habitDom(h)===habFilter);
@@ -1699,10 +1733,10 @@ function renderHabits(){
   groups.forEach(did=>{
     const d=domById(did);const hs=shown.filter(h=>habitDom(h)===did);if(!hs.length)return;
     const done=hs.filter(h=>st[h.id]).length;
-    html+=`<div class="shop-rayon" style="color:${d.c}"><span class="dom-emo">${d.emo}</span>${esc(d.lbl)}<span style="margin-left:auto;color:var(--muted);font-weight:600">${done}/${hs.length}</span></div>`;
+    html+=`<div class="shop-rayon" style="color:${d.c}"><span class="dom-dot" style="background:${d.c}"></span>${esc(d.lbl)}<span style="margin-left:auto;color:var(--muted);font-weight:600">${done}/${hs.length}</span></div>`;
     html+=hs.map(h=>{const r=habitRate(h.id,14);
       return `<div class="check ${st[h.id]?"done":""}" data-id="${h.id}">
-      <span class="box">${check}</span><span class="dom-emo" style="margin-right:2px">${h.emo||"⭐"}</span><span class="lbl">${esc(h.lbl)}</span>
+      <span class="box">${check}</span>${ic(habIcon(h),"ic hemo")}<span class="lbl">${esc(h.lbl)}</span>
       ${habitEdit?`<button class="hdel" data-del="${h.id}" aria-label="Supprimer">✕</button>`:`<span class="rate" title="Régularité sur 14 jours">${r}%</span>`}</div>`;}).join("");
   });
   $("#habits").innerHTML=html||`<div class="empty">Aucune habitude ici.</div>`;
@@ -1739,12 +1773,12 @@ $("#habit-edit").addEventListener("click",()=>{habitEdit=!habitEdit;$("#habit-ed
 $("#habit-add").addEventListener("click",()=>{
   const v=$("#habit-new").value.trim();if(!v)return;
   const dom=$("#habit-dom")?$("#habit-dom").value:"physique";
-  const H=getHabits();H.push({id:"h"+Date.now(),emo:domById(dom).emo,lbl:v,dom});store.set("habit_defs",H);
+  const H=getHabits();H.push({id:"h"+Date.now(),lbl:v,dom});store.set("habit_defs",H);
   $("#habit-new").value="";renderHabits();renderNow();
 });
 $("#habit-new").addEventListener("keydown",e=>{if(e.key==="Enter")$("#habit-add").click();});
 // remplit le sélecteur de domaine
-if($("#habit-dom"))$("#habit-dom").innerHTML=DOMAINS.map(d=>`<option value="${d.id}">${d.emo} ${d.lbl}</option>`).join("");
+if($("#habit-dom"))$("#habit-dom").innerHTML=DOMAINS.map(d=>`<option value="${d.id}">${d.lbl}</option>`).join("");
 // filtre par domaine
 $("#hab-filter")&&$("#hab-filter").addEventListener("click",e=>{const b=e.target.closest("[data-hf]");if(!b)return;habFilter=b.dataset.hf;renderHabits();});
 
@@ -1845,7 +1879,7 @@ function renderHomeDoms(){
     const pct=tot?Math.round(done/tot*100):0;
     const rate=domRate(d.id,14);
     return `<div class="dom" data-dom="${d.id}">
-      <div class="dom-top"><span class="dom-emo">${d.emo}</span><span class="dom-name">${d.lbl}</span>
+      <div class="dom-top"><span class="dom-dot" style="background:${d.c}"></span><span class="dom-name">${d.lbl}</span>
         <span class="dom-sc" style="color:${d.c}">${done}/${tot}</span></div>
       <div class="dom-bar"><i style="width:${pct}%;background:${d.c}"></i></div>
       <div class="dom-hint">${d.desc} · régularité ${rate}%</div></div>`;
@@ -1872,7 +1906,7 @@ function renderStats(){
   const H=getHabits();
   // Régularité par habitude : barre + % (pas de série qui retombe à 0)
   $("#streaks").innerHTML=H.map(h=>{const r=habitRate(h.id,14);
-    return `<div class="hrate"><span class="hr-lbl">${ic(HICONS[h.id]||"objectifs")} ${esc(h.lbl)}</span>
+    return `<div class="hrate"><span class="hr-lbl">${ic(habIcon(h))} ${esc(h.lbl)}</span>
       <span class="hr-bar"><i style="width:${r}%"></i></span><span class="hr-v tnum">${r}%</span></div>`;}).join("")||`<div class="sub">Ajoute des habitudes pour suivre ta régularité.</div>`;
   let hDone=0,hTot=0;for(let i=0;i<7;i++){const dt=new Date();dt.setDate(dt.getDate()-((new Date().getDay()+6)%7)+i);if(dt<=new Date()){hTot++;if(dayScore(dt)>=0.999)hDone++;}}
   const fsec=store.get("focus_week_"+weekId(),{min:0,n:0});
@@ -1894,7 +1928,7 @@ function hmLevel(dt,sel){
 function renderHeatmap(){
   const H=getHabits();const year=new Date().getFullYear();
   // Filtres : Tout + un onglet par domaine
-  const opts=[{id:"all",lbl:"Tout"}].concat(DOMAINS.map(d=>({id:"dom:"+d.id,lbl:d.emo+" "+d.lbl})));
+  const opts=[{id:"all",lbl:"Tout"}].concat(DOMAINS.map(d=>({id:"dom:"+d.id,lbl:d.lbl})));
   if(!opts.some(o=>o.id===hmSel))hmSel="all";
   if($("#hm-pick"))$("#hm-pick").innerHTML=opts.map(o=>`<button data-hm="${o.id}" aria-current="${o.id===hmSel}">${esc(o.lbl)}</button>`).join("");
   // Habitudes à afficher (toutes ou celles du domaine filtré)
@@ -1921,7 +1955,7 @@ function renderHeatmap(){
       cur.setDate(cur.getDate()+1);
     }
     return `<div class="card hmh" style="--habc:${col}">
-      <div class="hmh-top"><span class="hmh-emo">${h.emo||"⭐"}</span><span class="hmh-name">${esc(h.lbl)}</span><span class="hmh-count">${count} j</span></div>
+      <div class="hmh-top">${ic(habIcon(h),"ic hmh-ic")}<span class="hmh-name">${esc(h.lbl)}</span><span class="hmh-count">${count} j</span></div>
       <div class="hmh-labels">${labels}</div>
       <div class="hmh-grid">${cells}</div></div>`;
   }).join("")||`<div class="card"><div class="empty">Aucune habitude dans ce domaine.</div></div>`;
@@ -2721,16 +2755,16 @@ $("#ics-sync").addEventListener("click",()=>syncICS(false));
 {
  // Migration : purge toute synchro ICS en cache (localStorage + Supabase) qui écrasait le seed
  if(store.get("ics_fmt",0)<4){store.set("real_events_synced",null);store.set("ics_last",0);store.set("ics_fmt",4);}
- // Migration : domaines + habitudes enrichies (garde les habitudes perso + l'historique)
- if(store.get("hab_fmt",0)<2){
+ // Migration : domaines corrigés + icônes (garde les habitudes perso + l'historique)
+ if(store.get("hab_fmt",0)<3){
    const stored=store.get("habit_defs",null);
    if(stored&&Array.isArray(stored)){
      // garde les habitudes perso (id commençant par "h"), met à jour le reste depuis les défauts
-     const persos=stored.filter(h=>String(h.id).startsWith("h")&&!DEFAULT_HABITS.some(d=>d.id===h.id)).map(h=>({...h,dom:h.dom||"autre"}));
+     const persos=stored.filter(h=>String(h.id).startsWith("h")&&!DEFAULT_HABITS.some(d=>d.id===h.id)).map(h=>{const o={...h,dom:h.dom||"autre"};delete o.emo;return o;});
      const merged=[...DEFAULT_HABITS.map(d=>({...d})),...persos];
      store.set("habit_defs",merged);
    }
-   store.set("hab_fmt",2);
+   store.set("hab_fmt",3);
  }
  const last=store.get("ics_last",0);
  if($("#ics-status")&&store.get("real_events_synced",null))$("#ics-status").textContent="Cours à jour · "+new Date(last).toLocaleString("fr-FR",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"});
