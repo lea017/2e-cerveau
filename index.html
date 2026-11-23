@@ -164,6 +164,17 @@ section[role="tabpanel"]{padding-bottom:16px}
 .check .hdel:hover{color:var(--crit);background:var(--surface-2)}
 .check .streak .fire-ic{width:12px;height:12px;stroke:var(--accent-ink);fill:var(--accent-soft)}
 .check .rate{font-size:.72rem;color:var(--accent-ink);background:var(--accent-soft);padding:3px 9px;border-radius:999px;font-weight:600;flex:none;font-variant-numeric:tabular-nums}
+.lbl-wrap{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:1px}
+.lbl-wrap .lbl{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hab-t{font-size:.7rem;color:var(--muted);font-weight:600}
+.hab-why{flex:none;width:20px;height:20px;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--muted);font-size:.72rem;font-weight:700;cursor:pointer;padding:0;line-height:1}
+.whypop{position:fixed;inset:0;z-index:70;background:rgba(20,28,22,.5);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;padding:24px}
+.whypop .wp-card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:22px;max-width:340px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.whypop .wp-top{display:flex;align-items:center;gap:9px;font-weight:700;font-size:1.05rem;margin-bottom:10px}
+.whypop .wp-top .ic{width:20px;height:20px;stroke:var(--accent);flex:none}
+.whypop .wp-t{margin-left:auto;font-size:.76rem;color:var(--accent-ink);background:var(--accent-soft);padding:2px 9px;border-radius:999px;font-weight:600}
+.whypop .wp-why{font-size:.92rem;line-height:1.55;color:var(--fg)}
+.whypop .wp-close{width:100%;margin-top:16px}
 .hrate{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--line)}
 .hrate:last-child{border-bottom:0}
 .hrate .hr-lbl{flex:1 1 auto;min-width:0;display:flex;align-items:center;gap:7px;font-size:.9rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -206,6 +217,7 @@ section[role="tabpanel"]{padding-bottom:16px}
 .exam{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--line)}
 .exam:last-child{border-bottom:0}
 .exam .en{font-weight:600;font-size:.92rem}.exam .ed{font-size:.78rem;color:var(--muted)}
+.exam-auto{font-size:.6rem;font-weight:700;color:#9e3a30;background:#f6dedb;padding:1px 6px;border-radius:999px;margin-left:6px;vertical-align:middle}
 .exam .cd{font-family:var(--f-display);font-weight:700;font-size:1.3rem;text-align:right;color:var(--accent-ink)}
 .exam .cd small{display:block;font-size:.62rem;font-weight:500;color:var(--muted);letter-spacing:.05em}
 
@@ -319,6 +331,9 @@ svg.chart{width:100%;height:170px;display:block;margin-top:6px;overflow:visible}
 .cat-revision{--c:#9cc2a0;--cs:#e4efe3;--ci:#527a56}
 .cat-sport{--c:#b9d2a0;--cs:#ecf3e2;--ci:#6a8a4a}
 .cat-perso{--c:#cfe0b4;--cs:#f2f6e8;--ci:#7c9456}
+.cat-exam{--c:#d05a4e;--cs:#f6dedb;--ci:#9e3a30}
+.evblock.cat-exam,.wev.cat-exam{border-left:3px solid #d05a4e}
+.evblock.cat-exam .eb-t,.wev.cat-exam .we-t{color:#9e3a30;font-weight:700}
 .cal-nav{display:flex;align-items:center;gap:8px;margin:12px 0 4px}
 .cal-arrow{flex:none;width:34px;height:34px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--accent-ink);font-size:1.3rem;line-height:1;cursor:pointer;display:grid;place-items:center}
 .cal-arrow:active{background:var(--accent-soft)}
@@ -535,6 +550,14 @@ svg.bchart{width:100%;height:150px;display:block;margin-top:8px;overflow:visible
 .shop-item.done .nm{text-decoration:line-through;color:var(--muted)}
 .shop-foot{margin-top:14px}
 .shop-clear{width:100%;font-family:inherit;font-size:.86rem;font-weight:600;color:var(--muted);background:var(--surface);border:1px solid var(--line);border-radius:11px;padding:11px;cursor:pointer}
+/* ---- Meal prep ---- */
+.meal{padding:12px 0;border-bottom:1px solid var(--line)}
+.meal:last-child{border-bottom:0}
+.meal-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.meal-n{font-weight:700;font-size:.95rem}
+.meal-ings{font-size:.8rem;color:var(--muted);margin-top:4px;line-height:1.5}
+.meal-push{font-family:inherit;font-size:.74rem;font-weight:600;color:var(--accent-ink);background:var(--accent-soft);border:1px solid var(--accent);border-radius:999px;padding:4px 11px;cursor:pointer;white-space:nowrap}
+.meal-del{background:none;border:0;color:var(--muted);font-size:.95rem;cursor:pointer;padding:2px 4px}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .hm-cell.l1{background:#35543b}:root:not([data-theme="light"]) .hm-cell.l2{background:#4a7a53}:root:not([data-theme="light"]) .hm-cell.l3{background:#6fa876}}
 :root[data-theme="dark"] .hm-cell.l1{background:#35543b}:root[data-theme="dark"] .hm-cell.l2{background:#4a7a53}:root[data-theme="dark"] .hm-cell.l3{background:#6fa876}
 /* ---- Glow-up hero ---- */
@@ -933,6 +956,18 @@ svg.bchart{width:100%;height:150px;display:block;margin-top:8px;overflow:visible
       <button class="shop-clear" id="shop-clear">Retirer les articles pris</button>
     </div>
   </div>
+  <!-- Meal prep → courses -->
+  <div class="card">
+    <h3><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11h16a8 8 0 01-16 0z"/><path d="M12 11c0-3 2-5 4-5"/></svg> Mes repas de la semaine</h3>
+    <div class="sub">Note un repas + ses ingrédients, puis envoie-les direct dans ta liste de courses.</div>
+    <div id="meal-list"></div>
+    <div class="add-sep">Nouveau repas</div>
+    <div class="add-row" style="flex-wrap:wrap">
+      <input id="meal-name" placeholder="Repas (ex. Poulet riz brocolis)" maxlength="40" style="flex:1 1 100%">
+      <input id="meal-ings" placeholder="Ingrédients, séparés par virgules" maxlength="120" style="flex:1 1 100%">
+      <button id="meal-add" style="width:100%">Ajouter le repas</button>
+    </div>
+  </div>
 </section>
 
 <!-- SEANCES -->
@@ -1223,7 +1258,7 @@ const HAB_ICON={
   escalade:"climb",callis:"calis",course:"run",gainage:"core",etirements:"stretch",marche:"walk",bouger:"seances",
   lecture:"book",dessin:"draw",calme:"meditate",journal:"diary",scroll:"phoneoff",intention:"target",
   anglais:"flag",etudes:"etudes",nophone_am:"phoneoff",
-  skincare_am:"skincare",skincare_pm:"moon",skincare:"skincare",couche:"moon",lumiere:"sun",
+  lever:"sun",skincare_am:"skincare",skincare_pm:"moon",skincare:"skincare",couche:"moon",lumiere:"sun",
   mealprep:"salad",eau:"water",proteine:"protein",petitdej:"breakfast",
 };
 function habIcon(h){return HAB_ICON[h.id]||"target";}
@@ -1246,35 +1281,37 @@ const DOMAINS=[
   {id:"nourriture",lbl:"Nourriture",emo:"🥗",c:"#9cc27f",desc:"Healthy · meal prep"},
 ];
 const domById=(id)=>DOMAINS.find(d=>d.id===id)||{id:"autre",lbl:"Autre",emo:"•",c:"#a0a0a0"};
+// t = horaire conseillé (calculé/ajusté selon l'EDT) ; why = la raison (étude) affichée au clic
 const DEFAULT_HABITS=[
   // Physique — bouger le corps
-  {id:"escalade",lbl:"Escalade",dom:"physique"},
-  {id:"callis",lbl:"Callisthénie (maison)",dom:"physique"},
-  {id:"course",lbl:"Course à pied",dom:"physique"},
-  {id:"gainage",lbl:"Gainage / abdos",dom:"physique"},
-  {id:"etirements",lbl:"Étirements / mobilité",dom:"physique"},
-  {id:"marche",lbl:"Marcher (10k pas)",dom:"physique"},
+  {id:"escalade",lbl:"Escalade",dom:"physique",why:"2h de grimpe : force, gainage et mental. Idéal en fin de journée."},
+  {id:"callis",lbl:"Callisthénie (maison)",dom:"physique",t:"18:30",why:"Le soir, la force musculaire est au max (température corporelle haute) — meilleures perfs qu'au réveil."},
+  {id:"course",lbl:"Course à pied",dom:"physique",why:"Le cardio régulier booste l'humeur et la mémoire (BDNF). 2-3×/semaine suffit."},
+  {id:"gainage",lbl:"Gainage / abdos",dom:"physique",t:"07:00",why:"5 min au réveil : réveille le corps et ancre la discipline dès le début."},
+  {id:"etirements",lbl:"Étirements / mobilité",dom:"physique",t:"21:30",why:"Le soir, améliore la souplesse et prépare au sommeil."},
+  {id:"marche",lbl:"Marcher (10k pas)",dom:"physique",why:"La marche quotidienne réduit le stress et vaut un vrai cardio léger."},
   // Mental — tête & discipline
-  {id:"lecture",lbl:"Lire 10 min",dom:"mental"},
-  {id:"dessin",lbl:"Dessiner",dom:"mental"},
-  {id:"calme",lbl:"Méditation / respiration",dom:"mental"},
-  {id:"journal",lbl:"Journaling du soir",dom:"mental"},
-  {id:"scroll",lbl:"Pas de scroll inutile",dom:"mental"},
-  {id:"nophone_am",lbl:"Pas de téléphone au réveil",dom:"mental"},
-  {id:"intention",lbl:"Mon intention du jour",dom:"mental"},
+  {id:"lecture",lbl:"Lire 10 min",dom:"mental",t:"22:00",why:"Lire avant de dormir baisse le stress de 68% (étude Sussex) — mieux qu'un écran."},
+  {id:"dessin",lbl:"Dessiner",dom:"mental",why:"Créer active le circuit de récompense et fait baisser le cortisol."},
+  {id:"calme",lbl:"Méditation / respiration",dom:"mental",t:"07:15",why:"10 min de respiration le matin : focus et calme prouvés pour la journée."},
+  {id:"journal",lbl:"Journaling du soir",dom:"mental",t:"22:15",why:"Écrire 3 lignes le soir améliore l'humeur et vide la tête avant de dormir."},
+  {id:"scroll",lbl:"Pas de scroll inutile",dom:"mental",why:"Le scroll fragmente l'attention et vole des heures. Ton temps vaut mieux."},
+  {id:"nophone_am",lbl:"Pas de téléphone au réveil",dom:"mental",t:"06:50",why:"Les 30 premières min sans écran protègent ta dopamine et ta concentration de la journée."},
+  {id:"intention",lbl:"Mon intention du jour",dom:"mental",t:"07:00",why:"Choisir LA chose qui compte évite de se disperser. Clarté dès le matin."},
   // Scolaire — études
-  {id:"anglais",lbl:"Anglais du jour",dom:"scolaire"},
-  {id:"etudes",lbl:"Réviser / étudier",dom:"scolaire"},
+  {id:"anglais",lbl:"Anglais du jour (TOEIC)",dom:"scolaire",t:"20:30",why:"15-20 min/jour d'exposition régulière bat les sessions longues espacées."},
+  {id:"etudes",lbl:"Réviser / étudier",dom:"scolaire",why:"La répétition espacée (un peu chaque jour) ancre bien plus que le bachotage."},
   // Beauté — soin de soi
-  {id:"skincare_am",lbl:"Skincare du matin",dom:"beaute"},
-  {id:"skincare_pm",lbl:"Skincare du soir",dom:"beaute"},
-  {id:"couche",lbl:"Couché à heure fixe",dom:"beaute"},
-  {id:"lumiere",lbl:"Lumière du matin",dom:"beaute"},
+  {id:"lever",lbl:"Se lever à heure fixe",dom:"beaute",t:"05:30",why:"Un réveil régulier (même week-end) est LE réglage n°1 de l'horloge interne et de l'énergie."},
+  {id:"skincare_am",lbl:"Skincare du matin",dom:"beaute",t:"06:00",why:"Nettoyant + hydratant + SPF : la protection solaire est le n°1 anti-âge prouvé."},
+  {id:"skincare_pm",lbl:"Skincare du soir",dom:"beaute",t:"22:30",why:"Le soir, la peau se régénère. Démaquiller + soin = teint net au réveil."},
+  {id:"couche",lbl:"Se coucher à heure fixe",dom:"beaute",t:"23:00",why:"Heure de coucher régulière = sommeil réparateur. Vise 7-8h pour récupérer."},
+  {id:"lumiere",lbl:"Lumière du matin",dom:"beaute",t:"07:10",why:"10-15 min de lumière le matin calent ton horloge et réveillent le corps naturellement."},
   // Nourriture — bien manger
-  {id:"mealprep",lbl:"Repas healthy / meal prep",dom:"nourriture"},
-  {id:"eau",lbl:"Boire assez d'eau (2L)",dom:"nourriture"},
-  {id:"proteine",lbl:"Assez de protéines",dom:"nourriture"},
-  {id:"petitdej",lbl:"Petit déj préparé la veille",dom:"nourriture"},
+  {id:"mealprep",lbl:"Repas healthy / meal prep",dom:"nourriture",why:"Préparer à l'avance = tu ne craques pas sur du rapide. Base de la constance."},
+  {id:"eau",lbl:"Boire 2L d'eau",dom:"nourriture",why:"Même légèrement déshydratée, la concentration et l'énergie chutent. Vise ~2L."},
+  {id:"proteine",lbl:"Assez de protéines",dom:"nourriture",why:"Les protéines réparent les muscles après le sport et calent la faim."},
+  {id:"petitdej",lbl:"Petit déj préparé la veille",dom:"nourriture",t:"21:45",why:"Préparer le soir = zéro friction le matin, tu pars sans sauter le repas."},
 ];
 function getHabits(){return store.get("habit_defs",DEFAULT_HABITS);}
 // migration douce : si une habitude n'a pas de domaine (ancienne donnée), on la devine
@@ -1344,7 +1381,17 @@ const BUDGET_SEED=[
   {id:"b8",t:"Abonnements (streaming…)",a:30,in:false,cat:"abo"},
   {id:"b9",t:"Loisirs / plaisir",a:0,in:false,cat:"resto"},
 ];
-const getExams=()=>store.get("exams",EXAMS_SEED);
+// Exams saisis à la main + exams détectés automatiquement dans l'EDT
+function autoExams(){
+  const real=(typeof getReal==="function")?getReal():{};const out=[];
+  for(const dk in real){(real[dk]||[]).forEach(r=>{if(typeof isExam==="function"&&isExam(r.b))
+    out.push({id:"auto-"+dk+"-"+r.t,n:r.b.replace(/\s*(examen|CC|contr[oô]le_?terminal|contr[oô]le|rattrapage)\s*/gi," ").replace(/\s+/g," ").trim()||r.b,d:dk,note:(r.t||"")+(r.n?" · "+r.n:""),auto:true});});}
+  return out;
+}
+const getExams=()=>{const manual=store.get("exams",EXAMS_SEED);const auto=autoExams();
+  // évite les doublons (même date)
+  const dates=new Set(manual.map(e=>e.d));
+  return manual.concat(auto.filter(e=>!dates.has(e.d)));};
 const getGoals=()=>store.get("goals",GOALS_SEED);
 const getBudget=()=>store.get("budget",BUDGET_SEED);
 const PLANNING_SEED={
@@ -1511,7 +1558,7 @@ function show(v){
   if(v==="valeurs")renderValues();
   if(v==="seances")renderMusc();
   if(v==="budget")renderBudget();
-  if(v==="courses")renderShop();
+  if(v==="courses"){renderShop();renderMeals();}
   closeSheet();
   window.scrollTo(0,0);
 }
@@ -1717,6 +1764,18 @@ document.querySelector('[data-view="home"]').addEventListener("click",e=>{const 
 /* ---- Habits ---- */
 let habitEdit=false;
 let habFilter="all";
+// Horaire conseillé d'une habitude, ajusté à l'EDT du jour (ex. jour de cours tôt → matin décalé)
+function habTime(h){
+  if(!h.t)return "";
+  // si cours le matin tôt aujourd'hui, les habitudes du matin se calent avant le départ
+  try{
+    const wd=(new Date().getDay()+6)%7;const real=(typeof getReal==="function")?(getReal()[dateForWeekday(wd)]||[]):[];
+    const firstCourse=real.map(r=>toMin(r.t)).filter(m=>m!=null).sort((a,b)=>a-b)[0];
+    const hm=toMin(h.t);
+    // habitude du matin (avant 10h) un jour où le 1er cours est à 8h15 : rien à changer, les horaires sont déjà calculés pour ça
+    return h.t;
+  }catch(e){return h.t;}
+}
 function renderHabits(){
   const key="habits_"+dayKey();const st=store.get(key,{});const H=getHabits();
   // barre de filtres par domaine
@@ -1734,10 +1793,11 @@ function renderHabits(){
     const d=domById(did);const hs=shown.filter(h=>habitDom(h)===did);if(!hs.length)return;
     const done=hs.filter(h=>st[h.id]).length;
     html+=`<div class="shop-rayon" style="color:${d.c}"><span class="dom-dot" style="background:${d.c}"></span>${esc(d.lbl)}<span style="margin-left:auto;color:var(--muted);font-weight:600">${done}/${hs.length}</span></div>`;
-    html+=hs.map(h=>{const r=habitRate(h.id,14);
+    html+=hs.map(h=>{const r=habitRate(h.id,14);const t=habTime(h);
       return `<div class="check ${st[h.id]?"done":""}" data-id="${h.id}">
-      <span class="box">${check}</span>${ic(habIcon(h),"ic hemo")}<span class="lbl">${esc(h.lbl)}</span>
-      ${habitEdit?`<button class="hdel" data-del="${h.id}" aria-label="Supprimer">✕</button>`:`<span class="rate" title="Régularité sur 14 jours">${r}%</span>`}</div>`;}).join("");
+      <span class="box">${check}</span>${ic(habIcon(h),"ic hemo")}
+      <span class="lbl-wrap"><span class="lbl">${esc(h.lbl)}</span>${t?`<span class="hab-t">${t}</span>`:""}</span>
+      ${habitEdit?`<button class="hdel" data-del="${h.id}" aria-label="Supprimer">✕</button>`:`<button class="hab-why" data-why="${h.id}" aria-label="Pourquoi">?</button><span class="rate" title="Régularité sur 14 jours">${r}%</span>`}</div>`;}).join("");
   });
   $("#habits").innerHTML=html||`<div class="empty">Aucune habitude ici.</div>`;
   const done=H.filter(h=>st[h.id]).length,pct=H.length?Math.round(done/H.length*100):0;
@@ -1763,6 +1823,8 @@ function habitRate(id,N){
 $("#habits").addEventListener("click",e=>{
   const del=e.target.closest(".hdel");
   if(del){const H=getHabits().filter(h=>h.id!==del.dataset.del);store.set("habit_defs",H);renderHabits();renderNow();renderHomeSummary();return;}
+  const why=e.target.closest(".hab-why");
+  if(why){const h=getHabits().find(x=>x.id===why.dataset.why);if(h&&h.why)showWhy(h);return;}
   if(habitEdit)return;
   const c=e.target.closest(".check");if(!c)return;
   const key="habits_"+dayKey();const st=store.get(key,{});const was=st[c.dataset.id];
@@ -1770,6 +1832,15 @@ $("#habits").addEventListener("click",e=>{
   renderHabits();renderNow();renderHomeSummary();checkBadges();
 });
 $("#habit-edit").addEventListener("click",()=>{habitEdit=!habitEdit;$("#habit-edit").setAttribute("aria-pressed",habitEdit);$("#habit-edit").textContent=habitEdit?"Terminé":"Modifier";renderHabits();});
+// Popup "pourquoi" (la raison/étude derrière l'habitude)
+function showWhy(h){
+  let el=$("#whypop");
+  if(!el){el=document.createElement("div");el.id="whypop";el.className="whypop";document.body.appendChild(el);
+    el.addEventListener("click",ev=>{if(ev.target.id==="whypop"||ev.target.closest(".wp-close"))el.hidden=true;});}
+  el.innerHTML=`<div class="wp-card"><div class="wp-top">${ic(habIcon(h),"ic")}<span>${esc(h.lbl)}</span>${h.t?`<span class="wp-t">${h.t}</span>`:""}</div>
+    <div class="wp-why">${esc(h.why)}</div><button class="wp-close btn">OK</button></div>`;
+  el.hidden=false;
+}
 $("#habit-add").addEventListener("click",()=>{
   const v=$("#habit-new").value.trim();if(!v)return;
   const dom=$("#habit-dom")?$("#habit-dom").value:"physique";
@@ -1999,7 +2070,9 @@ $("#f-reset").addEventListener("click",()=>{clearInterval(fTimer);fTimer=null;fR
 /* ---- Calendrier visuel (jour / semaine, catégories colorées) ---- */
 const DAYS_FR=["Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi","Dimanche"];
 const DAYS_MIN=["Lun","Mar","Mer","Jeu","Ven","Sam","Dim"];
-const CATS={cours:"Cours",sport:"Sport",revision:"Révision",perso:"Perso"};
+const CATS={cours:"Cours",exam:"Exam",sport:"Sport",revision:"Révision",perso:"Perso"};
+// Détecte si un cours est en réalité un examen / contrôle
+function isExam(title){return /\bexamen\b|\bcontr[oô]le\b|\bCC\b|_terminal|contr[oô]le_|rattrapage|partiel/i.test(title||"");}
 const CAL_START=7,CAL_END=23;      // heures affichées
 const SLOT_H=46;                    // hauteur d'une heure (jour)
 const WROW_H=26;                    // hauteur d'une heure (semaine)
@@ -2022,7 +2095,7 @@ function weekMonday(off){const d=new Date();d.setHours(0,0,0,0);d.setDate(d.getD
 // Events d'une date donnée : cours ICS (par date) + perso (par jour de semaine)
 function eventsForDate(date){
   const out=[];const dk=dkOf(date);const wd=wdOf(date);
-  (getReal()[dk]||[]).forEach(r=>out.push({t:r.t,e:r.e,b:r.b,n:r.n,cat:"cours",real:true}));
+  (getReal()[dk]||[]).forEach(r=>out.push({t:r.t,e:r.e,b:r.b,n:r.n,cat:isExam(r.b)?"exam":"cours",real:true}));
   (getPlanning()[wd]||[]).forEach((r,i)=>out.push({t:r.t,e:r.e,b:r.b,n:r.n,cat:r.cat||guessCat(r.b),idx:i}));
   return out.filter(e=>toMin(e.t)!=null).sort((a,b)=>toMin(a.t)-toMin(b.t));
 }
@@ -2292,9 +2365,50 @@ $("#shop-list").addEventListener("click",e=>{
   const list=getShop();const it=list.find(x=>x.id===row.dataset.id);if(it){it.done=!it.done;store.set("shop_list",list);renderShop();}
 });
 $("#shop-clear").addEventListener("click",()=>{store.set("shop_list",getShop().filter(x=>!x.done));renderShop();});
+/* ---- Meal prep → courses ---- */
+const getMeals=()=>store.get("meals",[]);
+// devine le rayon d'un ingrédient
+function guessRayon(name){
+  const s=(name||"").toLowerCase();
+  if(/pomme|banane|salade|tomate|brocoli|courgette|carotte|oignon|ail|poivron|épinard|fruit|légume|avocat|citron|champignon|patate|pomme de terre/.test(s))return "Fruits & légumes";
+  if(/poulet|boeuf|bœuf|dinde|jambon|œuf|oeuf|lait|yaourt|fromage|beurre|crème|poisson|saumon|thon|tofu|skyr/.test(s))return "Frais";
+  if(/riz|pâte|pate|semoule|quinoa|farine|huile|sel|poivre|épice|conserve|haricot|lentille|pois chiche|sucre|café|thé|flocon|avoine|miel/.test(s))return "Épicerie";
+  if(/surgel|glace|congel/.test(s))return "Surgelés";
+  if(/eau|jus|soda|boisson|lait d'amande|lait de/.test(s))return "Boissons";
+  if(/dentifrice|shampoing|savon|gel douche|papier|coton|déo/.test(s))return "Hygiène";
+  return "Autre";
+}
+function renderMeals(){
+  const meals=getMeals();
+  $("#meal-list").innerHTML=meals.length?meals.map(m=>`<div class="meal">
+    <div class="meal-top"><span class="meal-n">${esc(m.n)}</span>
+      <span style="display:flex;gap:6px"><button class="meal-push" data-push="${m.id}">→ courses</button><button class="meal-del" data-mdel="${m.id}" aria-label="Supprimer">✕</button></span></div>
+    <div class="meal-ings">${m.ings.map(i=>esc(i)).join(" · ")}</div></div>`).join(""):`<div class="empty">Aucun repas noté.</div>`;
+}
+$("#meal-add").addEventListener("click",()=>{
+  const n=$("#meal-name").value.trim();const raw=$("#meal-ings").value.trim();
+  if(!n)return;
+  const ings=raw.split(",").map(x=>x.trim()).filter(Boolean);
+  const meals=getMeals();meals.push({id:"m"+Date.now(),n,ings});store.set("meals",meals);
+  $("#meal-name").value="";$("#meal-ings").value="";renderMeals();
+});
+$("#meal-list").addEventListener("click",e=>{
+  const del=e.target.closest("[data-mdel]");
+  if(del){store.set("meals",getMeals().filter(m=>m.id!==del.dataset.mdel));renderMeals();return;}
+  const push=e.target.closest("[data-push]");
+  if(push){const m=getMeals().find(x=>x.id===push.dataset.push);if(!m)return;
+    const list=getShop();let added=0;
+    m.ings.forEach(ing=>{if(!list.some(x=>!x.done&&x.t.toLowerCase()===ing.toLowerCase())){
+      list.push({id:"s"+Date.now()+Math.random().toString(36).slice(2,5),t:ing,rayon:guessRayon(ing),done:false});added++;}});
+    store.set("shop_list",list);renderShop();
+    push.textContent=added?`${added} ajouté${added>1?"s":""} ✓`:"déjà dans la liste";
+    setTimeout(()=>{push.textContent="→ courses";},1500);
+  }
+});
 
 /* ---- Sessions ---- */
-let curSess=daySession()==="Repos"?"PUSH":daySession();
+const SESS_KEYS=Object.keys(SESSIONS);
+let curSess=daySession()==="Repos"?SESS_KEYS[0]:(SESSIONS[daySession()]?daySession():SESS_KEYS[0]);
 function renderSessChips(){$("#sess-chips").innerHTML=Object.keys(SESSIONS).map(s=>`<button class="chip" data-s="${s}" aria-current="${s===curSess}">${s}</button>`).join("");}
 function renderSessExos(){
   const key="sess_"+curSess+"_"+dayKey();const st=store.get(key,{});
@@ -2385,18 +2499,19 @@ $("#mz-hist").addEventListener("click",e=>{
 
 /* ---- Exams / TOEIC ---- */
 function renderExams(){
-  const exams=getExams().slice().sort((a,b)=>new Date(a.d)-new Date(b.d));
+  // masque les exams passés, trie par date
+  const exams=getExams().filter(e=>Math.ceil((new Date(e.d)-new Date())/864e5)>=-1).slice().sort((a,b)=>new Date(a.d)-new Date(b.d));
   $("#exams").innerHTML=exams.length?exams.map(e=>{
     const days=Math.ceil((new Date(e.d)-new Date())/864e5);
-    const dd=new Date(e.d).toLocaleDateString("fr-FR",{day:"numeric",month:"long"});
-    const past=days<0;
-    return `<div class="exam"><div><div class="en">${esc(e.n)}</div><div class="ed">${dd}${e.note?" · "+esc(e.note):""}</div></div>
-      <div style="display:flex;align-items:center;gap:8px"><div class="cd tnum" style="${past?"color:var(--muted)":""}">${past?"✓":"J-"+days}<small>${past?"passé":"jours"}</small></div>
-      <button class="del" data-id="${e.id}" aria-label="Supprimer">✕</button></div></div>`;
-  }).join(""):`<div class="empty">Aucun examen. Ajoute-en un ci-dessous.</div>`;
+    const dd=new Date(e.d).toLocaleDateString("fr-FR",{weekday:"short",day:"numeric",month:"long"});
+    const past=days<0;const soon=days>=0&&days<=5;
+    return `<div class="exam"><div><div class="en">${esc(e.n)}${e.auto?`<span class="exam-auto">EDT</span>`:""}</div><div class="ed">${dd}${e.note?" · "+esc(e.note):""}</div></div>
+      <div style="display:flex;align-items:center;gap:8px"><div class="cd tnum" style="${past?"color:var(--muted)":soon?"color:#d05a4e":""}">${past?"✓":"J-"+days}<small>${past?"passé":"jours"}</small></div>
+      ${e.auto?"":`<button class="del" data-id="${e.id}" aria-label="Supprimer">✕</button>`}</div></div>`;
+  }).join(""):`<div class="empty">Aucun examen à venir.</div>`;
 }
 $("#exams").addEventListener("click",e=>{const del=e.target.closest(".del");if(!del)return;
-  store.set("exams",getExams().filter(x=>x.id!==del.dataset.id));renderExams();renderHomeSummary();});
+  store.set("exams",store.get("exams",EXAMS_SEED).filter(x=>x.id!==del.dataset.id));renderExams();renderHomeSummary();});
 $("#exam-add").addEventListener("click",()=>{
   const n=$("#exam-name").value.trim(),d=$("#exam-date").value;if(!n||!d)return;
   const ex=getExams();ex.push({id:"e"+Date.now(),n,d,note:$("#exam-note").value.trim()});store.set("exams",ex);
@@ -2755,8 +2870,8 @@ $("#ics-sync").addEventListener("click",()=>syncICS(false));
 {
  // Migration : purge toute synchro ICS en cache (localStorage + Supabase) qui écrasait le seed
  if(store.get("ics_fmt",0)<4){store.set("real_events_synced",null);store.set("ics_last",0);store.set("ics_fmt",4);}
- // Migration : domaines corrigés + icônes (garde les habitudes perso + l'historique)
- if(store.get("hab_fmt",0)<3){
+ // Migration : habitudes enrichies + horaires conseillés (garde les perso + l'historique)
+ if(store.get("hab_fmt",0)<4){
    const stored=store.get("habit_defs",null);
    if(stored&&Array.isArray(stored)){
      // garde les habitudes perso (id commençant par "h"), met à jour le reste depuis les défauts
@@ -2764,7 +2879,7 @@ $("#ics-sync").addEventListener("click",()=>syncICS(false));
      const merged=[...DEFAULT_HABITS.map(d=>({...d})),...persos];
      store.set("habit_defs",merged);
    }
-   store.set("hab_fmt",3);
+   store.set("hab_fmt",4);
  }
  const last=store.get("ics_last",0);
  if($("#ics-status")&&store.get("real_events_synced",null))$("#ics-status").textContent="Cours à jour · "+new Date(last).toLocaleString("fr-FR",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"});
@@ -2774,7 +2889,7 @@ $("#ics-sync").addEventListener("click",()=>syncICS(false));
 /* ---- Rendu complet (réutilisable après synchro) ---- */
 function renderAll(){
   renderPts();renderNow();renderHomeSummary();renderHabits();renderPlanning();renderTodos();renderRoutines();renderValues();
-  renderSessChips();renderSessExos();renderExams();renderToeic();renderJournal();renderBudget();renderGoals();renderMusc();renderShop();
+  renderSessChips();renderSessExos();renderExams();renderToeic();renderJournal();renderBudget();renderGoals();renderMusc();renderShop();renderMeals();
   fRender();renderFocus();
 }
 
