@@ -1287,31 +1287,31 @@ const DEFAULT_HABITS=[
   {id:"escalade",lbl:"Escalade",dom:"physique",why:"2h de grimpe : force, gainage et mental. Idéal en fin de journée."},
   {id:"callis",lbl:"Callisthénie (maison)",dom:"physique",t:"18:30",why:"Le soir, la force musculaire est au max (température corporelle haute) — meilleures perfs qu'au réveil."},
   {id:"course",lbl:"Course à pied",dom:"physique",why:"Le cardio régulier booste l'humeur et la mémoire (BDNF). 2-3×/semaine suffit."},
-  {id:"gainage",lbl:"Gainage / abdos",dom:"physique",t:"07:00",why:"5 min au réveil : réveille le corps et ancre la discipline dès le début."},
-  {id:"etirements",lbl:"Étirements / mobilité",dom:"physique",t:"21:30",why:"Le soir, améliore la souplesse et prépare au sommeil."},
+  {id:"gainage",lbl:"Gainage / abdos",dom:"physique",why:"5 min de gainage quand tu peux dans la journée : ça renforce le centre pour l'escalade."},
+  {id:"etirements",lbl:"Étirements / mobilité",dom:"physique",t:"21:15",why:"Le soir, améliore la souplesse et prépare au sommeil."},
   {id:"marche",lbl:"Marcher (10k pas)",dom:"physique",why:"La marche quotidienne réduit le stress et vaut un vrai cardio léger."},
   // Mental — tête & discipline
-  {id:"lecture",lbl:"Lire 10 min",dom:"mental",t:"22:00",why:"Lire avant de dormir baisse le stress de 68% (étude Sussex) — mieux qu'un écran."},
+  {id:"lecture",lbl:"Lire 10 min",dom:"mental",t:"21:45",why:"Lire avant de dormir baisse le stress de 68% (étude Sussex) — mieux qu'un écran."},
   {id:"dessin",lbl:"Dessiner",dom:"mental",why:"Créer active le circuit de récompense et fait baisser le cortisol."},
-  {id:"calme",lbl:"Méditation / respiration",dom:"mental",t:"07:15",why:"10 min de respiration le matin : focus et calme prouvés pour la journée."},
-  {id:"journal",lbl:"Journaling du soir",dom:"mental",t:"22:15",why:"Écrire 3 lignes le soir améliore l'humeur et vide la tête avant de dormir."},
+  {id:"calme",lbl:"Méditation / respiration",dom:"mental",t:"21:50",why:"Quelques minutes de respiration le soir pour redescendre avant de dormir."},
+  {id:"journal",lbl:"Journaling du soir",dom:"mental",t:"22:00",why:"Écrire 3 lignes le soir améliore l'humeur et vide la tête avant de dormir."},
   {id:"scroll",lbl:"Pas de scroll inutile",dom:"mental",why:"Le scroll fragmente l'attention et vole des heures. Ton temps vaut mieux."},
-  {id:"nophone_am",lbl:"Pas de téléphone au réveil",dom:"mental",t:"06:50",why:"Les 30 premières min sans écran protègent ta dopamine et ta concentration de la journée."},
-  {id:"intention",lbl:"Mon intention du jour",dom:"mental",t:"07:00",why:"Choisir LA chose qui compte évite de se disperser. Clarté dès le matin."},
+  {id:"nophone_am",lbl:"Pas de téléphone au réveil",dom:"mental",t:"05:50",tEnt:"06:00",why:"Les premières min sans écran protègent ta dopamine et ta concentration de la journée."},
+  {id:"intention",lbl:"Mon intention du jour",dom:"mental",t:"07:40",tEnt:"06:50",why:"Choisir LA chose qui compte évite de se disperser. Clarté dès le matin."},
   // Scolaire — études
-  {id:"anglais",lbl:"Anglais du jour (TOEIC)",dom:"scolaire",t:"20:30",why:"15-20 min/jour d'exposition régulière bat les sessions longues espacées."},
+  {id:"anglais",lbl:"Anglais (TOEIC) — le matin",dom:"scolaire",t:"06:00",tEnt:"06:10",why:"Cerveau frais le matin = meilleure mémorisation. École : 1h30 (6h-7h30). Entreprise : 30 min (6h10-6h40). L'exposition quotidienne bat les sessions espacées."},
   {id:"etudes",lbl:"Réviser / étudier",dom:"scolaire",why:"La répétition espacée (un peu chaque jour) ancre bien plus que le bachotage."},
   // Beauté — soin de soi
-  {id:"lever",lbl:"Se lever à heure fixe",dom:"beaute",t:"05:30",why:"Un réveil régulier (même week-end) est LE réglage n°1 de l'horloge interne et de l'énergie."},
-  {id:"skincare_am",lbl:"Skincare du matin",dom:"beaute",t:"06:00",why:"Nettoyant + hydratant + SPF : la protection solaire est le n°1 anti-âge prouvé."},
-  {id:"skincare_pm",lbl:"Skincare du soir",dom:"beaute",t:"22:30",why:"Le soir, la peau se régénère. Démaquiller + soin = teint net au réveil."},
-  {id:"couche",lbl:"Se coucher à heure fixe",dom:"beaute",t:"23:00",why:"Heure de coucher régulière = sommeil réparateur. Vise 7-8h pour récupérer."},
-  {id:"lumiere",lbl:"Lumière du matin",dom:"beaute",t:"07:10",why:"10-15 min de lumière le matin calent ton horloge et réveillent le corps naturellement."},
+  {id:"lever",lbl:"Se lever à heure fixe",dom:"beaute",t:"05:50",tEnt:"06:00",why:"Réveil régulier = réglage n°1 de l'horloge interne. École 5h50, entreprise 6h00 — pour faire ton anglais avant de partir."},
+  {id:"skincare_am",lbl:"Skincare du matin",dom:"beaute",t:"07:35",tEnt:"06:45",why:"Nettoyant + hydratant + SPF : la protection solaire est le n°1 anti-âge prouvé."},
+  {id:"skincare_pm",lbl:"Skincare du soir",dom:"beaute",t:"22:05",why:"Le soir, la peau se régénère. Démaquiller + soin = teint net au réveil."},
+  {id:"couche",lbl:"Se coucher à heure fixe",dom:"beaute",t:"22:20",tEnt:"22:30",why:"7h30 de sommeil mini. École coucher 22h20 (lever 5h50), entreprise 22h30 (lever 6h). La régularité compte plus que l'heure exacte."},
+  {id:"lumiere",lbl:"Lumière du matin",dom:"beaute",t:"07:30",tEnt:"06:50",why:"10-15 min de lumière le matin calent ton horloge et réveillent le corps naturellement."},
   // Nourriture — bien manger
   {id:"mealprep",lbl:"Repas healthy / meal prep",dom:"nourriture",why:"Préparer à l'avance = tu ne craques pas sur du rapide. Base de la constance."},
-  {id:"eau",lbl:"Boire 2L d'eau",dom:"nourriture",why:"Même légèrement déshydratée, la concentration et l'énergie chutent. Vise ~2L."},
-  {id:"proteine",lbl:"Assez de protéines",dom:"nourriture",why:"Les protéines réparent les muscles après le sport et calent la faim."},
-  {id:"petitdej",lbl:"Petit déj préparé la veille",dom:"nourriture",t:"21:45",why:"Préparer le soir = zéro friction le matin, tu pars sans sauter le repas."},
+  {id:"eau",lbl:"Boire 2 à 2,5L d'eau",dom:"nourriture",why:"Même légèrement déshydratée, concentration et énergie chutent. Vise 2L, 2,5L les jours de sport."},
+  {id:"proteine",lbl:"Assez de protéines",dom:"nourriture",why:"~1,4-1,6 g/kg de poids avec la callisthénie et l'escalade : ça répare les muscles et cale la faim."},
+  {id:"petitdej",lbl:"Petit déj préparé la veille",dom:"nourriture",t:"21:50",why:"Préparer le soir = zéro friction le matin, tu pars sans sauter le repas."},
 ];
 function getHabits(){return store.get("habit_defs",DEFAULT_HABITS);}
 // migration douce : si une habitude n'a pas de domaine (ancienne donnée), on la devine
@@ -1764,17 +1764,16 @@ document.querySelector('[data-view="home"]').addEventListener("click",e=>{const 
 /* ---- Habits ---- */
 let habitEdit=false;
 let habFilter="all";
-// Horaire conseillé d'une habitude, ajusté à l'EDT du jour (ex. jour de cours tôt → matin décalé)
+// Jour "entreprise" = jour de semaine sans cours dans l'EDT (alternance). École = jour avec cours.
+function isEntrepriseDay(dt=new Date()){
+  const wd=(dt.getDay()+6)%7;if(wd>=5)return false; // week-end
+  try{const real=(typeof getReal==="function")?(getReal()[dayKey(dt)]||[]):[];return real.length===0;}catch(e){return false;}
+}
+// Horaire conseillé d'une habitude, selon le type de jour (école vs entreprise)
 function habTime(h){
   if(!h.t)return "";
-  // si cours le matin tôt aujourd'hui, les habitudes du matin se calent avant le départ
-  try{
-    const wd=(new Date().getDay()+6)%7;const real=(typeof getReal==="function")?(getReal()[dateForWeekday(wd)]||[]):[];
-    const firstCourse=real.map(r=>toMin(r.t)).filter(m=>m!=null).sort((a,b)=>a-b)[0];
-    const hm=toMin(h.t);
-    // habitude du matin (avant 10h) un jour où le 1er cours est à 8h15 : rien à changer, les horaires sont déjà calculés pour ça
-    return h.t;
-  }catch(e){return h.t;}
+  if(h.tEnt&&isEntrepriseDay())return h.tEnt;
+  return h.t;
 }
 function renderHabits(){
   const key="habits_"+dayKey();const st=store.get(key,{});const H=getHabits();
@@ -2870,8 +2869,8 @@ $("#ics-sync").addEventListener("click",()=>syncICS(false));
 {
  // Migration : purge toute synchro ICS en cache (localStorage + Supabase) qui écrasait le seed
  if(store.get("ics_fmt",0)<4){store.set("real_events_synced",null);store.set("ics_last",0);store.set("ics_fmt",4);}
- // Migration : habitudes enrichies + horaires conseillés (garde les perso + l'historique)
- if(store.get("hab_fmt",0)<4){
+ // Migration : horaires sommeil/anglais recalculés (garde les perso + l'historique)
+ if(store.get("hab_fmt",0)<5){
    const stored=store.get("habit_defs",null);
    if(stored&&Array.isArray(stored)){
      // garde les habitudes perso (id commençant par "h"), met à jour le reste depuis les défauts
@@ -2879,7 +2878,7 @@ $("#ics-sync").addEventListener("click",()=>syncICS(false));
      const merged=[...DEFAULT_HABITS.map(d=>({...d})),...persos];
      store.set("habit_defs",merged);
    }
-   store.set("hab_fmt",4);
+   store.set("hab_fmt",5);
  }
  const last=store.get("ics_last",0);
  if($("#ics-status")&&store.get("real_events_synced",null))$("#ics-status").textContent="Cours à jour · "+new Date(last).toLocaleString("fr-FR",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"});
